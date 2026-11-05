@@ -1,0 +1,16 @@
+{
+  "_comment": "Sumber RSS resmi yang robots.txt-nya mengizinkan crawler umum (dicek 2026-11-05). Tambah sumber baru hanya setelah cek robots.txt.",
+  "sources": [
+    { "name": "ANTARA", "feed": "https://www.antaranews.com/rss/ekonomi.xml" },
+    { "name": "ANTARA", "feed": "https://www.antaranews.com/rss/hukum.xml" },
+    { "name": "ANTARA", "feed": "https://www.antaranews.com/rss/top-news.xml" },
+    { "name": "CNBC Indonesia", "feed": "https://www.cnbcindonesia.com/rss" },
+    { "name": "CNBC Indonesia", "feed": "https://www.cnbcindonesia.com/news/rss" },
+    { "name": "CNBC Indonesia", "feed": "https://www.cnbcindonesia.com/tech/rss" },
+    { "name": "CNBC Indonesia", "feed": "https://www.cnbcindonesia.com/mymoney/rss" },
+    { "name": "CNN Indonesia", "feed": "https://www.cnnindonesia.com/rss" },
+    { "name": "CNN Indonesia", "feed": "https://www.cnnindonesia.com/teknologi/rss" },
+    { "name": "Cekfakta", "feed": "https://cekfakta.com/feed" },
+    { "name": "TurnBackHoax", "feed": "http://turnbackhoax.id/feed" }
+  ]
+}
