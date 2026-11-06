@@ -3,7 +3,17 @@
 import unittest
 from datetime import UTC, datetime
 
-from tools.news_fetch import clean_text, classify, dedupe, is_relevant, make_snippet, parse_date, parse_feed
+from tools.news_fetch import (
+    append_jsonl,
+    clean_text,
+    classify,
+    dedupe,
+    is_relevant,
+    make_snippet,
+    parse_date,
+    parse_feed,
+    resolve_url,
+)
 
 SAMPLE = b"""<?xml version="1.0"?><rss version="2.0"><channel><title>X</title>
 <item><title>Waspada penipuan online bermodus undian</title><link>https://contoh.id/a</link>
@@ -83,6 +93,26 @@ class NewsFetchTest(unittest.TestCase):
             {"id": "3", "title": "Penipuan transfer", "url": "https://a.id/2"},
         ]
         self.assertEqual([i["id"] for i in dedupe(items)], ["1", "3"])
+
+    def test_resolve_url_unwraps_bing_news_redirect(self):
+        wrapped = (
+            "http://www.bing.com/news/apiclick.aspx?ref=FexRss&aid=&tid=abc"
+            "&url=https%3a%2f%2finvestor.id%2fbusiness%2f316236%2fx&c=1&mkt=en-id"
+        )
+        self.assertEqual(resolve_url(wrapped), "https://investor.id/business/316236/x")
+        self.assertEqual(resolve_url("https://contoh.id/a"), "https://contoh.id/a")
+
+    def test_append_jsonl_appends_once_and_skips_known_ids(self):
+        import tempfile
+        from pathlib import Path
+
+        with tempfile.TemporaryDirectory() as tmp:
+            path = Path(tmp) / "articles.jsonl"
+            first = [{"id": "a", "title": "Penipuan A"}, {"id": "b", "title": "Penipuan B"}]
+            self.assertEqual(append_jsonl(first, path), 2)
+            self.assertEqual(append_jsonl(first, path), 0)
+            self.assertEqual(append_jsonl([{"id": "c", "title": "Penipuan C"}], path), 1)
+            self.assertEqual(len(path.read_text(encoding="utf-8").strip().splitlines()), 3)
 
 
 if __name__ == "__main__":

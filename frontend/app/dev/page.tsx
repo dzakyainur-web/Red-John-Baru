@@ -11,26 +11,22 @@ import {
   type CheckResult,
   type Context,
   type Example,
-  type Health,
 } from "@/lib/api";
+import { FlagList, PageHead, Score, LevelBadge } from "@/components/ui";
 
 type LogEntry = { label: string; status: number; ms: number; body: unknown };
 
-const RISK_STYLE: Record<CheckResult["risk_level"], string> = {
-  low: "bg-green-100 text-green-800 dark:bg-green-900 dark:text-green-200",
-  medium: "bg-amber-100 text-amber-800 dark:bg-amber-900 dark:text-amber-200",
-  high: "bg-red-100 text-red-800 dark:bg-red-900 dark:text-red-200",
-};
-const SEVERITY_STYLE: Record<string, string> = {
-  tinggi: "border-red-400",
-  sedang: "border-amber-400",
-  rendah: "border-zinc-300 dark:border-zinc-700",
-};
-const btn =
-  "rounded-lg border border-zinc-300 px-3 py-2 text-sm hover:bg-zinc-100 disabled:opacity-50 dark:border-zinc-700 dark:hover:bg-zinc-800";
+const btn = "btn btn-sm";
+
+const ROUTES = [
+  { method: "POST", path: "/api/check", note: "body {text, context} → CheckResponse" },
+  { method: "GET", path: "/api/examples", note: "ExampleOut[]" },
+  { method: "GET", path: "/api/model/status", note: "{ml_loaded, model_version}" },
+  { method: "GET", path: "/health", note: "HealthResponse" },
+];
 
 export default function DevConsolePage() {
-  const [health, setHealth] = useState<Health | null>(null);
+  const [health, setHealth] = useState<string>("—");
   const [modelStatus, setModelStatus] = useState<string>("—");
   const [examples, setExamples] = useState<Example[]>([]);
   const [text, setText] = useState("");
@@ -42,7 +38,6 @@ export default function DevConsolePage() {
   const [showRaw, setShowRaw] = useState(false);
 
   useEffect(() => {
-    fetchHealth().then(setHealth).catch((e) => setError(String(e)));
     fetchExamples().then(setExamples).catch(() => {});
   }, []);
 
@@ -61,11 +56,11 @@ export default function DevConsolePage() {
         body: payload === undefined ? undefined : JSON.stringify(payload),
       });
       status = res.status;
-      const textBody = await res.text();
+      const rawBody = await res.text();
       try {
-        body = JSON.parse(textBody);
+        body = JSON.parse(rawBody);
       } catch {
-        body = textBody;
+        body = rawBody;
       }
     } catch (e) {
       body = { error: String(e) };
@@ -90,49 +85,81 @@ export default function DevConsolePage() {
   }
 
   return (
-    <div className="space-y-8">
-      <section>
-        <h1 className="text-2xl font-bold">Dev Console — Uji API Backend</h1>
-        <p className="mt-1 text-sm text-zinc-600 dark:text-zinc-400">
-          Halaman uji semua endpoint. API base: <code className="text-xs">{API_BASE}</code>
-        </p>
+    <div className="space-y-9">
+      <PageHead
+        title="Dev console"
+        lead={
+          <>
+            Uji keempat route backend. Base URL:{" "}
+            <code className="font-[family-name:var(--font-geist-mono)] text-xs">{API_BASE}</code>
+          </>
+        }
+      />
+
+      <section className="space-y-3">
+        <h2 className="section-title">Route yang tersedia</h2>
+        <ul className="border-t border-rule">
+          {ROUTES.map((r) => (
+            <li key={r.path} className="flex flex-wrap gap-x-3 border-b border-rule py-2 text-sm">
+              <span className={`w-12 shrink-0 font-[family-name:var(--font-geist-mono)] text-xs ${r.method === "POST" ? "text-alert" : "text-muted"}`}>
+                {r.method}
+              </span>
+              <code className="font-[family-name:var(--font-geist-mono)] text-xs">{r.path}</code>
+              <span className="text-xs text-muted">{r.note}</span>
+            </li>
+          ))}
+        </ul>
       </section>
 
       <section className="space-y-3">
-        <h2 className="text-lg font-semibold">1. Health &amp; model</h2>
-        <div className="flex flex-wrap items-center gap-2">
-          <button className={btn} onClick={() => fetchHealth().then((h) => { setHealth(h); record("GET /health", 200, 0, h); }).catch((e) => setError(String(e)))}>
+        <h2 className="section-title">Health &amp; model</h2>
+        <div className="flex flex-wrap gap-2">
+          <button
+            className={btn}
+            onClick={() =>
+              fetchHealth()
+                .then((h) => {
+                  setHealth(`${h.status} · ml_loaded=${h.ml_loaded} · model=${h.model_version ?? "—"}`);
+                  record("GET /health", 200, 0, h);
+                })
+                .catch((e) => setError(String(e)))
+            }
+          >
             GET /health
           </button>
-          <button className={btn} onClick={() => fetchModelStatus().then((m) => { setModelStatus(JSON.stringify(m)); record("GET /api/model/status", 200, 0, m); }).catch((e) => setError(String(e)))}>
+          <button
+            className={btn}
+            onClick={() =>
+              fetchModelStatus()
+                .then((m) => {
+                  setModelStatus(JSON.stringify(m));
+                  record("GET /api/model/status", 200, 0, m);
+                })
+                .catch((e) => setError(String(e)))
+            }
+          >
             GET /api/model/status
           </button>
-          {health && (
-            <span className="text-sm">
-              status{" "}
-              <strong className={health.status === "ok" ? "text-green-600" : "text-amber-600"}>{health.status}</strong>
-              {" · "}model {health.ml_loaded ? `dimuat (${health.model_version})` : "TIDAK dimuat → rules-only"}
-            </span>
-          )}
         </div>
-        <pre className="rounded-lg bg-zinc-100 p-3 text-xs dark:bg-zinc-900">model/status: {modelStatus}</pre>
+        <p className="data">health: {health}</p>
+        <p className="data">model/status: {modelStatus}</p>
       </section>
 
       <section className="space-y-3">
-        <h2 className="text-lg font-semibold">2. POST /api/check</h2>
-        <p className="text-sm text-zinc-600 dark:text-zinc-400">Klik contoh untuk mengisi teks:</p>
+        <h2 className="section-title">POST /api/check</h2>
         <div className="flex flex-wrap gap-2">
           {examples.map((ex) => (
             <button
               key={ex.id}
-              onClick={() => { setText(ex.text); setResult(null); setError(null); }}
-              className={`rounded-full border px-3 py-1.5 text-xs ${
-                ex.label === "scam"
-                  ? "border-red-300 text-red-700 dark:border-red-800 dark:text-red-300"
-                  : "border-green-300 text-green-700 dark:border-green-800 dark:text-green-300"
-              }`}
+              className="chip"
+              onClick={() => {
+                setText(ex.text);
+                setResult(null);
+                setError(null);
+              }}
             >
-              {ex.category} ({ex.label})
+              {ex.category}
+              <span className="font-normal text-muted">{ex.label}</span>
             </button>
           ))}
         </div>
@@ -141,119 +168,94 @@ export default function DevConsolePage() {
           onChange={(e) => setText(e.target.value)}
           rows={5}
           maxLength={5000}
-          placeholder="Tempel pesan di sini…"
-          className="w-full rounded-lg border border-zinc-300 p-3 text-sm dark:border-zinc-700 dark:bg-zinc-900"
+          placeholder="Tempel pesan…"
+          className="field"
         />
         <div className="flex flex-wrap items-center gap-2">
-          <label htmlFor="ctx" className="text-sm text-zinc-600 dark:text-zinc-400">Konteks</label>
-          <select
-            id="ctx"
-            value={context}
-            onChange={(e) => setContext(e.target.value as Context)}
-            className="rounded border border-zinc-300 px-2 py-1.5 text-sm dark:border-zinc-700 dark:bg-zinc-900"
-          >
-            {CONTEXTS.map((c) => <option key={c} value={c}>{c}</option>)}
+          <label htmlFor="ctx" className="text-sm text-muted">
+            context
+          </label>
+          <select id="ctx" value={context} onChange={(e) => setContext(e.target.value as Context)} className="field w-auto">
+            {CONTEXTS.map((c) => (
+              <option key={c} value={c}>
+                {c}
+              </option>
+            ))}
           </select>
-          <span className="text-xs text-zinc-500">{text.length}/5000</span>
-          <button
-            onClick={submit}
-            disabled={loading || !text.trim()}
-            className="ml-auto rounded-lg bg-zinc-900 px-4 py-2 text-sm font-medium text-white disabled:opacity-50 dark:bg-zinc-100 dark:text-zinc-900"
-          >
+          <span className="data">{text.length}/5000</span>
+          <button onClick={submit} disabled={loading || !text.trim()} className="btn btn-primary btn-sm ml-auto">
             {loading ? "Memeriksa…" : "Periksa"}
           </button>
         </div>
-        {error && <p className="text-sm text-red-600">{error}</p>}
+        {error && <p className="text-sm text-alert-ink">{error}</p>}
       </section>
 
       <section className="space-y-3">
-        <h2 className="text-lg font-semibold">3. Uji validasi &amp; error</h2>
+        <h2 className="section-title">Uji validasi</h2>
         <div className="flex flex-wrap gap-2">
           <button className={btn} onClick={() => raw("POST", "/api/check", { text: "   " })}>
-            teks kosong → 422?
+            teks kosong
           </button>
           <button className={btn} onClick={() => raw("POST", "/api/check", { text: "a".repeat(6000) })}>
-            teks 6000 char → 422?
+            teks 6000 char
           </button>
           <button className={btn} onClick={() => raw("POST", "/api/check", {})}>
-            body tanpa text → 422?
+            body tanpa text
           </button>
           <button className={btn} onClick={() => raw("POST", "/api/check", { text: "halo", context: "telegram" })}>
-            context tak dikenal → ?
+            context tak dikenal
           </button>
           <button className={btn} onClick={() => raw("GET", "/api/tidak-ada")}>
-            endpoint tidak ada → 404?
+            route tidak ada
           </button>
         </div>
       </section>
 
       {result && (
-        <section className="space-y-4 rounded-xl border border-zinc-200 p-4 dark:border-zinc-800">
-          <div className="flex flex-wrap items-center gap-3">
-            <span className={`rounded-full px-3 py-1 text-sm font-bold ${RISK_STYLE[result.risk_level]}`}>
-              {result.risk_level.toUpperCase()}
-            </span>
-            <span className="text-sm">Skor <strong>{result.score}/100</strong></span>
-            <span className="text-xs text-zinc-500">
-              aturan {Math.round(result.rule_score * 100)}% · ML{" "}
+        <section className="space-y-4">
+          <div className="rule-accent" />
+          <div className="flex flex-wrap items-center gap-4">
+            <LevelBadge level={result.risk_level} />
+            <Score score={result.score} level={result.risk_level} />
+            <span className="data">
+              rule {Math.round(result.rule_score * 100)}% · ml{" "}
               {result.ml_score == null ? "—" : `${Math.round(result.ml_score * 100)}%`}
             </span>
-            <button onClick={() => setShowRaw((v) => !v)} className="ml-auto rounded border border-zinc-300 px-2 py-1 text-xs dark:border-zinc-700">
+            <button onClick={() => setShowRaw((v) => !v)} className="btn btn-sm ml-auto">
               {showRaw ? "Sembunyikan JSON" : "Lihat JSON"}
             </button>
           </div>
           {showRaw && (
-            <pre className="overflow-auto rounded-lg bg-zinc-100 p-3 text-xs dark:bg-zinc-900">
+            <pre className="overflow-auto border border-rule bg-raised p-3 font-[family-name:var(--font-geist-mono)] text-xs">
               {JSON.stringify(result, null, 2)}
             </pre>
           )}
-          <ul className="space-y-2">
-            {result.flags.map((f) => (
-              <li key={f.id} className={`rounded-lg border-l-4 bg-zinc-50 p-3 dark:bg-zinc-900 ${SEVERITY_STYLE[f.severity]}`}>
-                <p className="text-sm font-semibold">
-                  {f.id} · {f.title}{" "}
-                  <span className="text-xs font-normal text-zinc-500">({f.severity}, {f.status})</span>
-                </p>
-                {f.evidence && <p className="mt-1 text-xs italic text-zinc-600 dark:text-zinc-400">“{f.evidence}”</p>}
-                <p className="mt-1 text-sm">{f.explanation}</p>
-                <p className="mt-1 text-sm text-zinc-600 dark:text-zinc-400">→ {f.advice}</p>
-                {f.note && <p className="mt-1 text-xs text-amber-600">{f.note}</p>}
-              </li>
-            ))}
-          </ul>
-          {result.ml && (
-            <details className="text-sm">
-              <summary className="cursor-pointer font-medium">ML v{result.ml.model_version} · p={result.ml.fraud_probability}</summary>
-              <ul className="mt-1 list-inside list-disc text-xs text-zinc-600 dark:text-zinc-400">
-                {result.ml.top_features.map((t) => (
-                  <li key={t.feature}>{t.feature}: {t.weight.toFixed(3)}</li>
-                ))}
-              </ul>
-            </details>
-          )}
-          <p className="text-xs text-zinc-500">Skenario terkait: {result.recommended_scenarios.join(", ") || "—"}</p>
-          <p className="border-t border-zinc-200 pt-3 text-xs text-zinc-500 dark:border-zinc-800">{result.disclaimer}</p>
+          {result.flags.length > 0 && <FlagList flags={result.flags} />}
+          <p className="data">skenario: {result.recommended_scenarios.join(", ") || "—"}</p>
+          <p className="border-t border-rule pt-3 text-xs text-muted">{result.disclaimer}</p>
         </section>
       )}
 
       <section className="space-y-2">
         <div className="flex items-center justify-between">
-          <h2 className="text-lg font-semibold">4. Log request</h2>
-          <button className={btn} onClick={() => setLog([])}>Bersihkan</button>
+          <h2 className="section-title">Log request</h2>
+          <button className={btn} onClick={() => setLog([])}>
+            Bersihkan
+          </button>
         </div>
         {log.length === 0 ? (
-          <p className="text-sm text-zinc-500">Kosong.</p>
+          <p className="text-sm text-muted">Kosong.</p>
         ) : (
-          <ul className="space-y-2">
+          <ul className="border-t border-rule">
             {log.map((entry, i) => (
-              <li key={i} className="rounded-lg border border-zinc-200 p-3 dark:border-zinc-800">
-                <p className="font-mono text-xs">
-                  <span className={entry.status >= 200 && entry.status < 300 ? "text-green-600" : "text-red-600"}>
+              <li key={i} className="border-b border-rule py-2.5">
+                <p className="data">
+                  <span className={entry.status >= 200 && entry.status < 300 ? "text-safe" : "text-alert-ink"}>
                     {entry.status || "ERR"}
                   </span>{" "}
                   {entry.label} · {entry.ms} ms
                 </p>
-                <pre className="mt-1 max-h-40 overflow-auto text-xs text-zinc-600 dark:text-zinc-400">
+                <pre className="mt-1 max-h-40 overflow-auto font-[family-name:var(--font-geist-mono)] text-xs text-muted">
                   {JSON.stringify(entry.body, null, 2)}
                 </pre>
               </li>

@@ -1,3 +1,4 @@
+import scraped from "./news_scraped.json";
 import news from "./news.json";
 
 export type NewsItem = {
@@ -10,9 +11,19 @@ export type NewsItem = {
   categories: string[];
 };
 
-// Sumber tunggal data berita: JSON hasil `python tools/news_fetch.py`.
-export const NEWS_ITEMS = (news.items ?? []) as NewsItem[];
-export const NEWS_UPDATED_AT: string | null = news.generated_at ?? null;
+// Dua jalur data: RSS (`python tools/news_fetch.py`) dan halaman tag portal tanpa RSS
+// (`python tools/news_scrape.py`). Digabung, URL sama diambil yang pertama.
+const merge = (...lists: NewsItem[][]): NewsItem[] => {
+  const byUrl = new Map<string, NewsItem>();
+  for (const item of lists.flat()) if (!byUrl.has(item.url)) byUrl.set(item.url, item);
+  return [...byUrl.values()].sort((a, b) => (b.published_at ?? "").localeCompare(a.published_at ?? ""));
+};
+
+export const NEWS_ITEMS = merge((news.items ?? []) as NewsItem[], (scraped.items ?? []) as NewsItem[]);
+export const NEWS_UPDATED_AT: string | null = [news.generated_at, scraped.generated_at]
+  .filter(Boolean)
+  .sort()
+  .pop() ?? null;
 
 export const CATEGORY_LABEL: Record<string, string> = {
   kerja: "Kerja palsu",
