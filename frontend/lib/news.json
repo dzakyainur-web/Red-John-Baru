@@ -1,16 +1,16 @@
 {
-  "generated_at": "2026-11-05T08:25:39+00:00",
+  "generated_at": "2026-11-06T02:34:06+00:00",
   "note": "Metadata + snippet dari RSS resmi. Hak cipta tetap milik media; baca artikel aslinya di url.",
   "items": [
     {
-      "id": "828d00b9acd1",
-      "title": "Utang Pinjol Capai Rp106,48 T, Kredit Macet Tembus 5%",
-      "url": "https://www.cnbcindonesia.com/market/20261105145356-17-782659/utang-pinjol-capai-rp10648-t-kredit-macet-tembus-5",
+      "id": "f34bc1bf6f24",
+      "title": "OJK Blokir 39.923 Rekening Judol, NIK Sama Ikut Diburu",
+      "url": "https://www.cnbcindonesia.com/market/20261105222007-17-782802/ojk-blokir-39923-rekening-judol-nik-sama-ikut-diburu",
       "source": "CNBC Indonesia",
-      "published_at": "2026-11-05T07:57:17+00:00",
-      "snippet": "Outstanding pinjaman daring mencapai Rp106,48 triliun pada September 2026, tumbuh 17,02% YoY.",
+      "published_at": "2026-11-05T23:25:30+00:00",
+      "snippet": "OJK meminta bank memblokir 39.923 rekening terkait judi online.",
       "categories": [
-        "investasi"
+        "umum"
       ]
     },
     {
@@ -69,49 +69,27 @@
       ]
     },
     {
-      "id": "ba71b16a7584",
-      "title": "Cek Fakta: Hoaks Tautan Pendaftaran Petugas Haji 2026/2027",
-      "url": "http://cekfakta.com/focus/37364",
+      "id": "cd9c65f88681",
+      "title": "[PENIPUAN] Tautan Informasi Program Pertanian",
+      "url": "http://cekfakta.com/focus/37378",
       "source": "Cekfakta",
       "published_at": null,
-      "snippet": "Liputan6.com, Jakarta - Cek Fakta Liputan6.com mendapati klaim tautan pendaftaran petugas haji 2026/2027. Informasi diunggah salah satu akun Facebook pada 2 November 2026. Berikut isi unggahannya: \"PETUGAS HAJI 2026/2027 -Tamatan SMP.SMA.SMK.D3.S1 -Laki-Laki/Perempuan -Minimal…",
+      "snippet": "Akun Facebook “Pusat Bantuan” pada Sabtu (24/10/2026) mengunggah foto [arsip] berisi informasi dan tautan terkait informasi program pertanian. Berikut narasi lengkapnya: Sahabat Tani Indonesia! 🌾 Lagi cari info seputar program pertanian 2026 di daerah kakak? Kami bantu bagikan…",
       "categories": [
+        "giveaway",
+        "impersonasi",
         "phishing"
       ]
     },
     {
-      "id": "17cd9ec92fcb",
-      "title": "[PENIPUAN] Tautan Bansos Pelajar Dari Kemensos",
-      "url": "https://turnbackhoax.id/articles/37350-penipuan-tautan-bansos-pelajar-dari-kemensos",
-      "source": "TurnBackHoax",
+      "id": "5d2299bcf91b",
+      "title": "[PENIPUAN] Tautan Pendaftaran Staf Sekolah Rakyat Tahun 2026",
+      "url": "http://cekfakta.com/focus/37376",
+      "source": "Cekfakta",
       "published_at": null,
-      "snippet": "Akun Facebook “Info Terkini” pada Rabu (28/10/2026) mengunggah foto [arsip] berisi informasi dan tautan program bansos pelajar. Berikut narasi lengkapnya: 📢 INFORMASI BANTUAN SOSIAL PELAJAR 🎓📚 Pendidikan adalah hak setiap anak! 🇮🇩 Program bantuan pendidikan bertujuan membantu…",
+      "snippet": "Akun Facebook “Lowongan kerja” pada Minggu (13/9/2026) membagikan foto [ arsip ] yang menampilkan informasi dan tautan lowongan kerja staf Sekolah Rakyat tahun 2026. Berikut narasi lengkapnya: “ PENDAFTARAN GURU & STAF SEKOLAH RAKYAT 2026 | Kami membuka kesempatan bagi…",
       "categories": [
-        "giveaway",
-        "phishing"
-      ]
-    },
-    {
-      "id": "eda6cd364f0f",
-      "title": "[PENIPUAN] Tautan Program Bantuan Budidaya Lobster",
-      "url": "https://turnbackhoax.id/articles/37349-penipuan-tautan-program-bantuan-budidaya-lobster",
-      "source": "TurnBackHoax",
-      "published_at": null,
-      "snippet": "Akun Facebook “Program Bantuan Budidaya Lobster Indonesia” pada Minggu (25/10/2026) mengunggah tautan [arsip] berisi informasi dan tautan program bantuan budidaya lobster. Berikut narasi lengkapnya: 🦞 BANTUAN BIBIT LOBSTER Program bantuan bibit lobster bertujuan mendukung…",
-      "categories": [
-        "giveaway",
-        "phishing"
-      ]
-    },
-    {
-      "id": "f7ed44894ce3",
-      "title": "[PENIPUAN] Tautan Program Bantuan Rumah Gratis",
-      "url": "https://turnbackhoax.id/articles/37348-penipuan-tautan-program-bantuan-rumah-gratis",
-      "source": "TurnBackHoax",
-      "published_at": null,
-      "snippet": "Akun Facebook “Welly satria dewi” pada Selasa (27/10/2026) mengunggah foto [arsip] berisi informasi dan tautan program bantuan rumah gratis. Berikut narasi lengkapnya: DIBUKA PENDAFTARAN PROGRAM BANTUAN RUMAH GRATIS KRITERIA PENERIMA; - Yang Blum Punya Rumah - Yang Masih…",
-      "categories": [
-        "giveaway",
+        "kerja",
         "phishing"
       ]
     }
