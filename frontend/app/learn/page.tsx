@@ -2,6 +2,7 @@
 
 import { useState } from "react";
 import { SCENARIOS, type Choice, type Scenario } from "@/lib/scenarios";
+import { PageHead, SourceNote } from "@/components/ui";
 
 const DIFF_LABEL: Record<Scenario["difficulty"], string> = {
   easy: "mudah",
@@ -25,45 +26,55 @@ function ChatPlayer({ scenario, onDone }: { scenario: Scenario; onDone: (picks: 
 
   function next() {
     setLastChoice(null);
+    if (stepIndex + 1 >= scenario.steps.length) {
+      onDone(picks);
+      return;
+    }
     setStepIndex((i) => i + 1);
-  }
-
-  if (stepIndex >= scenario.steps.length) {
-    onDone(picks);
-    return null;
   }
 
   return (
     <div className="space-y-4">
       {step.kind === "message" ? (
-        <div className="flex justify-start">
-          <div className="max-w-[85%] rounded-2xl rounded-bl-sm bg-zinc-200 px-4 py-2.5 text-sm dark:bg-zinc-800">
-            <p className="text-xs font-semibold text-zinc-500">{step.from}</p>
-            <p className="mt-1">{step.text}</p>
+        <div className="space-y-3">
+          <div className="flex justify-start">
+            <div className="max-w-[85%] border border-rule bg-surface px-4 py-3 text-sm">
+              <p className="data">{step.from}</p>
+              <p className="mt-1.5">{step.text}</p>
+            </div>
           </div>
+          <button onClick={next} className="btn btn-sm">
+            Lanjut
+          </button>
         </div>
       ) : lastChoice == null ? (
-        <div className="space-y-2 pl-4">
+        <div className="space-y-2">
           <p className="text-sm font-medium">Apa respons kamu?</p>
-          {step.options.map((o) => (
-            <button
-              key={o.id}
-              onClick={() => choose(o)}
-              className="w-full rounded-lg border border-zinc-300 p-3 text-left text-sm hover:bg-zinc-100 dark:border-zinc-700 dark:hover:bg-zinc-800"
-            >
-              {o.text}
-            </button>
-          ))}
+          <div className="divide-y divide-rule border-y border-rule">
+            {step.options.map((o) => (
+              <button
+                key={o.id}
+                onClick={() => choose(o)}
+                className="block w-full px-3 py-3 text-left text-sm transition-colors hover:bg-raised"
+              >
+                {o.text}
+              </button>
+            ))}
+          </div>
         </div>
       ) : (
-        <div className={`space-y-3 rounded-lg border p-3 text-sm ${lastChoice.safe ? "border-green-400 bg-green-50 dark:bg-green-950" : "border-red-400 bg-red-50 dark:bg-red-950"}`}>
-          <p className="font-semibold">{lastChoice.safe ? "✅ Aman" : "⚠️ Berbahaya"}</p>
-          <p><strong>Akibatnya:</strong> {lastChoice.consequence}</p>
-          <p className="text-zinc-700 dark:text-zinc-300"><strong>Kenapa:</strong> {lastChoice.explain}</p>
-          <button
-            onClick={next}
-            className="rounded-lg bg-zinc-900 px-4 py-2 text-sm font-medium text-white dark:bg-zinc-100 dark:text-zinc-900"
-          >
+        <div className="rise space-y-3 border border-rule bg-surface p-4 text-sm">
+          <p className="flex items-center gap-2 font-semibold">
+            <span aria-hidden="true" className={`size-2.5 rounded-full ${lastChoice.safe ? "bg-safe" : "bg-alert"}`} />
+            {lastChoice.safe ? "Aman" : "Berbahaya"}
+          </p>
+          <p>
+            <strong className="font-semibold">Akibatnya.</strong> {lastChoice.consequence}
+          </p>
+          <p className="text-muted">
+            <strong className="font-semibold text-ink">Kenapa.</strong> {lastChoice.explain}
+          </p>
+          <button onClick={next} className="btn btn-primary btn-sm">
             {stepIndex + 1 < scenario.steps.length ? "Lanjut" : "Lihat hasil"}
           </button>
         </div>
@@ -86,32 +97,45 @@ export default function LearnPage() {
     setReviewing(false);
   }
 
+  function pickScenario(id: string) {
+    setActiveId(id);
+    setPicks(null);
+    setReviewing(false);
+  }
+
   if (scenario && picks) {
     return (
       <div className="space-y-6">
-        <h1 className="text-2xl font-bold">{scenario.title}</h1>
-        <div className="rounded-xl border border-zinc-200 p-4 dark:border-zinc-800">
-          <p className="text-lg font-semibold">
-            Keputusan aman: {safeCount}/{picks.length}
-          </p>
-          <p className="mt-2 text-sm"><strong>Yang seharusnya diperhatikan:</strong> {scenario.debrief}</p>
-          {reviewing ? (
-            <ul className="mt-4 space-y-2 text-sm">
-              {picks.map((p, i) => (
-                <li key={i} className={p.safe ? "text-green-700 dark:text-green-400" : "text-red-700 dark:text-red-400"}>
-                  {p.safe ? "✅" : "⚠️"} {p.text}
-                </li>
-              ))}
-            </ul>
-          ) : (
-            <button onClick={() => setReviewing(true)} className="mt-3 rounded border border-zinc-300 px-3 py-1.5 text-sm dark:border-zinc-700">
-              Review pilihan bahaya
-            </button>
-          )}
+        <div className="rule-accent" />
+        <p className="data">{scenario.title}</p>
+        <h1 className="page-title">
+          {safeCount} dari {picks.length} keputusan aman
+        </h1>
+        <p className="lead text-sm">{scenario.debrief}</p>
+
+        {reviewing ? (
+          <ul className="border-t border-rule">
+            {picks.map((p, i) => (
+              <li key={i} className="flex gap-3 border-b border-rule py-2.5 text-sm">
+                <span aria-hidden="true" className={`mt-1.5 size-2 shrink-0 rounded-full ${p.safe ? "bg-safe" : "bg-alert"}`} />
+                <span className={p.safe ? "" : "text-alert-ink"}>{p.text}</span>
+              </li>
+            ))}
+          </ul>
+        ) : (
+          <button onClick={() => setReviewing(true)} className="btn btn-sm">
+            Lihat semua pilihanmu
+          </button>
+        )}
+
+        <div className="flex flex-wrap gap-2">
+          <button onClick={reset} className="btn btn-primary">
+            Coba skenario lain
+          </button>
+          <button onClick={() => pickScenario(scenario.id)} className="btn">
+            Ulangi skenario ini
+          </button>
         </div>
-        <button onClick={reset} className="rounded-lg bg-zinc-900 px-4 py-2 text-sm text-white dark:bg-zinc-100 dark:text-zinc-900">
-          Coba skenario lain
-        </button>
       </div>
     );
   }
@@ -119,38 +143,42 @@ export default function LearnPage() {
   if (scenario) {
     return (
       <div className="space-y-6">
-        <button onClick={reset} className="text-sm text-zinc-500 hover:underline">← Kembali ke daftar</button>
-        <div>
-          <h1 className="text-2xl font-bold">{scenario.title}</h1>
-          <p className="mt-1 text-sm text-zinc-600 dark:text-zinc-400">{scenario.intro}</p>
-        </div>
+        <button onClick={reset} className="text-sm text-alert-ink underline decoration-alert-line underline-offset-4 hover:decoration-alert">
+          Kembali ke daftar skenario
+        </button>
+        <PageHead title={scenario.title} lead={scenario.intro} aside={<span className="data">tingkat {DIFF_LABEL[scenario.difficulty]}</span>} />
         <ChatPlayer scenario={scenario} onDone={setPicks} />
       </div>
     );
   }
 
   return (
-    <div className="space-y-6">
-      <div>
-        <h1 className="text-2xl font-bold">Belajar Kenali Scam</h1>
-        <p className="mt-1 text-sm text-zinc-600 dark:text-zinc-400">
-          Baca percakapan, pilih respons kamu, dan lihat akibatnya. Semua skenario fiktif.
-        </p>
-      </div>
-      <ul className="space-y-3">
+    <div className="space-y-8">
+      <PageHead
+        title="Belajar kenali scam"
+        lead="Baca percakapannya, pilih responsmu, lihat akibatnya. Semua skenario fiktif — tidak ada backend yang dipanggil, latihan berjalan di browser."
+      />
+
+      <ul className="border-t border-rule">
         {SCENARIOS.map((s) => (
           <li key={s.id}>
             <button
-              onClick={() => { setActiveId(s.id); setPicks(null); }}
-              className="w-full rounded-xl border border-zinc-200 p-4 text-left hover:bg-zinc-100 dark:border-zinc-800 dark:hover:bg-zinc-900"
+              onClick={() => pickScenario(s.id)}
+              className="flex w-full flex-wrap items-baseline justify-between gap-x-6 gap-y-1 border-b border-rule px-1 py-4 text-left transition-colors hover:bg-raised"
             >
-              <p className="font-semibold">{s.title}</p>
-              <p className="mt-1 text-sm text-zinc-600 dark:text-zinc-400">{s.intro}</p>
-              <p className="mt-2 text-xs text-zinc-500">Tingkat: {DIFF_LABEL[s.difficulty]}</p>
+              <span className="max-w-[52ch]">
+                <span className="block font-semibold">{s.title}</span>
+                <span className="mt-0.5 block text-sm text-muted">{s.intro}</span>
+              </span>
+              <span className="data">tingkat {DIFF_LABEL[s.difficulty]}</span>
             </button>
           </li>
         ))}
       </ul>
+
+      <SourceNote>
+        Skenario ditulis tim sebagai bahan latihan, bukan rekaman percakapan nyata.
+      </SourceNote>
     </div>
   );
 }

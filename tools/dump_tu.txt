@@ -1,0 +1,9 @@
+===== app/rules/__pycache__/text_utils.cpython-312.pyc
+<module> | names: ('__future__', 'annotations', 're', 'typing', 'Iterable', 'Pattern', 'urllib.parse', 'urlparse', 'compile', '_URL_RE', '_NUMBER_LIKE_RE', 'find_urls', 'host_of', 'mask_pii', 'snippet', 'compile_any') | consts: ['0', "('annotations',)", 'None', "('Iterable', 'Pattern')", "('urlparse',)", '\'(?ix)\\n    (?:\\n        https?://[^\\\\s<>"\\\']+      # skema penuh\\n        | www\\\\.[^\\\\s<>"\\\']+     ', "'[\\\\w.\\\\-+]{0,3}[0-9][0-9\\\\s.\\\\-]{8,}[\\\\w.\\\\-]{0,3}'", '<code find_urls>', '<code host_of>', '<code mask_pii>', '<code snippet>', '<code compile_any>', "('text', 'str', 'return', 'list[str]')", "('url', 'str', 'return', 'str')", "('text', 'str', 'return', 'str')", '(30,)', "('text', 'str', 'start', 'int', 'end', 'int', 'pad', 'int', 'return', 'str')", "('patterns', 'Iterable[str]', 'return', 'Pattern[str]')"]
+  find_urls | names: ('_URL_RE', 'finditer', 'group', 'rstrip', 'append') | consts: ["'Ambil semua kemungkinan URL/domain dari teks (sudah dibersihkan tanda baca akhir).'", '0', '\'.,;:!?)]}"\\\'\'']
+  host_of | names: ('urlparse', 'hostname', 'ValueError', 'lower', 'rstrip') | consts: ['None', "'://'", "'http://'", "''", "'.'"]
+  mask_pii | names: ('_NUMBER_LIKE_RE', 'sub') | consts: ["'Samarkan deretan angka panjang (nomor HP/rekening) agar tidak disimpan/ditampilkan.'", '<code <lambda>>']
+    <lambda> | names: ('re', 'sub', 'group') | consts: ['None', "'\\\\d'", "'•'", '0']
+  snippet | names: ('max', 'min', 'len', 'replace', 'strip', 'mask_pii') | consts: ["'Potongan teks di sekitar match, dengan PII disamarkan.'", '0', "'\\n'", "' '", "'…'", "''"]
+  compile_any | names: ('re', 'compile', 'join', 'IGNORECASE') | consts: ['None', "'|'", '<code <genexpr>>']
+    <genexpr> | names: () | consts: ["'(?:'", "')'", 'None']

@@ -1,0 +1,37 @@
+{
+ "count": 120,
+ "by_source": {
+  "detik": 29,
+  "liputan6": 31,
+  "kompas": 44,
+  "suara": 16
+ },
+ "without_date": 0,
+ "first5": [
+  [
+   "detik",
+   "2026-11-05T20:15:00+00:00",
+   "Jatim Jadi Provinsi dengan Kejahatan Siber Terting"
+  ],
+  [
+   "liputan6",
+   "2026-11-05T09:30:06+00:00",
+   "OJK Blokir 743.589 Rekening Penipuan, Dana Rp 967,"
+  ],
+  [
+   "kompas",
+   "2026-11-05T00:00:00+00:00",
+   "Terbongkar di Bandara Ngurah Rai, Travel Haji Tida"
+  ],
+  [
+   "kompas",
+   "2026-11-05T00:00:00+00:00",
+   "Pemilik Travel Haji Ilegal di Bali Ditangkap, Kump"
+  ],
+  [
+   "kompas",
+   "2026-11-05T00:00:00+00:00",
+   "Owner Arisan Meow Jadi Tersangka, Kerugian Korban "
+  ]
+ ]
+}
