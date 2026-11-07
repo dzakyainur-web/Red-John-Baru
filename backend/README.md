@@ -8,15 +8,21 @@ API FastAPI untuk menilai pesan mencurigakan: **rules yang dapat dijelaskan + mo
 ```bash
 uv sync
 cp .env.example .env      # lalu isi nilainya
-uv run main.py            # scraper + scheduler ikut aktif
+uv run main.py            # API saja
+uv run scraper.py         # service scraper (scheduler) — proses terpisah
 ```
 
-`backend/.env` dibaca otomatis oleh `app/config.py` (tanpa dependency tambahan), jadi
-`uv run main.py`, `uvicorn main:app`, dan CLI harvester semuanya memakai nilai yang sama.
-Variabel yang sudah ada di environment shell menang — di Railway cukup isi Variables dashboard.
+Dua proses, satu image. `uv run main.py` **tidak** lagi menjalankan scraper; jalankan
+`uv run scraper.py` di terminal/container lain. Untuk deploy satu container, set
+`NEWS_SCHEDULER=true` agar API ikut menjalankan scheduler.
 
-Set `NEWS_RUN_ON_START=true` bila ingin satu putaran harvest langsung saat boot, bukan menunggu
-interval 6 jam pertama.
+`backend/.env` dibaca otomatis oleh `app/config.py` (tanpa dependency tambahan), jadi
+`uv run main.py`, `uv run scraper.py`, `uvicorn main:app`, dan CLI harvester semuanya memakai
+nilai yang sama. Variabel yang sudah ada di environment shell menang — di Railway cukup isi
+Variables dashboard.
+
+Set `NEWS_RUN_ON_START=true` bila ingin satu putaran harvest langsung saat scraper boot, bukan
+menunggu interval 6 jam pertama.
 
 Dokumentasi interaktif: <http://localhost:8000/docs>
 
@@ -44,15 +50,19 @@ Migrasi SQL dijalankan manual: buka Supabase → SQL Editor → tempel isi
 
 ```bash
 # pratinjau tanpa menyentuh database
-uv run python -m app.news_harvester.runner --once --dry-run
-uv run python -m app.news_harvester.runner --once --dry-run --source kompas
+uv run scraper.py --once --dry-run
+uv run scraper.py --once --dry-run --source kompas
 
-# run sungguhan (butuh SUPABASE_URL + SUPABASE_SERVICE_ROLE_KEY)
-uv run python -m app.news_harvester.runner --once
+# run sungguhan sekali (butuh SUPABASE_URL + SUPABASE_SERVICE_ROLE_KEY)
+uv run scraper.py --once
+
+# service: scheduler tiap NEWS_INTERVAL_HOURS, berhenti dengan SIGINT/SIGTERM
+uv run scraper.py
 ```
 
-Di dalam API, APScheduler menjalankan satu putaran tiap `NEWS_INTERVAL_HOURS` (default 6 jam).
-Lock di tabel `news_run_lock` membuat beberapa replica Railway aman — hanya satu yang menulis.
+Scheduler hidup di proses scraper, bukan di API. Lock di tabel `news_run_lock` membuat beberapa
+replica aman — hanya satu yang menulis, jadi `scraper.py` boleh diskalakan asal tidak semuanya
+menulis bersamaan.
 
 Env:
 
@@ -60,8 +70,8 @@ Env:
 |---|---|---|
 | `SUPABASE_URL` | — | Project URL. Tanpa ini endpoint tetap boot, `/api/news` balas `configured: false` |
 | `SUPABASE_SERVICE_ROLE_KEY` | — | Kunci tulis (bypass RLS). Jangan dipakai di frontend |
-| `NEWS_ENABLED` | `true` | Matikan scheduler bila `false` (CLI tetap bisa dipakai) |
-| `NEWS_RUN_ON_START` | `false` | Jalankan sekali saat cold start |
+| `NEWS_SCHEDULER` | `false` | `true` = API ikut menjalankan scheduler scraper (deploy satu container) |
+| `NEWS_RUN_ON_START` | `false` | Jalankan sekali saat scraper boot |
 | `NEWS_INTERVAL_HOURS` | `6` | Jarak antar run |
 
 Catatan: `robots.txt` Kompas memuat komentar ToS yang melarang pengambilan otomatis; robots sendiri
