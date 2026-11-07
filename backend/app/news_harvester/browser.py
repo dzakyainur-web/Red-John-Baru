@@ -32,11 +32,13 @@ _ARTICLE_JS = """([bodySelector]) => {
         const el = document.querySelector(`meta[property="${property}"]`);
         return el ? (el.getAttribute('content') || '') : '';
     };
+    // Paragraf pengisi yang bukan isi berita.
+    const filler = /^(scroll to continue with content|advertisement|iklan|baca juga:?)$/i;
     const body = document.querySelector(bodySelector);
     const paragraphs = body
         ? Array.from(body.querySelectorAll('p'))
             .map(p => (p.textContent || '').replace(/\\s+/g, ' ').trim())
-            .filter(t => t.length > 0)
+            .filter(t => t.length > 0 && !filler.test(t))
         : [];
     const time = document.querySelector('time[datetime]');
     return {

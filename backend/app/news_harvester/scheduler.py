@@ -24,7 +24,8 @@ async def run_scheduled() -> None:
     try:
         await run_once()
     except Exception as exc:  # noqa: BLE001 - job terjadwal tidak boleh mati
-        logger.warning("Job news harvester gagal: %s", exc)
+        # str() kosong untuk beberapa error DB (mis. postgrest APIError) -> sertakan tipe.
+        logger.warning("Job news harvester gagal: %s: %s", type(exc).__name__, exc, exc_info=True)
 
 
 def start_scheduler() -> AsyncIOScheduler | None:

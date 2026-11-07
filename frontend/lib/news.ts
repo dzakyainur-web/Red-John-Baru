@@ -4,7 +4,8 @@ import { API_BASE } from "./api";
 export type NewsItem = {
   id: string;
   title: string;
-  url: string;
+  // null untuk laporan manual admin yang tidak punya artikel sumber.
+  url: string | null;
   source: string;
   published_at: string | null;
   snippet: string;
@@ -49,24 +50,4 @@ export async function fetchNews(limit = 60): Promise<NewsListOut> {
   }
 }
 
-export const CATEGORY_LABEL: Record<string, string> = {
-  fake_job: "Kerja palsu",
-  phishing_link: "Phishing",
-  giveaway_palsu: "Hadiah palsu",
-  malware_apk: "Malware APK",
-  pinjol_ilegal: "Pinjol ilegal",
-};
-
-// Tanggal absolut (bukan "x hari lalu") supaya render server == klien.
-const DATE_FORMAT = new Intl.DateTimeFormat("id-ID", {
-  day: "numeric",
-  month: "long",
-  year: "numeric",
-  timeZone: "Asia/Jakarta",
-});
-
-export function formatNewsDate(value: string | null): string {
-  if (!value) return "";
-  const date = new Date(value);
-  return Number.isNaN(date.getTime()) ? "" : DATE_FORMAT.format(date);
-}
+export { CATEGORY_LABEL, formatNewsDate } from "./labels";

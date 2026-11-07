@@ -33,14 +33,20 @@ export default async function BeritaPage() {
       {lead ? (
         <>
           <article className="border-l-[3px] border-l-alert pl-5">
-            <a
-              href={lead.url}
-              target="_blank"
-              rel="noopener noreferrer"
-              className="news-display block text-[1.7rem] leading-tight text-ink decoration-alert decoration-2 underline-offset-4 hover:underline sm:text-[2.1rem]"
-            >
-              {lead.title}
-            </a>
+            {lead.url ? (
+              <a
+                href={lead.url}
+                target="_blank"
+                rel="noopener noreferrer"
+                className="news-display block text-[1.7rem] leading-tight text-ink decoration-alert decoration-2 underline-offset-4 hover:underline sm:text-[2.1rem]"
+              >
+                {lead.title}
+              </a>
+            ) : (
+              <p className="news-display block text-[1.7rem] leading-tight text-ink sm:text-[2.1rem]">
+                {lead.title}
+              </p>
+            )}
             {lead.snippet && <p className="mt-3 max-w-[62ch] text-sm text-muted">{lead.snippet}</p>}
             <p className="mt-3 flex flex-wrap items-center gap-x-2 text-xs text-muted">
               <span className="font-semibold text-ink">{lead.source}</span>
@@ -71,14 +77,18 @@ export default async function BeritaPage() {
                     {item.published_at && <p>{formatNewsDate(item.published_at)}</p>}
                   </div>
                   <div>
-                    <a
-                      href={item.url}
-                      target="_blank"
-                      rel="noopener noreferrer"
-                      className="block font-semibold leading-snug decoration-alert underline-offset-4 hover:text-alert-ink hover:underline"
-                    >
-                      {item.title}
-                    </a>
+                    {item.url ? (
+                      <a
+                        href={item.url}
+                        target="_blank"
+                        rel="noopener noreferrer"
+                        className="block font-semibold leading-snug decoration-alert underline-offset-4 hover:text-alert-ink hover:underline"
+                      >
+                        {item.title}
+                      </a>
+                    ) : (
+                      <p className="block font-semibold leading-snug">{item.title}</p>
+                    )}
                     {item.snippet && (
                       <p className="mt-1 line-clamp-2 max-w-[62ch] text-sm text-muted">{item.snippet}</p>
                     )}

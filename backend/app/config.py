@@ -15,8 +15,8 @@ ENV_PATH = BASE_DIR.parent / ".env"
 def load_env_file(path: Path = ENV_PATH) -> None:
     """Muat `.env` ke os.environ. Tanpa dependency, tanpa menimpa env yang sudah ada.
 
-    Dipanggil saat modul ini diimpor, jadi `uv run main.py`, `uvicorn main:app`, dan
-    `python -m app.news_harvester.runner` semuanya membaca `.env` tanpa flag `--env-file`.
+    Dipanggil saat modul ini diimpor, jadi `uv run main.py`, `uv run scraper.py`, dan
+    `uvicorn main:app` semuanya membaca `.env` tanpa flag `--env-file`.
     Variabel yang sudah ada di shell menang (Railway tetap pakai dashboard Variables).
     """
     try:
@@ -59,8 +59,10 @@ class Settings:
     supabase_service_key: str = field(
         default_factory=lambda: os.environ.get("SUPABASE_SERVICE_ROLE_KEY", "")
     )
-    news_enabled: bool = field(
-        default_factory=lambda: os.environ.get("NEWS_ENABLED", "true").lower()
+    # Scheduler hanya hidup di proses scraper (`uv run scraper.py`). Set true bila
+    # ingin API ikut menjalankannya (deploy satu container).
+    news_scheduler: bool = field(
+        default_factory=lambda: os.environ.get("NEWS_SCHEDULER", "false").lower()
         in {"1", "true", "yes", "on"}
     )
     news_run_on_start: bool = field(

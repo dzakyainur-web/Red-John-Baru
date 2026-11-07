@@ -166,7 +166,8 @@ def to_news_item(row: dict[str, Any]) -> dict[str, Any]:
     return {
         "id": row["id"],
         "title": row["title"],
-        "url": row["source_url"],
+        # Laporan manual tidak punya artikel sumber -> tanpa tautan.
+        "url": row.get("source_url") or None,
         "source": row["source_media"],
         "published_at": row.get("published_at") or row.get("created_at"),
         "snippet": truncate(row.get("description") or "", SNIPPET_CHARS),

@@ -318,6 +318,59 @@ def extract_iocs(text: str) -> list[dict]:
     return _ioc_urls(text) + _ioc_apk(text) + _ioc_phones(text)
 
 
+_MAX_IOCS = 20
+
+
+def sanitize_indicator(kind: str, value: str) -> dict | None:
+    """Satu IOC dari input manual -> bentuk kanonik, atau None bila tidak valid.
+
+    URL didefang, telepon dinormalisasi ke +62, nama APK harus berpola `*.apk`.
+    """
+    value = clean_text(value or "")
+    if not value:
+        return None
+    if kind == "url":
+        urls = find_urls(value)
+        if not urls or urls[0] != value:
+            return None
+        host = host_of(value)
+        if not host or _host_blocked(host) or not _tld_allowed(host):
+            return None
+        return {"type": "url", "value": _defang(value)}
+    if kind == "phone":
+        number = _normalize_phone(re.sub(r"\D", "", value))
+        return {"type": "phone", "value": number} if number else None
+    if kind == "apk":
+        if not _APK_RE.fullmatch(value):
+            return None
+        return {"type": "apk", "value": value}
+    if kind == "bank_account":
+        # Nomor rekening: digit saja, 6–20 digit (bank Indonesia).
+        digits = re.sub(r"\D", "", value)
+        if not 6 <= len(digits) <= 20:
+            return None
+        return {"type": "bank_account", "value": digits}
+    return None
+
+
+def sanitize_indicators(items: list[dict]) -> list[dict]:
+    """Bersihkan daftar IOC dari klien: buang yang tidak valid dan duplikat."""
+    result: list[dict] = []
+    seen: set[tuple[str, str]] = set()
+    for item in items:
+        cleaned = sanitize_indicator(str(item.get("type", "")), str(item.get("value", "")))
+        if cleaned is None:
+            continue
+        key = (cleaned["type"], cleaned["value"].lower())
+        if key in seen:
+            continue
+        seen.add(key)
+        result.append(cleaned)
+        if len(result) >= _MAX_IOCS:
+            break
+    return result
+
+
 def classify(title: str, description: str) -> Category:
     """Pilih kategori modus dengan skor istilah; seri -> urutan _TIE_ORDER."""
     haystack = f"{title} {description}".lower()

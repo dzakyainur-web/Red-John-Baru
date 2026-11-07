@@ -17,6 +17,8 @@ export default function SiteHeader() {
     { href: "/inspect", label: "INSPECT" },
     { href: "/learn", label: "INTEL" },
     { href: "/act", label: "PLAYBOOK" },
+    // ponytail: panel internal tanpa auth, hapus sebelum rilis.
+    { href: "/admin", label: "ADMIN" },
     { href: "/login", label: "MASUK" },
   ];
 
