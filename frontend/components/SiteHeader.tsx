@@ -17,7 +17,12 @@ export default function SiteHeader() {
     { href: "/inspect", label: "INSPECT" },
     { href: "/learn", label: "INTEL" },
     { href: "/act", label: "PLAYBOOK" },
+    { href: "/login", label: "MASUK" },
   ];
+
+  if (pathname === "/login" || pathname === "/register") {
+    return null;
+  }
 
   return (
     <header className="fixed top-0 left-0 right-0 z-50 px-4 sm:px-8 py-5 transition-all">
