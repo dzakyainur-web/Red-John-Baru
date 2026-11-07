@@ -15,16 +15,16 @@ export default function ManifestoCard() {
         <span className="text-zinc-500 mr-2 text-sm select-none font-bold">[</span>
         <div className="space-y-0.5">
           <p className="font-medium text-white/90">
-            WE SHAPE BOLD IDENTITIES AND DIGITAL
+            KAMI MEMBANGUN SISTEM INTELIJEN DAN
           </p>
           <p className="font-medium text-white/80">
-            EXPERIENCES FOR BRANDS THAT VALUE
+            PERLINDUNGAN SIBER UNTUK MENGHADAPI
           </p>
           <p className="font-medium text-white/80">
-            CLEAR THINKING, TIMELESS CRAFT,
+            REKAYASA SOSIAL, PENIPUAN DIGITAL,
           </p>
           <div className="flex items-center justify-between gap-4">
-            <p className="font-medium text-white/80">AND IDEAS BUILT TO LAST.</p>
+            <p className="font-medium text-white/80">DAN ANCAMAN MANIPULASI MODERN.</p>
             <span className="text-zinc-500 text-sm select-none font-bold">]</span>
           </div>
         </div>
@@ -33,7 +33,7 @@ export default function ManifestoCard() {
       {/* Subtle indicator tag */}
       <div className="mt-3 flex items-center gap-2 text-[10px] uppercase tracking-widest text-zinc-500">
         <span className="inline-block size-1.5 rounded-full bg-[#FF3815] animate-pulse" />
-        <span>STUDIO BRIEF &bull; 2026</span>
+        <span>CATATAN SISTEM &bull; 2026</span>
       </div>
     </div>
   );

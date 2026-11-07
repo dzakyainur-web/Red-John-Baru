@@ -37,41 +37,46 @@ export default function StudioFooter() {
         <div className="grid grid-cols-1 md:grid-cols-4 gap-10 pb-16 border-b border-white/10 text-xs text-zinc-400">
           <div>
             <div className="text-white font-bold mb-3 uppercase tracking-wider text-[11px]">
-              ABOUT THE SYSTEM
+              TENTANG SISTEM
             </div>
             <p className="leading-relaxed">
-              Autonomous scam intelligence, forensic heuristics, and deception awareness engine designed for modern digital ecosystems.
+              Intelijen penipuan mandiri, heuristik forensik, dan mesin pemantau manipulasi siber yang dirancang untuk ekosistem digital modern.
             </p>
           </div>
 
           <div>
             <div className="text-white font-bold mb-3 uppercase tracking-wider text-[11px]">
-              DIRECTORY
+              DIREKTORI
             </div>
             <ul className="space-y-2">
               <li>
                 <Link href="/" className="hover:text-white transition-colors">
-                  &bull; Message Inspector
+                  &bull; Game Red John vs Jane
+                </Link>
+              </li>
+              <li>
+                <Link href="/pemindai" className="hover:text-white transition-colors">
+                  &bull; Pemindai Anomali Pesan
                 </Link>
               </li>
               <li>
                 <Link href="/inspect" className="hover:text-white transition-colors">
-                  &bull; Link Homoglyph Check
+                  &bull; Forensik Tautan &amp; Homoglyph
                 </Link>
               </li>
               <li>
                 <Link href="/berita" className="hover:text-white transition-colors">
-                  &bull; Modus Trend Monitor
+                  &bull; Pemantau Tren Modus
                 </Link>
               </li>
               <li>
                 <Link href="/learn" className="hover:text-white transition-colors">
-                  &bull; Scam Education Modules
+                  &bull; Lab Pembelajaran &amp; Skenario
                 </Link>
               </li>
               <li>
                 <Link href="/act" className="hover:text-white transition-colors">
-                  &bull; Emergency Action Playbook
+                  &bull; Buku Panduan Darurat
                 </Link>
               </li>
             </ul>
@@ -79,29 +84,29 @@ export default function StudioFooter() {
 
           <div>
             <div className="text-white font-bold mb-3 uppercase tracking-wider text-[11px]">
-              TRANSPARENCY & ETHICS
+              TRANSPARANSI &amp; ETIKA
             </div>
             <p className="leading-relaxed mb-3">
-              Zero telemetry data storage. No private messages or phone numbers are ever recorded or sold.
+              Tanpa penyimpanan telemetri data. Tidak ada pesan pribadi atau nomor telepon yang disimpan atau diperjualbelikan.
             </p>
             <Link
               href="/tentang-keamanan"
               className="text-[#FF5533] underline underline-offset-4 hover:text-[#FF3815]"
             >
-              Security & Data Architecture &rarr;
+              Arsitektur Keamanan &amp; Data &rarr;
             </Link>
           </div>
 
           <div>
             <div className="text-white font-bold mb-3 uppercase tracking-wider text-[11px]">
-              SYSTEM CLOCK & NODES
+              WAKTU SISTEM &amp; SIMPUL
             </div>
             <div className="text-lg text-white font-bold mb-2">
               {timeStr || "12:00:00 WIB"}
             </div>
             <p className="text-[11px] text-zinc-500">
-              COORDINATES: -6.2088° S, 106.8456° E<br />
-              ENGINE: v2.4 HYBRID INFERENCE
+              KOORDINAT: -6.2088° S, 106.8456° E<br />
+              ENGINE: INFERENSI HIBRIDA v2.4
             </p>
           </div>
         </div>
@@ -109,13 +114,13 @@ export default function StudioFooter() {
         {/* Bottom copyright */}
         <div className="pt-8 flex flex-wrap items-center justify-between gap-4 text-[11px] text-zinc-600">
           <div>
-            &copy; {year} ORANGE HORSE &bull; GUARDIAN SCAM INTELLIGENCE. ALL RIGHTS RESERVED.
+            &copy; {year} ORANGE HORSE &bull; INTELIJEN KEAMANAN GUARDIAN. HAK CIPTA DILINDUNGI.
           </div>
           <div className="flex items-center gap-4">
-            <span>BUILT WITH PRECISION &amp; CRAFT</span>
+            <span>DIRANCANG DENGAN PRESISI &amp; KEHATI-HATIAN</span>
             <span className="size-1 rounded-full bg-zinc-600" />
             <a href="#top" className="text-zinc-400 hover:text-white">
-              BACK TO TOP &uarr;
+              KEMBALI KE ATAS &uarr;
             </a>
           </div>
         </div>

@@ -19,9 +19,9 @@ const bricolage = Bricolage_Grotesque({
 const publicSans = Public_Sans({ variable: "--font-body", subsets: ["latin"], display: "swap" });
 
 export const metadata: Metadata = {
-  title: "Orange Horse — Bold Identities & Cyber Deception Intelligence",
+  title: "Orange Horse — Game Duel Red John & Intelijen Penipuan Siber",
   description:
-    "We shape bold identities and digital experiences for brands that value clear thinking, timeless craft, and ideas built to last.",
+    "Game simulasi interaktif melawan dalang siber Red John didampingi bot Jane, dilengkapi pemindai anomali pesan dan forensik tautan digital.",
 };
 
 export default function RootLayout({

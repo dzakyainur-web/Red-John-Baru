@@ -4,7 +4,8 @@ import Link from "next/link";
 import { usePathname } from "next/navigation";
 
 const NAV: { href: string; label: string }[] = [
-  { href: "/", label: "Cek pesan" },
+  { href: "/", label: "Game" },
+  { href: "/pemindai", label: "Pemindai" },
   { href: "/inspect", label: "Periksa tautan" },
   { href: "/learn", label: "Belajar" },
   { href: "/berita", label: "Berita" },

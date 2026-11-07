@@ -11,10 +11,10 @@ export default function SiteHeader() {
   const [menuOpen, setMenuOpen] = useState(false);
 
   const navLinks = [
-    { href: "/", label: "OVERVIEW" },
-    { href: "/#engine", label: "SCANNER" },
+    { href: "/", label: "GAME" },
+    { href: "/pemindai", label: "PEMINDAI" },
     { href: "/berita", label: "RADAR" },
-    { href: "/inspect", label: "INSPECT" },
+    { href: "/inspect", label: "INSPEKSI" },
     { href: "/learn", label: "INTEL" },
     { href: "/act", label: "PLAYBOOK" },
     // ponytail: panel internal tanpa auth, hapus sebelum rilis.
@@ -52,7 +52,7 @@ export default function SiteHeader() {
           {/* Quick status pill */}
           <div className="hidden md:flex items-center gap-2 px-3 py-1 rounded-full bg-white/[0.04] border border-white/[0.08] backdrop-blur-sm text-[11px] font-[family-name:var(--font-geist-mono)] text-zinc-400">
             <span className="size-1.5 rounded-full bg-[#FF3815] animate-ping" />
-            <span>CORE ACTIVE</span>
+            <span>SISTEM AKTIF</span>
           </div>
         </div>
 
@@ -80,10 +80,10 @@ export default function SiteHeader() {
                 ? "bg-[#FF3815]/15 border-[#FF3815]/40 text-[#FF5533]"
                 : "bg-white/[0.04] border-white/10 text-zinc-400 hover:text-white hover:border-white/20"
             }`}
-            title={soundEnabled ? "Mute audio" : "Enable futuristic sound FX"}
+            title={soundEnabled ? "Matikan audio" : "Aktifkan efek suara"}
           >
             <span className="size-1.5 rounded-full bg-current" />
-            <span>SOUND: {soundEnabled ? "ON" : "OFF"}</span>
+            <span>SUARA: {soundEnabled ? "NYALA" : "MATI"}</span>
           </button>
 
           {/* Desktop Nav Links */}
@@ -115,7 +115,7 @@ export default function SiteHeader() {
               playClick();
               setMenuOpen(!menuOpen);
             }}
-            aria-label="Toggle navigation menu"
+            aria-label="Buka/tutup menu navigasi"
             className="lg:hidden flex size-11 items-center justify-center rounded-full bg-[#181818]/80 border border-white/10 backdrop-blur-md text-white hover:border-white/30"
           >
             <svg className="size-5" fill="none" viewBox="0 0 24 24" stroke="currentColor" strokeWidth="2">
@@ -149,13 +149,13 @@ export default function SiteHeader() {
             ))}
 
             <div className="pt-3 border-t border-white/10 flex items-center justify-between">
-              <span className="text-xs font-[family-name:var(--font-geist-mono)] text-zinc-500">AUDIO SYNTH</span>
+              <span className="text-xs font-[family-name:var(--font-geist-mono)] text-zinc-500">EFEK SUARA</span>
               <button
                 type="button"
                 onClick={toggleSound}
                 className="text-xs font-[family-name:var(--font-geist-mono)] text-[#FF5533]"
               >
-                TOGGLE: {soundEnabled ? "ON" : "OFF"}
+                STATUS: {soundEnabled ? "NYALA" : "MATI"}
               </button>
             </div>
           </div>
