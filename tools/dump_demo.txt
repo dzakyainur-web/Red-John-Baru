@@ -1,3 +1,0 @@
-===== app/__pycache__/demo.cpython-312.pyc
-<module> | names: ('__doc__', 'app.engine', 'assess', 'SAMPLES', 'main', '__name__') | consts: ["'Smoke test manual: `uv run python -m app.demo`.'", '0', "('assess',)", "('Selamat! Kamu menang hadiah utama. Transfer biaya admin 200rb dan kirim OTP sekarang juga!', 'Akun", 'None', '<code main>', "'__main__'", "('return', None)"]
-  main | names: ('SAMPLES', 'assess', 'print', 'risk_level', 'upper', 'score', 'rule_score', 'ml_score', 'flags', 'id', 'status', 'severity', 'title') | consts: ['None', "'\\n['", "' '", "'] '", '70', "'  rule='", "'.2f'", "' ml='", "'   - '", "' ('", "') '"]

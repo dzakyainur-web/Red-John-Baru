@@ -6,7 +6,7 @@ import StudioFooter from "./StudioFooter";
 
 export default function PageShell({ children }: { children: React.ReactNode }) {
   const pathname = usePathname();
-  const isHome = pathname === "/";
+  const isHome = pathname === "/" || pathname === "/login" || pathname === "/register";
 
   if (isHome) {
     return <>{children}</>;

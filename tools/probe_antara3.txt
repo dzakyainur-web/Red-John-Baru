@@ -1,9 +1,0 @@
-h5 a -> 0
-h5 a[href] -> 0
-.h5 a -> 15
-h5 -> 0
-.card__post a -> 146
-<div class="card__post__transition position-relative">
-											<a href="https://www.antaranews.com/berita/5814771/bi-bali-ingatkan-risiko-kejahatan-keuangan-digital-sektor-pariwisata" title="BI Bali ingatkan risiko kejahatan keuangan digital sektor pariwisata">
-												<picture>
-													
