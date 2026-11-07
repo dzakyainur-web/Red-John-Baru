@@ -13,7 +13,7 @@ from app.config import settings
 from app.ml.model import get_model
 from app.news_harvester import store as news_store
 from app.news_harvester.scheduler import start_scheduler, stop_scheduler
-from app.routers import check, examples, news
+from app.routers import check, examples, news, threats
 from app.schemas import HealthResponse
 
 logging.basicConfig(level=logging.INFO)
@@ -29,10 +29,12 @@ async def lifespan(_: FastAPI):
         logger.info("Model ML dimuat: %s", model.version)
 
     await news_store.init_store()
-    if settings.news_enabled and news_store.get_store() is not None:
+    if settings.news_scheduler and news_store.get_store() is not None:
         start_scheduler()
     else:
-        logger.info("News harvester terjadwal nonaktif.")
+        logger.info(
+            "Scraper terjadwal nonaktif di proses API. Jalankan `uv run scraper.py` bila perlu."
+        )
 
     try:
         yield
@@ -54,13 +56,14 @@ app = FastAPI(
 app.add_middleware(
     CORSMiddleware,
     allow_origins=list(settings.cors_origins) or ["*"],
-    allow_methods=["GET", "POST"],
+    allow_methods=["GET", "POST", "PATCH", "DELETE"],
     allow_headers=["Content-Type"],
 )
 
 app.include_router(check.router, prefix="/api")
 app.include_router(examples.router, prefix="/api")
 app.include_router(news.router, prefix="/api")
+app.include_router(threats.router, prefix="/api")
 
 
 @app.get("/health", response_model=HealthResponse)
