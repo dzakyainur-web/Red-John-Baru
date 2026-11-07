@@ -48,6 +48,34 @@ def test_detik_hanya_url_artikel() -> None:
     assert items[0]["media"] == "detik.com"
 
 
+def test_detik_menolak_halaman_galeri_foto() -> None:
+    """Galeri foto juga berakhiran /d-<id>/ tapi isinya cuma caption 1 paragraf."""
+    source = BY_MEDIA["detik.com"]
+    anchors = [
+        {
+            "href": "https://news.detik.com/foto-news/d-6832239/korban-penipuan-freelance",
+            "text": "Korban penipuan freelance sambangi Mabes Polri",
+        },
+        {
+            "href": "https://inet.detik.com/fotoinet/d-8481134/chat-penipu-online",
+            "text": "Chat penipu online disikat netizen Indonesia",
+        },
+        {
+            "href": "https://inet.detik.com/security/d-8728686/kebocoran-data-pelanggan",
+            "text": "Data 5,7 juta akun pelanggan bocor, diminta ganti PIN",
+        },
+    ]
+    items = parse_anchors(anchors, source.item_pattern, source.media)
+    assert [i["url"] for i in items] == [
+        "https://inet.detik.com/security/d-8728686/kebocoran-data-pelanggan"
+    ]
+
+
+def test_detik_body_selector_masih_ada_di_markup() -> None:
+    """Regresi: `.detail__body-text.itp_bodycontent` sudah dihapus Detik."""
+    assert BY_MEDIA["detik.com"].body_selector == ".detail__body-text, .itp_bodycontent"
+
+
 def test_kompas_menerima_subdomain() -> None:
     source = BY_MEDIA["kompas.com"]
     anchors = [

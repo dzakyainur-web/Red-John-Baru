@@ -15,7 +15,10 @@ SOURCE = Source(
         "https://www.detik.com/tag/kejahatan-siber",
     ),
     list_selector="div.list.media_rows article a[href]",
-    item_pattern=re.compile(r"/d-\d+/"),
-    body_selector=".detail__body-text.itp_bodycontent",
+    # Hanya artikel teks: halaman galeri foto (/foto-news/, /fotoinet/, /fotohealth/…)
+    # juga berakhiran /d-<id>/ tapi isinya cuma caption satu paragraf.
+    item_pattern=re.compile(r"^(?!.*/foto[\w-]*/).*/d-\d+/"),
+    # `.itp_bodycontent` dipertahankan sebagai cadangan untuk artikel lama.
+    body_selector=".detail__body-text, .itp_bodycontent",
     crawl_delay=1.5,
 )
