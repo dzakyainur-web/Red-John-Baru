@@ -1,5 +1,5 @@
-import scraped from "./news_scraped.json";
-import news from "./news.json";
+import { cacheLife } from "next/cache";
+import { API_BASE } from "./api";
 
 export type NewsItem = {
   id: string;
@@ -11,27 +11,50 @@ export type NewsItem = {
   categories: string[];
 };
 
-// Dua jalur data: RSS (`python tools/news_fetch.py`) dan halaman tag portal tanpa RSS
-// (`python tools/news_scrape.py`). Digabung, URL sama diambil yang pertama.
-const merge = (...lists: NewsItem[][]): NewsItem[] => {
-  const byUrl = new Map<string, NewsItem>();
-  for (const item of lists.flat()) if (!byUrl.has(item.url)) byUrl.set(item.url, item);
-  return [...byUrl.values()].sort((a, b) => (b.published_at ?? "").localeCompare(a.published_at ?? ""));
+export type NewsListOut = {
+  items: NewsItem[];
+  total: number;
+  limit: number;
+  offset: number;
+  updated_at: string | null;
+  configured: boolean;
 };
 
-export const NEWS_ITEMS = merge((news.items ?? []) as NewsItem[], (scraped.items ?? []) as NewsItem[]);
-export const NEWS_UPDATED_AT: string | null = [news.generated_at, scraped.generated_at]
-  .filter(Boolean)
-  .sort()
-  .pop() ?? null;
+const EMPTY: NewsListOut = {
+  items: [],
+  total: 0,
+  limit: 0,
+  offset: 0,
+  updated_at: null,
+  configured: false,
+};
+
+// Berita dikumpulkan backend tiap 6 jam; cache 10 menit cukup.
+// Next 16 (cacheComponents) butuh "use cache" — `next.revalidate` saja ditolak saat prerender.
+// Error DILEMPAR dari dalam fungsi cache: Next tidak menyimpan hasil gagal, jadi backend
+// yang sempat mati tidak mengunci halaman kosong selama 10 menit.
+async function newsCached(limit: number): Promise<NewsListOut> {
+  "use cache";
+  cacheLife({ revalidate: 600 });
+  const res = await fetch(`${API_BASE}/api/news?limit=${limit}`);
+  if (!res.ok) throw new Error(`/api/news ${res.status}`);
+  return (await res.json()) as NewsListOut;
+}
+
+export async function fetchNews(limit = 60): Promise<NewsListOut> {
+  try {
+    return await newsCached(limit);
+  } catch {
+    return { ...EMPTY, limit };
+  }
+}
 
 export const CATEGORY_LABEL: Record<string, string> = {
-  kerja: "Kerja palsu",
-  giveaway: "Hadiah",
-  impersonasi: "Impersonasi",
-  investasi: "Investasi/pinjol",
-  phishing: "Phishing",
-  umum: "Umum",
+  fake_job: "Kerja palsu",
+  phishing_link: "Phishing",
+  giveaway_palsu: "Hadiah palsu",
+  malware_apk: "Malware APK",
+  pinjol_ilegal: "Pinjol ilegal",
 };
 
 // Tanggal absolut (bukan "x hari lalu") supaya render server == klien.
