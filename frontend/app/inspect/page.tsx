@@ -1,29 +1,23 @@
 "use client";
 
 import { useState } from "react";
-import {
-  inspectUrl,
-  probePage,
-  type ProbeResult,
-  type Severity,
-  type UrlReport,
-} from "@/lib/url-inspect";
+import { inspectUrl, probePage, type ProbeResult, type Severity, type UrlReport } from "@/lib/url-inspect";
+import { PageHead, SourceNote } from "@/components/ui";
 
-const SEV_BORDER: Record<Severity, string> = {
-  tinggi: "border-red-400",
-  sedang: "border-amber-400",
-  rendah: "border-zinc-300 dark:border-zinc-600",
+const SEV_EDGE: Record<Severity, string> = {
+  tinggi: "border-l-alert",
+  sedang: "border-l-warn",
+  rendah: "border-l-rule-strong",
 };
-const LEVEL_STYLE: Record<UrlReport["level"], string> = {
-  low: "bg-green-100 text-green-800 dark:bg-green-900 dark:text-green-200",
-  medium: "bg-amber-100 text-amber-800 dark:bg-amber-900 dark:text-amber-200",
-  high: "bg-red-100 text-red-800 dark:bg-red-900 dark:text-red-200",
+const LEVEL_TONE: Record<UrlReport["level"], string> = {
+  low: "text-safe",
+  medium: "text-warn",
+  high: "text-alert",
 };
 const SAMPLES = [
   "https://bca-verifikasi.xyz/login",
   "http://192.168.10.20/otp",
   "bit.ly/abc123",
-  "https://instagram.com/p/abc",
   "https://bca.co.id/",
 ];
 
@@ -32,132 +26,183 @@ export default function InspectPage() {
   const [report, setReport] = useState<UrlReport | null>(null);
   const [probe, setProbe] = useState<ProbeResult | null>(null);
   const [probing, setProbing] = useState(false);
+  const [error, setError] = useState<string | null>(null);
 
   function analyze() {
-    setReport(inspectUrl(input));
+    setError(null);
     setProbe(null);
+    setReport(inspectUrl(input));
   }
 
   async function runProbe() {
     setProbing(true);
     setProbe(null);
-    setProbe(await probePage(input));
-    setProbing(false);
+    try {
+      setProbe(await probePage(input));
+    } finally {
+      setProbing(false);
+    }
   }
 
   return (
     <div className="space-y-8">
-      <section>
-        <h1 className="text-2xl font-bold">Periksa Tautan</h1>
-        <p className="mt-1 text-sm text-zinc-600 dark:text-zinc-400">
-          Analisis alamat tanpa membukanya: domain palsu, shortlink, akhiran tidak umum, dan trik
-          penyamaran. Semua berjalan di browser kamu — alamat tidak dikirim ke server kami.
-        </p>
-      </section>
+      <PageHead
+        title="Periksa tautan"
+        lead="Baca alamatnya dulu sebelum diklik: domain tiruan, shortlink, akhiran murah, dan trik penyamaran. Semua berjalan di browser — alamat tidak dikirim ke backend."
+      />
 
-      <section className="space-y-3">
-        <div className="flex flex-wrap gap-2">
-          {SAMPLES.map((s) => (
-            <button
-              key={s}
-              onClick={() => { setInput(s); setReport(null); setProbe(null); }}
-              className="rounded-full border border-zinc-300 px-3 py-1.5 text-xs hover:bg-zinc-100 dark:border-zinc-700 dark:hover:bg-zinc-800"
-            >
-              {s}
-            </button>
-          ))}
-        </div>
-        <div className="flex flex-wrap gap-2">
+      <section aria-labelledby="url-heading" className="space-y-3">
+        <h2 id="url-heading" className="section-title">
+          Alamat yang dicurigai
+        </h2>
+        <div className="flex flex-col gap-2 sm:flex-row">
           <input
             value={input}
             onChange={(e) => setInput(e.target.value)}
             onKeyDown={(e) => e.key === "Enter" && analyze()}
             placeholder="contoh: bca-verifikasi.xyz/login"
-            className="min-w-0 flex-1 rounded-lg border border-zinc-300 px-3 py-2 text-sm dark:border-zinc-700 dark:bg-zinc-900"
+            inputMode="url"
+            autoCapitalize="none"
+            autoCorrect="off"
+            spellCheck={false}
+            aria-labelledby="url-heading"
+            className="field font-[family-name:var(--font-geist-mono)] text-sm"
           />
-          <button
-            onClick={analyze}
-            disabled={!input.trim()}
-            className="rounded-lg bg-zinc-900 px-4 py-2 text-sm font-medium text-white disabled:opacity-50 dark:bg-zinc-100 dark:text-zinc-900"
-          >
-            Analisis
+          <button onClick={analyze} disabled={!input.trim()} className="btn btn-primary shrink-0">
+            Analisis alamat
           </button>
         </div>
+        <div className="flex flex-wrap gap-2">
+          {SAMPLES.map((s) => (
+            <button
+              key={s}
+              type="button"
+              onClick={() => {
+                setInput(s);
+                setReport(null);
+                setProbe(null);
+              }}
+              className="chip font-[family-name:var(--font-geist-mono)] font-normal"
+            >
+              {s}
+            </button>
+          ))}
+        </div>
+        {error && (
+          <p role="alert" className="text-sm text-alert-ink">
+            {error}
+          </p>
+        )}
       </section>
 
       {report && (
-        <section className="space-y-4 rounded-xl border border-zinc-200 p-4 dark:border-zinc-800">
-          <div className="flex flex-wrap items-center gap-3">
-            <span className={`rounded-full px-3 py-1 text-sm font-bold ${LEVEL_STYLE[report.level]}`}>
-              {report.level.toUpperCase()}
-            </span>
-            <span className="text-sm">Skor <strong>{report.score}/100</strong></span>
-            {report.host && <code className="text-xs text-zinc-500">{report.host}</code>}
+        <section aria-labelledby="report-heading" className="rise space-y-5">
+          <div className="rule-accent" />
+          <div className="flex flex-wrap items-end justify-between gap-x-8 gap-y-3">
+            <div>
+              <h2 id="report-heading" className="section-title">
+                Hasil alamat
+              </h2>
+              {report.host ? (
+                <p className="mt-1 break-all font-[family-name:var(--font-geist-mono)] text-sm">{report.host}</p>
+              ) : (
+                <p className="mt-1 text-sm text-muted">Alamat tidak bisa diurai.</p>
+              )}
+            </div>
+            <p className="flex items-baseline gap-1">
+              <span
+                className={`font-[family-name:var(--font-display)] text-5xl font-semibold leading-none tabular-nums ${LEVEL_TONE[report.level]}`}
+              >
+                {report.score}
+              </span>
+              <span className="text-sm text-muted">/100 skor risiko</span>
+            </p>
           </div>
 
           {report.findings.length > 0 ? (
-            <ul className="space-y-2">
+            <ul className="border-t border-rule">
               {report.findings.map((f) => (
-                <li key={f.id} className={`rounded-lg border-l-4 bg-zinc-50 p-3 dark:bg-zinc-900 ${SEV_BORDER[f.severity]}`}>
-                  <p className="text-sm font-semibold">
-                    {f.title} <span className="text-xs font-normal text-zinc-500">({f.severity})</span>
+                <li
+                  key={f.id}
+                  className={`border-b border-rule border-l-[3px] py-3.5 pl-4 ${SEV_EDGE[f.severity]}`}
+                >
+                  <p className="flex flex-wrap items-baseline gap-x-2">
+                    <span className="font-semibold">{f.title}</span>
+                    <span className="data">
+                      {f.id} · {f.severity}
+                    </span>
                   </p>
-                  <p className="mt-1 text-sm text-zinc-600 dark:text-zinc-400">{f.detail}</p>
+                  <p className="mt-1 max-w-[62ch] text-sm text-muted">{f.detail}</p>
                 </li>
               ))}
             </ul>
           ) : (
-            <p className="text-sm text-zinc-600 dark:text-zinc-400">
-              Tidak ada ciri mencurigakan pada alamatnya. Ini bukan jaminan aman — situs bisa saja sah
-              secara alamat tapi tetap menjual barang palsu.
+            <p className="border-l-[3px] border-l-safe bg-safe-wash px-3 py-2 text-sm text-safe">
+              Tidak ada ciri mencurigakan pada alamatnya. Bukan jaminan aman — situs bisa sah secara
+              alamat tapi tetap menjual barang palsu.
             </p>
           )}
 
-          <div className="border-t border-zinc-200 pt-3 dark:border-zinc-800">
-            <div className="flex flex-wrap items-center gap-2">
-              <button
-                onClick={runProbe}
-                disabled={probing}
-                className="rounded-lg border border-zinc-300 px-3 py-2 text-sm disabled:opacity-50 dark:border-zinc-700"
-              >
-                {probing ? "Mencoba…" : "Coba ambil isi halaman"}
+          <div className="space-y-3 border-t border-rule pt-4">
+            <div className="flex flex-wrap items-center gap-3">
+              <button onClick={runProbe} disabled={probing} className="btn btn-sm">
+                {probing ? "Mencoba ambil…" : "Coba ambil isi halaman"}
               </button>
-              <span className="text-xs text-zinc-500">
-                Opsional. Banyak situs memblokir pembacaan dari browser lain (CORS).
-              </span>
+              <p className="text-xs text-muted">
+                Opsional. Banyak situs memblokir pembacaan lintas origin (CORS).
+              </p>
             </div>
             {probe && (
-              <div className="mt-3 rounded-lg bg-zinc-50 p-3 text-sm dark:bg-zinc-900">
+              <div className="panel p-4 text-sm">
                 {probe.ok ? (
-                  <ul className="space-y-1">
-                    <li>Judul: <strong>{probe.title ?? "(tidak ada)"}</strong></li>
-                    <li>Status: {probe.status} · {probe.bytes.toLocaleString("id-ID")} byte</li>
-                    <li>URL akhir: <code className="text-xs">{probe.finalUrl}</code></li>
+                  <dl className="space-y-1.5">
+                    <Row label="Judul" value={probe.title ?? "(tidak ada)"} />
+                    <Row label="Status" value={`${probe.status} · ${probe.bytes.toLocaleString("id-ID")} byte`} />
+                    <Row label="URL akhir" value={probe.finalUrl} mono />
                     {probe.finalUrl !== report.normalized && (
-                      <li className="text-amber-600">Dialihkan ke domain/alamat berbeda.</li>
+                      <p className="border-l-[3px] border-l-warn bg-warn-wash px-2.5 py-1.5 text-warn">
+                        Dialihkan ke alamat lain.
+                      </p>
                     )}
-                    {probe.hasPasswordField && <li className="text-red-600">Halaman berisi kolom password.</li>}
+                    {probe.hasPasswordField && (
+                      <p className="border-l-[3px] border-l-alert bg-alert-wash px-2.5 py-1.5 text-alert-ink">
+                        Halaman berisi kolom password.
+                      </p>
+                    )}
                     {probe.otpMentions.length > 0 && (
-                      <li className="text-red-600">Menyebut: {probe.otpMentions.join(", ")}</li>
+                      <p className="border-l-[3px] border-l-alert bg-alert-wash px-2.5 py-1.5 text-alert-ink">
+                        Menyebut: {probe.otpMentions.join(", ")}
+                      </p>
                     )}
-                    {probe.metaRefresh && (
-                      <li className="text-amber-600">Meta refresh: <code className="text-xs">{probe.metaRefresh}</code></li>
+                    {probe.metaRefresh && <Row label="Meta refresh" value={probe.metaRefresh} mono />}
+                    {probe.externalScripts > 0 && (
+                      <Row label="Script luar" value={`${probe.externalScripts} domain lain`} />
                     )}
-                    {probe.externalScripts > 0 && <li>{probe.externalScripts} script dari domain lain</li>}
-                  </ul>
+                  </dl>
                 ) : (
-                  <p className="text-zinc-600 dark:text-zinc-400">{probe.reason}</p>
+                  <p className="text-muted">{probe.reason}</p>
                 )}
               </div>
             )}
           </div>
 
-          <p className="text-xs text-zinc-500">
-            Analisis alamat memakai pola; penipu bisa memakai domain yang belum dikenal daftar ini.
-            Jangan pernah mengisi password/OTP di halaman yang kamu buka lewat link chat.
-          </p>
+          <SourceNote>
+            Analisis memakai pola; penipu bisa memakai domain baru yang belum dikenal. Jangan pernah
+            mengisi password atau OTP di halaman yang dibuka dari tautan chat.
+          </SourceNote>
         </section>
       )}
+    </div>
+  );
+}
+
+function Row({ label, value, mono }: { label: string; value: string; mono?: boolean }) {
+  return (
+    <div className="flex flex-wrap gap-x-3 border-b border-rule pb-1.5 last:border-b-0">
+      <dt className="w-24 shrink-0 text-xs text-muted">{label}</dt>
+      <dd className={`min-w-0 break-all ${mono ? "font-[family-name:var(--font-geist-mono)] text-xs" : ""}`}>
+        {value}
+      </dd>
     </div>
   );
 }

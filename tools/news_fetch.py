@@ -1,11 +1,13 @@
-"""Ambil berita penipuan digital dari RSS Tier A -> frontend/lib/news.json (statis).
+"""Ambil berita penipuan digital dari RSS -> frontend/lib/news.json + backend/data/articles.jsonl.
 
-    python tools/news_fetch.py
+    python tools/news_fetch.py [--jsonl backend/data/articles.jsonl]
 
-Hanya metadata + snippet pendek dari deskripsi RSS; pembaca selalu diarahkan ke
-artikel asli. Jalankan manual/CI, bukan saat request. Tanpa dependensi (stdlib).
+JSON = feed statis untuk web. JSONL = arsip append-only untuk data latih ML
+(dedupe per id, aman dijalankan berulang). Hanya metadata + snippet pendek dari
+deskripsi RSS; pembaca selalu diarahkan ke artikel asli. Jalankan manual/CI,
+bukan saat request. Tanpa dependensi (stdlib).
 
-Sumber baru wajib dicek robots.txt-nya lebih dulu: lihat tools/sources.json.
+Sumber baru wajib dicek robots.txt/ToS-nya lebih dulu: lihat tools/sources.json.
 """
 
 from __future__ import annotations
@@ -19,6 +21,7 @@ import ssl
 import sys
 import time
 import urllib.error
+import urllib.parse
 import urllib.request
 import xml.etree.ElementTree as ET
 from datetime import UTC, datetime
@@ -28,6 +31,7 @@ from pathlib import Path
 ROOT = Path(__file__).resolve().parent.parent
 SOURCES_PATH = Path(__file__).resolve().parent / "sources.json"
 OUT_PATH = ROOT / "frontend" / "lib" / "news.json"
+JSONL_PATH = ROOT / "backend" / "data" / "articles.jsonl"
 
 USER_AGENT = "GuardianAI-news/1.0 (+https://github.com/; edukasi penipuan digital)"
 TIMEOUT = 20
@@ -138,6 +142,15 @@ def is_fresh(published_at: str | None, now: datetime) -> bool:
 def article_id(url: str) -> str:
     return hashlib.sha1(url.encode("utf-8")).hexdigest()[:12]
 
+def resolve_url(url: str) -> str:
+    """Bing News RSS membungkus tautan asli di parameter url=; buka bungkusnya."""
+    parsed = urllib.parse.urlparse(url)
+    if parsed.hostname and parsed.hostname.endswith("bing.com"):
+        original = urllib.parse.parse_qs(parsed.query).get("url")
+        if original and original[0].startswith(("http://", "https://")):
+            return original[0]
+    return url
+
 
 def parse_feed(xml_bytes: bytes, source_name: str, now: datetime | None = None) -> list[dict]:
     """Ambil <item> dari RSS 2.0. Feed rusak -> list kosong (bukan crash)."""
@@ -149,7 +162,7 @@ def parse_feed(xml_bytes: bytes, source_name: str, now: datetime | None = None) 
     items: list[dict] = []
     for item in root.iter("item"):
         title = clean_text(item.findtext("title") or "")
-        url = (item.findtext("link") or "").strip()
+        url = resolve_url((item.findtext("link") or "").strip())
         # Bersihkan tags DULU: <img src="…instagram…"> akan mengotori pencocokan kata kunci.
         description = clean_text(item.findtext("description") or "")
         if not title or not url.startswith(("http://", "https://")):
@@ -220,6 +233,23 @@ def dedupe(items: list[dict]) -> list[dict]:
         unique.append(item)
     return unique
 
+def append_jsonl(items: list[dict], path: Path) -> int:
+    """Arsip data latih: tambah artikel baru, id sudah ada dilewati. Return jumlah baru."""
+    path.parent.mkdir(parents=True, exist_ok=True)
+    seen = set()
+    if path.exists():
+        with path.open(encoding="utf-8") as handle:
+            for line in handle:
+                try:
+                    seen.add(json.loads(line)["id"])
+                except (json.JSONDecodeError, KeyError):
+                    continue
+    new = [item for item in items if item["id"] not in seen]
+    with path.open("a", encoding="utf-8") as handle:
+        for item in new:
+            handle.write(json.dumps(item, ensure_ascii=False) + "\n")
+    return len(new)
+
 
 def build(sources_path: Path, out_path: Path) -> dict:
     config = json.loads(sources_path.read_text(encoding="utf-8"))
@@ -255,8 +285,17 @@ def main() -> None:
     parser = argparse.ArgumentParser(description=__doc__)
     parser.add_argument("--sources", type=Path, default=SOURCES_PATH)
     parser.add_argument("--out", type=Path, default=OUT_PATH)
+    parser.add_argument(
+        "--jsonl",
+        type=Path,
+        default=JSONL_PATH,
+        help="Arsip data latih (append, dedupe per id). Kosongkan dengan --jsonl '' untuk mematikan.",
+    )
     args = parser.parse_args()
-    if not build(args.sources, args.out)["items"]:
+    payload = build(args.sources, args.out)
+    if args.jsonl and payload["items"]:
+        print(f"-> {append_jsonl(payload['items'], args.jsonl)} artikel baru di {args.jsonl}")
+    if not payload["items"]:
         sys.exit("Tidak ada artikel relevan — cek koneksi atau kata kunci di news_fetch.py")
 
 

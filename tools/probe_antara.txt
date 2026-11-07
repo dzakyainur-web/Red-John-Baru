@@ -1,0 +1,189 @@
+total anchors 281
+  pcls=card__post__transiti len=  0 
+     https://www.antaranews.com/video/5814811/ojk-paparkan-alasan-uang-korban-online-scam-tak-k
+  pcls=h5                   len= 66 OJK paparkan alasan uang korban online scam tak kembali sepe
+     https://www.antaranews.com/video/5814811/ojk-paparkan-alasan-uang-korban-online-scam-tak-k
+  pcls=card__post__transiti len=  0 
+     https://www.antaranews.com/berita/5814771/bi-bali-ingatkan-risiko-kejahatan-keuangan-digit
+  pcls=h5                   len= 68 BI Bali ingatkan risiko kejahatan keuangan digital sektor pa
+     https://www.antaranews.com/berita/5814771/bi-bali-ingatkan-risiko-kejahatan-keuangan-digit
+  pcls=card__post__transiti len=  0 
+     https://www.antaranews.com/berita/5809919/waspada-penipuan-berkedok-tawaran-endorse-incar-
+  pcls=h5                   len= 61 Waspada, penipuan berkedok tawaran endorse incar akun kreato
+     https://www.antaranews.com/berita/5809919/waspada-penipuan-berkedok-tawaran-endorse-incar-
+  pcls=card__post__transiti len=  0 
+     https://www.antaranews.com/video/5803053/polda-bali-ungkap-penipuan-online-sasar-pekerja-m
+  pcls=h5                   len= 64 Polda Bali ungkap penipuan online sasar Pekerja Migran Indon
+     https://www.antaranews.com/video/5803053/polda-bali-ungkap-penipuan-online-sasar-pekerja-m
+  pcls=card__post__transiti len=  0 
+     https://www.antaranews.com/berita/5792829/dua-tahun-prabowo-gibran-memutus-rantai-online-s
+  pcls=h5                   len= 63 Dua Tahun Prabowo-Gibran: Memutus rantai "online scam" dan T
+     https://www.antaranews.com/berita/5792829/dua-tahun-prabowo-gibran-memutus-rantai-online-s
+  pcls=card__post__transiti len=  0 
+     https://www.antaranews.com/berita/5787401/menilik-sekolah-internet-komunitas-dari-pelosok-
+  pcls=h5                   len= 61 Menilik Sekolah Internet Komunitas dari pelosok Tanah Celebe
+     https://www.antaranews.com/berita/5787401/menilik-sekolah-internet-komunitas-dari-pelosok-
+  pcls=card__post__transiti len=  0 
+     https://www.antaranews.com/video/5782424/polda-sulsel-ungkap-penipuan-phishing-korban-rugi
+  pcls=h5                   len= 60 Polda Sulsel ungkap penipuan phishing, korban rugi Rp50 juta
+     https://www.antaranews.com/video/5782424/polda-sulsel-ungkap-penipuan-phishing-korban-rugi
+  pcls=card__post__transiti len=  0 
+     https://www.antaranews.com/berita/5780214/membaca-transformasi-polri-dalam-visi-polisi-ber
+  pcls=h5                   len= 65 Membaca transformasi Polri dalam visi "Polisi Bersama Masyar
+     https://www.antaranews.com/berita/5780214/membaca-transformasi-polri-dalam-visi-polisi-ber
+  pcls=card__post__transiti len=  0 
+     https://www.antaranews.com/berita/5779292/seiden-law-llp-mengeluarkan-pernyataan-diadili-m
+  pcls=h5                   len= 80 Seiden Law LLP Mengeluarkan Pernyataan: Diadili Melalui Konf
+     https://www.antaranews.com/berita/5779292/seiden-law-llp-mengeluarkan-pernyataan-diadili-m
+  pcls=card__post__transiti len=  0 
+     https://www.antaranews.com/berita/5761859/kemkomdigi-66-persen-masyarakat-indonesia-pernah
+  pcls=h5                   len= 62 Kemkomdigi: 66 persen masyarakat Indonesia pernah alami "sca
+     https://www.antaranews.com/berita/5761859/kemkomdigi-66-persen-masyarakat-indonesia-pernah
+  pcls=card__post__transiti len=  0 
+     https://www.antaranews.com/berita/5761573/bi-fokus-jaga-kepercayaan-seiring-pesatnya-pemba
+  pcls=h5                   len= 61 BI fokus jaga kepercayaan seiring pesatnya pembayaran digita
+     https://www.antaranews.com/berita/5761573/bi-fokus-jaga-kepercayaan-seiring-pesatnya-pemba
+  pcls=card__post__transiti len=  0 
+     https://www.antaranews.com/berita/5761428/bi-tekankan-tiga-aspek-untuk-perkuat-penanganan-
+  pcls=h5                   len= 63 BI tekankan tiga aspek untuk perkuat penanganan penipuan onl
+     https://www.antaranews.com/berita/5761428/bi-tekankan-tiga-aspek-untuk-perkuat-penanganan-
+  pcls=card__post__transiti len=  0 
+     https://www.antaranews.com/berita/5761283/kemkomdigi-dorong-penguatan-koordinasi-lintas-se
+  pcls=h5                   len= 67 Kemkomdigi dorong penguatan koordinasi lintas sektor tangani
+     https://www.antaranews.com/berita/5761283/kemkomdigi-dorong-penguatan-koordinasi-lintas-se
+  pcls=card__post__transiti len=  0 
+     https://www.antaranews.com/berita/5757072/polda-jatim-ungkap-scam-investasi-kripto-rugikan
+  pcls=h5                   len= 62 Polda Jatim ungkap scam investasi kripto rugikan Rp12,9 mili
+     https://www.antaranews.com/berita/5757072/polda-jatim-ungkap-scam-investasi-kripto-rugikan
+  pcls=card__post__transiti len=  0 
+     https://www.antaranews.com/video/5756713/pm-hun-manet-kamboja-bukan-ruang-aman-bagi-sindik
+  pcls=h5                   len= 68 PM Hun Manet: Kamboja bukan ruang aman bagi sindikat penipua
+     https://www.antaranews.com/video/5756713/pm-hun-manet-kamboja-bukan-ruang-aman-bagi-sindik
+  pcls=image-sm position-re len=  0 
+     https://www.antaranews.com/berita/5833039/jokowi-tiba-di-pn-jaktim-bawa-seluruh-dokumen-ij
+  pcls=post_title post_titl len= 52 Jokowi tiba di PN Jaktim bawa seluruh dokumen ijazah
+     https://www.antaranews.com/berita/5833039/jokowi-tiba-di-pn-jaktim-bawa-seluruh-dokumen-ij
+  pcls=image-sm position-re len=  0 
+     https://www.antaranews.com/berita/5832927/dihadiri-jokowi-di-pn-jaktim-ribuan-personel-gab
+  pcls=post_title post_titl len= 79 Dihadiri Jokowi di PN Jaktim, ribuan personel gabungan amank
+     https://www.antaranews.com/berita/5832927/dihadiri-jokowi-di-pn-jaktim-ribuan-personel-gab
+  pcls=image-sm position-re len=  0 
+     https://www.antaranews.com/berita/5833115/huruf-j-akan-hiasi-ruang-publik-jelang-lima-abad
+  pcls=post_title post_titl len= 58 Huruf "J" akan hiasi ruang publik jelang lima abad Jakarta
+     https://www.antaranews.com/berita/5833115/huruf-j-akan-hiasi-ruang-publik-jelang-lima-abad
+  pcls=image-sm position-re len=  0 
+     https://www.antaranews.com/berita/5833411/ekonomi-jakarta-tumbuh-587-persen-pada-triwulan-
+  pcls=post_title post_titl len= 57 Ekonomi Jakarta tumbuh 5,87 persen pada triwulan III 2026
+     https://www.antaranews.com/berita/5833411/ekonomi-jakarta-tumbuh-587-persen-pada-triwulan-
+  pcls=image-sm position-re len=  0 
+     https://www.antaranews.com/berita/5833251/transjakarta-bus-tj-priok-yang-keluarkan-asap-al
+  pcls=post_title post_titl len= 67 Transjakarta: bus Tj Priok yang keluarkan asap alami kendala
+     https://www.antaranews.com/berita/5833251/transjakarta-bus-tj-priok-yang-keluarkan-asap-al
+  pcls=image-sm position-re len=  0 
+     https://www.antaranews.com/berita/5833271/industri-pengolahan-sumbang-120-persen-dari-pert
+  pcls=post_title post_titl len= 68 Industri pengolahan sumbang 1,20 persen dari pertumbuhan 5,4
+     https://www.antaranews.com/berita/5833271/industri-pengolahan-sumbang-120-persen-dari-pert
+  pcls=image-sm position-re len=  0 
+     https://www.antaranews.com/berita/5832339/kepala-bappeda-dki-jakarta-meninggal-dunia?utm_s
+  pcls=post_title post_titl len= 42 Kepala Bappeda DKI Jakarta meninggal dunia
+     https://www.antaranews.com/berita/5832339/kepala-bappeda-dki-jakarta-meninggal-dunia?utm_s
+  pcls=image-sm position-re len=  0 
+     https://www.antaranews.com/berita/5834887/indef-paparkan-alasan-harga-beras-masih-tinggi-m
+  pcls=post_title post_titl len= 66 Indef paparkan alasan harga beras masih tinggi meski stok me
+     https://www.antaranews.com/berita/5834887/indef-paparkan-alasan-harga-beras-masih-tinggi-m
+  pcls=image-sm position-re len=  0 
+     https://www.antaranews.com/berita/5834883/ginting-petik-pelajaran-dari-malaysia-untuk-mela
+  pcls=post_title post_titl len= 64 Ginting petik pelajaran dari Malaysia untuk melaju di Korea 
+     https://www.antaranews.com/berita/5834883/ginting-petik-pelajaran-dari-malaysia-untuk-mela
+  pcls=image-sm position-re len=  0 
+     https://www.antaranews.com/berita/5834879/polri-tetapkan-su-tersangka-baru-kasus-penyadapa
+  pcls=post_title post_titl len= 56 Polri tetapkan SU tersangka baru kasus penyadapan ilegal
+     https://www.antaranews.com/berita/5834879/polri-tetapkan-su-tersangka-baru-kasus-penyadapa
+  pcls=image-sm position-re len=  0 
+     https://www.antaranews.com/berita/5834875/silmy-karim-sebut-digitalisasi-imigrasi-tutup-ru
+  pcls=post_title post_titl len= 68 Silmy Karim sebut digitalisasi Imigrasi tutup ruang pemerasa
+     https://www.antaranews.com/berita/5834875/silmy-karim-sebut-digitalisasi-imigrasi-tutup-ru
+  pcls=article__image posit len=  0 
+     https://www.antaranews.com/berita/5834879/polri-tetapkan-su-tersangka-baru-kasus-penyadapa
+  pcls=post_title post_titl len= 56 Polri tetapkan SU tersangka baru kasus penyadapan ilegal
+     https://www.antaranews.com/berita/5834879/polri-tetapkan-su-tersangka-baru-kasus-penyadapa
+  pcls=image-sm position-re len=  0 
+     https://www.antaranews.com/berita/5834763/menekraf-prioritaskan-pengembangan-industri-gim-
+  pcls=post_title post_titl len= 53 Menekraf prioritaskan pengembangan industri gim lokal
+     https://www.antaranews.com/berita/5834763/menekraf-prioritaskan-pengembangan-industri-gim-
+  pcls=image-sm position-re len=  0 
+     https://www.antaranews.com/berita/5834651/pemerintah-sebut-rekening-gratis-bakal-diluncurk
+  pcls=post_title post_titl len= 66 Pemerintah sebut rekening gratis bakal diluncurkan pada akhi
+     https://www.antaranews.com/berita/5834651/pemerintah-sebut-rekening-gratis-bakal-diluncurk
+  pcls=image-sm position-re len=  0 
+     https://www.antaranews.com/berita/5834611/dirut-kai-sampaikan-program-pembangunan-kereta-b
+  pcls=post_title post_titl len= 62 Dirut KAI sampaikan program pembangunan kereta Bali ke Prabo
+     https://www.antaranews.com/berita/5834611/dirut-kai-sampaikan-program-pembangunan-kereta-b
+  pcls=image-sm position-re len=  0 
+     https://www.antaranews.com/berita/5834595/bidik-15-juta-penerima-manfaat-mbg-bgn-kembali-a
+  pcls=post_title post_titl len= 66 Bidik 1,5 juta penerima manfaat MBG, BGN kembali aktivasi 95
+     https://www.antaranews.com/berita/5834595/bidik-15-juta-penerima-manfaat-mbg-bgn-kembali-a
+  pcls=article__image posit len=  0 
+     https://www.antaranews.com/berita/5834503/bps-cek-kesehatan-gratis-tingkatkan-harapan-hidu
+  pcls=post_title post_titl len= 59 BPS: Cek kesehatan gratis tingkatkan harapan hidup warga RI
+     https://www.antaranews.com/berita/5834503/bps-cek-kesehatan-gratis-tingkatkan-harapan-hidu
+  pcls=image-sm position-re len=  0 
+     https://www.antaranews.com/berita/5834351/bkpm-dorong-hilirisasi-timah-jadi-tin-chemical
+  pcls=post_title post_titl len= 46 BKPM dorong hilirisasi timah jadi tin chemical
+     https://www.antaranews.com/berita/5834351/bkpm-dorong-hilirisasi-timah-jadi-tin-chemical
+  pcls=image-sm position-re len=  0 
+     https://www.antaranews.com/berita/5834223/pengamat-uu-satu-data-indonesia-harus-lindungi-h
+  pcls=post_title post_titl len= 69 Pengamat: UU Satu Data Indonesia harus lindungi hak dan priv
+     https://www.antaranews.com/berita/5834223/pengamat-uu-satu-data-indonesia-harus-lindungi-h
+  pcls=image-sm position-re len=  0 
+     https://www.antaranews.com/berita/5834215/antara-tegaskan-ai-tidak-menggantikan-tanggung-j
+  pcls=post_title post_titl len= 62 ANTARA tegaskan AI tidak menggantikan tanggung jawab editori
+     https://www.antaranews.com/berita/5834215/antara-tegaskan-ai-tidak-menggantikan-tanggung-j
+  pcls=image-sm position-re len=  0 
+     https://www.antaranews.com/berita/5833447/antara-ingin-perdalam-kerja-sama-dengan-xinhua-d
+  pcls=post_title post_titl len= 56 ANTARA ingin perdalam kerja sama dengan Xinhua di era AI
+     https://www.antaranews.com/berita/5833447/antara-ingin-perdalam-kerja-sama-dengan-xinhua-d
+  pcls=card__post__body car len=  0 
+     https://www.antaranews.com/video/5831651/prabowo-prihatin-kasus-penyadapan-pastikan-proses
+  pcls=post_title post_titl len= 67 Prabowo prihatin kasus penyadapan, pastikan proses hukum tra
+     https://www.antaranews.com/video/5831651/prabowo-prihatin-kasus-penyadapan-pastikan-proses
+  pcls=card__post__body car len=  0 
+     https://www.antaranews.com/video/5833967/gunung-semeru-tiga-kali-hembuskan-awan-panas-hing
+  pcls=post_title post_titl len= 63 Gunung Semeru tiga kali hembuskan awan panas hingga 4.500 me
+     https://www.antaranews.com/video/5833967/gunung-semeru-tiga-kali-hembuskan-awan-panas-hing
+  pcls=card__post__body car len=  0 
+     https://www.antaranews.com/video/5833451/jokowi-hadir-sebagai-saksi-di-pn-jaktim-soal-tudi
+  pcls=post_title post_titl len= 66 Jokowi hadir sebagai saksi di PN Jaktim soal tudingan ijazah
+     https://www.antaranews.com/video/5833451/jokowi-hadir-sebagai-saksi-di-pn-jaktim-soal-tudi
+  pcls=card__post__body car len=  0 
+     https://www.antaranews.com/video/5832539/dubes-as-harap-asean-tandatangani-defa-pada-ktt-a
+  pcls=post_title post_titl len= 73 Dubes AS harap ASEAN tandatangani DEFA pada KTT ASEAN Novemb
+     https://www.antaranews.com/video/5832539/dubes-as-harap-asean-tandatangani-defa-pada-ktt-a
+  pcls=card__post__body car len=  0 
+     https://www.antaranews.com/video/5832407/helikopter-mi-17v5-tni-ad-jatuh-saat-operasi-karh
+  pcls=post_title post_titl len= 64 Helikopter Mi-17V5 TNI AD jatuh saat operasi karhutla di Ser
+     https://www.antaranews.com/video/5832407/helikopter-mi-17v5-tni-ad-jatuh-saat-operasi-karh
+  pcls=card__post__body car len=  0 
+     https://www.antaranews.com/video/5831651/prabowo-prihatin-kasus-penyadapan-pastikan-proses
+  pcls=post_title post_titl len= 67 Prabowo prihatin kasus penyadapan, pastikan proses hukum tra
+     https://www.antaranews.com/video/5831651/prabowo-prihatin-kasus-penyadapan-pastikan-proses
+  pcls=card__post__body car len=  0 
+     https://www.antaranews.com/video/5833967/gunung-semeru-tiga-kali-hembuskan-awan-panas-hing
+  pcls=post_title post_titl len= 63 Gunung Semeru tiga kali hembuskan awan panas hingga 4.500 me
+     https://www.antaranews.com/video/5833967/gunung-semeru-tiga-kali-hembuskan-awan-panas-hing
+  pcls=card__post__body car len=  0 
+     https://www.antaranews.com/video/5833451/jokowi-hadir-sebagai-saksi-di-pn-jaktim-soal-tudi
+  pcls=post_title post_titl len= 66 Jokowi hadir sebagai saksi di PN Jaktim soal tudingan ijazah
+     https://www.antaranews.com/video/5833451/jokowi-hadir-sebagai-saksi-di-pn-jaktim-soal-tudi
+  pcls=card__post__body car len=  0 
+     https://www.antaranews.com/video/5832539/dubes-as-harap-asean-tandatangani-defa-pada-ktt-a
+  pcls=post_title post_titl len= 73 Dubes AS harap ASEAN tandatangani DEFA pada KTT ASEAN Novemb
+     https://www.antaranews.com/video/5832539/dubes-as-harap-asean-tandatangani-defa-pada-ktt-a
+  pcls=card__post__body car len=  0 
+     https://www.antaranews.com/video/5832407/helikopter-mi-17v5-tni-ad-jatuh-saat-operasi-karh
+  pcls=post_title post_titl len= 64 Helikopter Mi-17V5 TNI AD jatuh saat operasi karhutla di Ser
+     https://www.antaranews.com/video/5832407/helikopter-mi-17v5-tni-ad-jatuh-saat-operasi-karh
+  pcls=card__post__body car len=  0 
+     https://www.antaranews.com/video/5831651/prabowo-prihatin-kasus-penyadapan-pastikan-proses
+  pcls=post_title post_titl len= 67 Prabowo prihatin kasus penyadapan, pastikan proses hukum tra
+     https://www.antaranews.com/video/5831651/prabowo-prihatin-kasus-penyadapan-pastikan-proses
