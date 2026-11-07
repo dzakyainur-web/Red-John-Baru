@@ -1,7 +1,0 @@
-anchors 21
- text: OJK Blokir 743.589 Rekening Penipuan, Dana Rp 967,5 Miliar Berhasil Diamankan
- date: None
- text: Kasus Mobil Rental, Kini Anggota DPRD Yunika Dilaporkan Rekannya
- date: None
- text: Modus Kencan, Wanita di Pati Kena Tipu, Sepeda Motor Dibawa Kabur
- date: None

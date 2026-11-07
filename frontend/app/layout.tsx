@@ -1,11 +1,16 @@
 import type { Metadata } from "next";
-import { Bricolage_Grotesque, Geist_Mono, Public_Sans } from "next/font/google";
+import { Bricolage_Grotesque, Geist_Mono, JetBrains_Mono, Public_Sans } from "next/font/google";
 import SiteHeader from "@/components/SiteHeader";
 import PageShell from "@/components/PageShell";
 import { SoundProvider } from "@/components/SoundManager";
 import "./globals.css";
 
 const geistMono = Geist_Mono({ variable: "--font-geist-mono", subsets: ["latin"] });
+const jetbrainsMono = JetBrains_Mono({
+  variable: "--font-jetbrains-mono",
+  subsets: ["latin"],
+  display: "swap",
+});
 const bricolage = Bricolage_Grotesque({
   variable: "--font-display",
   subsets: ["latin"],
@@ -27,7 +32,7 @@ export default function RootLayout({
   return (
     <html
       lang="id"
-      className={`${geistMono.variable} ${bricolage.variable} ${publicSans.variable} h-full antialiased dark`}
+      className={`${geistMono.variable} ${jetbrainsMono.variable} ${bricolage.variable} ${publicSans.variable} h-full antialiased dark`}
     >
       <body className="flex min-h-full flex-col bg-[#070707] text-white selection:bg-[#FF3815] selection:text-black">
         <SoundProvider>

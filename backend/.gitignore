@@ -3,3 +3,7 @@ __pycache__/
 .pytest_cache/
 .ruff_cache/
 .venv/
+
+# Artefak lokal: log proses, dump probe scraper.
+*.log
+*-probe.txt

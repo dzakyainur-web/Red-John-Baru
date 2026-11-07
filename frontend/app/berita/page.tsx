@@ -1,6 +1,6 @@
 import type { Metadata } from "next";
 import Link from "next/link";
-import { CATEGORY_LABEL, NEWS_ITEMS, NEWS_UPDATED_AT, formatNewsDate } from "@/lib/news";
+import { CATEGORY_LABEL, fetchNews, formatNewsDate } from "@/lib/news";
 
 export const metadata: Metadata = {
   title: "Kabar penipuan digital — GuardianAI",
@@ -8,9 +8,10 @@ export const metadata: Metadata = {
     "Berita penipuan digital dari media Indonesia, dikumpulkan tiap hari. Baca judulnya di sini, buka artikel aslinya untuk cerita lengkap.",
 };
 
-export default function BeritaPage() {
-  const [lead, ...stream] = NEWS_ITEMS;
-  const updated = formatNewsDate(NEWS_UPDATED_AT);
+export default async function BeritaPage() {
+  const { items, total, updated_at } = await fetchNews();
+  const [lead, ...stream] = items;
+  const updated = formatNewsDate(updated_at);
 
   return (
     <div className="news-page space-y-8">
@@ -19,11 +20,11 @@ export default function BeritaPage() {
           <h1 className="page-title max-w-[15ch]">Kabar penipuan digital</h1>
           <div className="pb-1 text-sm text-muted">
             {updated && <p>Diperbarui {updated}</p>}
-            <p className="data">{NEWS_ITEMS.length} berita terkumpul</p>
+            <p className="data">{total} berita terkumpul</p>
           </div>
         </div>
         <p className="lead mt-3 text-sm">
-          Dikumpulkan dari RSS dan halaman tag media Indonesia. Judul membuka artikel aslinya; isi
+          Dikumpulkan otomatis dari media Indonesia tiap 6 jam. Judul membuka artikel aslinya; isi
           tidak kami salin.
         </p>
         <div className="mt-5 h-[3px] bg-alert" />
@@ -32,14 +33,20 @@ export default function BeritaPage() {
       {lead ? (
         <>
           <article className="border-l-[3px] border-l-alert pl-5">
-            <a
-              href={lead.url}
-              target="_blank"
-              rel="noopener noreferrer"
-              className="news-display block text-[1.7rem] leading-tight text-ink decoration-alert decoration-2 underline-offset-4 hover:underline sm:text-[2.1rem]"
-            >
-              {lead.title}
-            </a>
+            {lead.url ? (
+              <a
+                href={lead.url}
+                target="_blank"
+                rel="noopener noreferrer"
+                className="news-display block text-[1.7rem] leading-tight text-ink decoration-alert decoration-2 underline-offset-4 hover:underline sm:text-[2.1rem]"
+              >
+                {lead.title}
+              </a>
+            ) : (
+              <p className="news-display block text-[1.7rem] leading-tight text-ink sm:text-[2.1rem]">
+                {lead.title}
+              </p>
+            )}
             {lead.snippet && <p className="mt-3 max-w-[62ch] text-sm text-muted">{lead.snippet}</p>}
             <p className="mt-3 flex flex-wrap items-center gap-x-2 text-xs text-muted">
               <span className="font-semibold text-ink">{lead.source}</span>
@@ -70,14 +77,18 @@ export default function BeritaPage() {
                     {item.published_at && <p>{formatNewsDate(item.published_at)}</p>}
                   </div>
                   <div>
-                    <a
-                      href={item.url}
-                      target="_blank"
-                      rel="noopener noreferrer"
-                      className="block font-semibold leading-snug decoration-alert underline-offset-4 hover:text-alert-ink hover:underline"
-                    >
-                      {item.title}
-                    </a>
+                    {item.url ? (
+                      <a
+                        href={item.url}
+                        target="_blank"
+                        rel="noopener noreferrer"
+                        className="block font-semibold leading-snug decoration-alert underline-offset-4 hover:text-alert-ink hover:underline"
+                      >
+                        {item.title}
+                      </a>
+                    ) : (
+                      <p className="block font-semibold leading-snug">{item.title}</p>
+                    )}
                     {item.snippet && (
                       <p className="mt-1 line-clamp-2 max-w-[62ch] text-sm text-muted">{item.snippet}</p>
                     )}
@@ -94,11 +105,7 @@ export default function BeritaPage() {
         <div className="border-t border-rule pt-6">
           <p className="font-semibold">Belum ada berita terkumpul.</p>
           <p className="mt-1 text-sm text-muted">
-            Jalankan{" "}
-            <code className="bg-raised px-1.5 py-0.5 font-[family-name:var(--font-geist-mono)] text-xs">
-              python tools/news_fetch.py
-            </code>{" "}
-            lalu muat ulang halaman ini.
+            Pengumpul berita berjalan otomatis tiap 6 jam. Coba muat ulang halaman ini nanti.
           </p>
         </div>
       )}
@@ -113,8 +120,8 @@ export default function BeritaPage() {
           </Link>
         </div>
         <p className="text-xs text-muted">
-          Ringkasan diambil dari feed resmi media. Hak cipta tetap milik penerbit; baca artikel
-          aslinya di situs mereka.
+          Ringkasan diambil dari media Indonesia lewat API kami. Hak cipta tetap milik penerbit;
+          baca artikel aslinya di situs mereka.
         </p>
       </footer>
     </div>

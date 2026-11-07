@@ -16,8 +16,15 @@ export default function SiteHeader() {
     { href: "/berita", label: "RADAR" },
     { href: "/inspect", label: "INSPEKSI" },
     { href: "/learn", label: "INTEL" },
-    { href: "/act", label: "PANDUAN" },
+    { href: "/act", label: "PLAYBOOK" },
+    // ponytail: panel internal tanpa auth, hapus sebelum rilis.
+    { href: "/admin", label: "ADMIN" },
+    { href: "/login", label: "MASUK" },
   ];
+
+  if (pathname === "/login" || pathname === "/register") {
+    return null;
+  }
 
   return (
     <header className="fixed top-0 left-0 right-0 z-50 px-4 sm:px-8 py-5 transition-all">

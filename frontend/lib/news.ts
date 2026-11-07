@@ -1,49 +1,53 @@
-import scraped from "./news_scraped.json";
-import news from "./news.json";
+import { cacheLife } from "next/cache";
+import { API_BASE } from "./api";
 
 export type NewsItem = {
   id: string;
   title: string;
-  url: string;
+  // null untuk laporan manual admin yang tidak punya artikel sumber.
+  url: string | null;
   source: string;
   published_at: string | null;
   snippet: string;
   categories: string[];
 };
 
-// Dua jalur data: RSS (`python tools/news_fetch.py`) dan halaman tag portal tanpa RSS
-// (`python tools/news_scrape.py`). Digabung, URL sama diambil yang pertama.
-const merge = (...lists: NewsItem[][]): NewsItem[] => {
-  const byUrl = new Map<string, NewsItem>();
-  for (const item of lists.flat()) if (!byUrl.has(item.url)) byUrl.set(item.url, item);
-  return [...byUrl.values()].sort((a, b) => (b.published_at ?? "").localeCompare(a.published_at ?? ""));
+export type NewsListOut = {
+  items: NewsItem[];
+  total: number;
+  limit: number;
+  offset: number;
+  updated_at: string | null;
+  configured: boolean;
 };
 
-export const NEWS_ITEMS = merge((news.items ?? []) as NewsItem[], (scraped.items ?? []) as NewsItem[]);
-export const NEWS_UPDATED_AT: string | null = [news.generated_at, scraped.generated_at]
-  .filter(Boolean)
-  .sort()
-  .pop() ?? null;
-
-export const CATEGORY_LABEL: Record<string, string> = {
-  kerja: "Kerja palsu",
-  giveaway: "Hadiah",
-  impersonasi: "Impersonasi",
-  investasi: "Investasi/pinjol",
-  phishing: "Phishing",
-  umum: "Umum",
+const EMPTY: NewsListOut = {
+  items: [],
+  total: 0,
+  limit: 0,
+  offset: 0,
+  updated_at: null,
+  configured: false,
 };
 
-// Tanggal absolut (bukan "x hari lalu") supaya render server == klien.
-const DATE_FORMAT = new Intl.DateTimeFormat("id-ID", {
-  day: "numeric",
-  month: "long",
-  year: "numeric",
-  timeZone: "Asia/Jakarta",
-});
-
-export function formatNewsDate(value: string | null): string {
-  if (!value) return "";
-  const date = new Date(value);
-  return Number.isNaN(date.getTime()) ? "" : DATE_FORMAT.format(date);
+// Berita dikumpulkan backend tiap 6 jam; cache 10 menit cukup.
+// Next 16 (cacheComponents) butuh "use cache" — `next.revalidate` saja ditolak saat prerender.
+// Error DILEMPAR dari dalam fungsi cache: Next tidak menyimpan hasil gagal, jadi backend
+// yang sempat mati tidak mengunci halaman kosong selama 10 menit.
+async function newsCached(limit: number): Promise<NewsListOut> {
+  "use cache";
+  cacheLife({ revalidate: 600 });
+  const res = await fetch(`${API_BASE}/api/news?limit=${limit}`);
+  if (!res.ok) throw new Error(`/api/news ${res.status}`);
+  return (await res.json()) as NewsListOut;
 }
+
+export async function fetchNews(limit = 60): Promise<NewsListOut> {
+  try {
+    return await newsCached(limit);
+  } catch {
+    return { ...EMPTY, limit };
+  }
+}
+
+export { CATEGORY_LABEL, formatNewsDate } from "./labels";

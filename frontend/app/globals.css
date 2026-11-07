@@ -50,6 +50,7 @@
   --color-warn-line: var(--warn-line);
   --font-sans: var(--font-body);
   --font-mono: var(--font-geist-mono);
+  --font-jetbrains: var(--font-jetbrains-mono);
   --font-heading: var(--font-display);
 }
 

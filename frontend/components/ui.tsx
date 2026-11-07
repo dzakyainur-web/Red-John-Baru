@@ -112,3 +112,27 @@ export function PageHead({
 export function SourceNote({ children }: { children: ReactNode }) {
   return <p className="text-xs text-muted">{children}</p>;
 }
+
+const STATUS_TONE: Record<string, string> = {
+  pending: "border-warn/40 bg-warn-wash text-warn",
+  verified: "border-safe/40 bg-safe-wash text-safe",
+  rejected: "border-alert/50 bg-alert-wash text-alert-ink",
+};
+
+const STATUS_LABEL: Record<string, string> = {
+  pending: "PENDING",
+  verified: "VERIFIED",
+  rejected: "REJECTED",
+};
+
+export function StatusBadge({ status }: { status: string }) {
+  return (
+    <span
+      className={`inline-flex items-center rounded-[3px] border px-2 py-0.5 font-[family-name:var(--font-geist-mono)] text-[11px] font-semibold tracking-wider ${
+        STATUS_TONE[status] ?? "border-rule-strong text-muted"
+      }`}
+    >
+      {STATUS_LABEL[status] ?? status.toUpperCase()}
+    </span>
+  );
+}
