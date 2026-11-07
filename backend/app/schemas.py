@@ -73,3 +73,22 @@ class HealthResponse(BaseModel):
     status: Literal["ok", "degraded"]
     ml_loaded: bool
     model_version: str | None
+
+
+class NewsItemOut(BaseModel):
+    id: str
+    title: str
+    url: str
+    source: str
+    published_at: str | None
+    snippet: str
+    categories: list[str]
+
+
+class NewsListOut(BaseModel):
+    items: list[NewsItemOut]
+    total: int
+    limit: int
+    offset: int
+    updated_at: str | None
+    configured: bool
