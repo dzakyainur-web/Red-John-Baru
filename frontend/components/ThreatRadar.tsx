@@ -3,11 +3,11 @@
 import Link from "next/link";
 
 const THREATS = [
-  { modus: "APK KURIR / UNDANGAN", threat: "CRITICAL", vector: "Android Malware (.apk)", icon: "⚠️" },
-  { modus: "CS BANK TELEGRAM", threat: "HIGH", vector: "Social Engineering / OTP Theft", icon: "🔴" },
-  { modus: "PIG BUTCHERING", threat: "HIGH", vector: "Crypto / Fake Exchange", icon: "⚡" },
-  { modus: "LOWONGAN FREELANCE LIKE", threat: "ELEVATED", vector: "Task Scam / Deposit Ponzi", icon: "🛑" },
-  { modus: "QUISHING (QR CODE)", threat: "ELEVATED", vector: "Credential Harvester", icon: "🔍" },
+  { modus: "APK KURIR / UNDANGAN", threat: "KRITIS", vector: "Malware Android (.apk)", icon: "⚠️" },
+  { modus: "CS BANK TELEGRAM", threat: "TINGGI", vector: "Rekayasa Sosial / Pencurian OTP", icon: "🔴" },
+  { modus: "PIG BUTCHERING", threat: "TINGGI", vector: "Kripto / Platform Bodong", icon: "⚡" },
+  { modus: "LOWONGAN FREELANCE LIKE", threat: "WASPADA", vector: "Tugas Palsu / Ponzi Deposit", icon: "🛑" },
+  { modus: "QUISHING (KODE QR)", threat: "WASPADA", vector: "Pencurian Kredensial", icon: "🔍" },
 ];
 
 export default function ThreatRadar() {
@@ -20,7 +20,7 @@ export default function ThreatRadar() {
             <span className="relative inline-flex rounded-full size-2.5 bg-[#FF3815]" />
           </span>
           <span className="text-xs font-[family-name:var(--font-geist-mono)] tracking-widest text-zinc-300 uppercase font-bold">
-            THREAT RADAR // LIVE MODUS PULSE
+            RADAR ANCAMAN // PANTAUAN MODUS AKTIF
           </span>
         </div>
 
@@ -28,7 +28,7 @@ export default function ThreatRadar() {
           href="/berita"
           className="text-xs font-[family-name:var(--font-geist-mono)] text-[#FF5533] hover:underline flex items-center gap-1"
         >
-          <span>VIEW FULL RADAR</span>
+          <span>LIHAT SEMUA RADAR</span>
           <span>&rarr;</span>
         </Link>
       </div>
@@ -41,8 +41,8 @@ export default function ThreatRadar() {
             className="flex-none min-w-[280px] sm:min-w-[320px] rounded-xl bg-black/50 border border-white/10 p-4 font-[family-name:var(--font-geist-mono)] hover:border-white/20 transition-all"
           >
             <div className="flex items-center justify-between text-[11px] text-zinc-500 mb-2">
-              <span>{t.icon} LEVEL: {t.threat}</span>
-              <span className="text-[#FF3815]">MONITORED</span>
+              <span>{t.icon} TINGKAT: {t.threat}</span>
+              <span className="text-[#FF3815]">DIPANTAU</span>
             </div>
             <div className="text-sm font-bold text-white uppercase tracking-tight mb-1">
               {t.modus}

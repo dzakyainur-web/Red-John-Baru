@@ -22,10 +22,10 @@ export default function PageShell({ children }: { children: React.ReactNode }) {
             className="inline-flex items-center gap-2 text-xs font-[family-name:var(--font-geist-mono)] text-zinc-400 hover:text-white transition-colors"
           >
             <span>&larr;</span>
-            <span>BACK TO ORANGE HORSE MAIN</span>
+            <span>KEMBALI KE BERANDA UTAMA</span>
           </Link>
           <span className="text-xs font-[family-name:var(--font-geist-mono)] text-[#FF3815] uppercase tracking-wider">
-            [ SECURE ENVIRONMENT ]
+            [ LINGKUNGAN AMAN ]
           </span>
         </div>
 

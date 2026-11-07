@@ -17,48 +17,59 @@ interface WorkItem {
 
 const WORKS: WorkItem[] = [
   {
-    id: "radar",
+    id: "game",
     number: "01",
-    title: "FRAUD TREND RADAR",
-    category: "THREAT INTELLIGENCE",
+    title: "DUEL INTELIJEN: RED JOHN vs JANE",
+    category: "GAME SIMULASI & KOGNITIF",
     description:
-      "Automated RSS aggregation and heuristic trend detection clustering emerging scam campaigns across Indonesia.",
-    tag: "LIVE RSS / NLP",
-    href: "/berita",
-    status: "ACTIVE RADAR",
+      "Game simulasi interaktif menghadapi tipu daya Red John dengan pendampingan bot Jane yang mengintervensi saat pilihanmu berisiko.",
+    tag: "GAME UTAMA",
+    href: "/#game",
+    status: "ARENA AKTIF",
+  },
+  {
+    id: "pemindai",
+    number: "02",
+    title: "PEMINDAI ANOMALI PESAN",
+    category: "CORE INFERENCE ENGINE",
+    description:
+      "Analisis mendalam teks SMS, WhatsApp, dan lowongan kerja mencurigakan berbasis aturan heuristik tanda bahaya dan machine learning lokal.",
+    tag: "PEMINDAI / NLP",
+    href: "/pemindai",
+    status: "SIAP PAKAI",
   },
   {
     id: "inspect",
-    number: "02",
-    title: "NEURAL LINK PARSER",
-    category: "FORENSIC ENGINE",
+    number: "03",
+    title: "PARSER TAUTAN FORENSIK",
+    category: "ENGINE FORENSIK",
     description:
-      "Deep URL dissection verifying homoglyph attacks, punycode spoofing, suspicious TLDs, and malicious redirect hops.",
-    tag: "HOMOGLYPH CHECK",
+      "Bedah mendalam URL untuk mendeteksi homoglyph, penipuan punycode, TLD mencurigakan, dan rantai pengalihan bahaya.",
+    tag: "CEK HOMOGLYPH",
     href: "/inspect",
-    status: "REALTIME",
+    status: "WAKTU NYATA",
   },
   {
-    id: "learn",
-    number: "03",
-    title: "DECEPTION DECODER",
-    category: "COGNITIVE DEFENSE",
+    id: "radar",
+    number: "04",
+    title: "RADAR TREN PENIPUAN",
+    category: "INTELIJEN ANCAMAN",
     description:
-      "Interactive threat simulations training users to spot micro-cues in urgent social engineering messages.",
-    tag: "SIMULATION / INTEL",
-    href: "/learn",
-    status: "TRAINING LAB",
+      "Agregasi otomatis RSS dan deteksi tren heuristik untuk memetakan gelombang modus penipuan di Indonesia.",
+    tag: "RSS AKTIF / NLP",
+    href: "/berita",
+    status: "RADAR AKTIF",
   },
   {
     id: "act",
-    number: "04",
-    title: "COUNTERMEASURE MATRIX",
-    category: "INCIDENT RESPONSE",
+    number: "05",
+    title: "MATRIKS MITIGASI DARURAT",
+    category: "TANGGAP INSIDEN",
     description:
-      "Emergency triage playbook: banking lockouts, SIM recovery, official police report channels, and digital evidence gathering.",
-    tag: "PLAYBOOK / TRIAGE",
+      "Buku saku tanggap darurat: pemblokiran rekening bank, pemulihan kartu SIM, kanal lapor resmi kepolisian, dan pengamanan bukti digital.",
+    tag: "PANDUAN / TRIAGE",
     href: "/act",
-    status: "EMERGENCY READY",
+    status: "SIAP DARURAT",
   },
 ];
 
@@ -73,14 +84,14 @@ export default function SelectedWorks() {
         <div className="flex flex-wrap items-baseline justify-between gap-4 mb-16">
           <div>
             <span className="text-xs font-[family-name:var(--font-geist-mono)] tracking-widest text-[#FF3815] uppercase font-bold">
-              [ CAPABILITIES // ARCHITECTURE ]
+              [ KAPABILITAS // ARSITEKTUR ]
             </span>
             <h2 className="mt-2 text-3xl sm:text-5xl font-black tracking-tight text-white font-[family-name:var(--font-display)] uppercase">
-              SELECTED MODULES
+              MODUL UTAMA
             </h2>
           </div>
           <p className="max-w-md text-xs sm:text-sm font-[family-name:var(--font-geist-mono)] text-zinc-400">
-            ENGINEERED AGAINST MODERN DECEPTION. ZERO COMPROMISE PRIVACY. ALL HEURISTICS RUN CLIENT-SIDE OR DEDICATED INFERENCE.
+            DIRANCANG UNTUK MENANGKAL MANIPULASI MODERN. TANPA KOMPROMI PRIVASI. SEMUA HEURISTIK BERJALAN DI SISI KLIEN ATAU INFERENSI DEDIKASI.
           </p>
         </div>
 

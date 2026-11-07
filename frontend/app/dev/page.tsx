@@ -87,17 +87,17 @@ export default function DevConsolePage() {
   return (
     <div className="space-y-9">
       <PageHead
-        title="Dev console"
+        title="Konsol Dev"
         lead={
           <>
-            Uji keempat route backend. Base URL:{" "}
+            Uji keempat rute backend. Base URL:{" "}
             <code className="font-[family-name:var(--font-geist-mono)] text-xs">{API_BASE}</code>
           </>
         }
       />
 
       <section className="space-y-3">
-        <h2 className="section-title">Route yang tersedia</h2>
+        <h2 className="section-title">Rute yang tersedia</h2>
         <ul className="border-t border-rule">
           {ROUTES.map((r) => (
             <li key={r.path} className="flex flex-wrap gap-x-3 border-b border-rule py-2 text-sm">
@@ -112,7 +112,7 @@ export default function DevConsolePage() {
       </section>
 
       <section className="space-y-3">
-        <h2 className="section-title">Health &amp; model</h2>
+        <h2 className="section-title">Kesehatan &amp; Model</h2>
         <div className="flex flex-wrap gap-2">
           <button
             className={btn}
@@ -173,7 +173,7 @@ export default function DevConsolePage() {
         />
         <div className="flex flex-wrap items-center gap-2">
           <label htmlFor="ctx" className="text-sm text-muted">
-            context
+            konteks
           </label>
           <select id="ctx" value={context} onChange={(e) => setContext(e.target.value as Context)} className="field w-auto">
             {CONTEXTS.map((c) => (
