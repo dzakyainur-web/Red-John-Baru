@@ -7,8 +7,16 @@ API FastAPI untuk menilai pesan mencurigakan: **rules yang dapat dijelaskan + mo
 
 ```bash
 uv sync
-uv run uvicorn main:app --reload --port 8000
+cp .env.example .env      # lalu isi nilainya
+uv run main.py            # scraper + scheduler ikut aktif
 ```
+
+`backend/.env` dibaca otomatis oleh `app/config.py` (tanpa dependency tambahan), jadi
+`uv run main.py`, `uvicorn main:app`, dan CLI harvester semuanya memakai nilai yang sama.
+Variabel yang sudah ada di environment shell menang — di Railway cukup isi Variables dashboard.
+
+Set `NEWS_RUN_ON_START=true` bila ingin satu putaran harvest langsung saat boot, bukan menunggu
+interval 6 jam pertama.
 
 Dokumentasi interaktif: <http://localhost:8000/docs>
 
@@ -18,10 +26,47 @@ Dokumentasi interaktif: <http://localhost:8000/docs>
 |---|---|---|
 | POST | `/api/check` | Body `{"text": "...", "context": "dm"}` → skor risiko, daftar tanda bahaya, probabilitas ML, rekomendasi skenario |
 | GET | `/api/examples` | Contoh pesan fiktif (aman & tipuan) untuk tombol "Coba contoh" |
+| GET | `/api/news` | Daftar berita penipuan (`limit`, `offset`, `category`, `source`, `q`) dari Supabase |
 | GET | `/api/model/status` | Apakah model ML termuat beserta versinya |
 | GET | `/health` | Health check (`ok` / `degraded` bila model tidak termuat) |
 
 Teks hanya diproses di memori request; tidak disimpan dan tidak di-log.
+
+## News harvester
+
+Parser Playwright async untuk Detik, Kompas, dan Liputan6. Tiap artikel diekstrak jadi judul,
+kutipan ≤1200 karakter, IOC (URL/APK/nomor telepon, selalu defanged), dan satu kategori modus
+(`fake_job`, `phishing_link`, `giveaway_palsu`, `malware_apk`, `pinjol_ilegal`). Hasil masuk ke tabel
+`scam_reports` di Supabase dengan dedupe `source_url`.
+
+Migrasi SQL dijalankan manual: buka Supabase → SQL Editor → tempel isi
+`supabase/migrations/001_scam_reports.sql`.
+
+```bash
+# pratinjau tanpa menyentuh database
+uv run python -m app.news_harvester.runner --once --dry-run
+uv run python -m app.news_harvester.runner --once --dry-run --source kompas
+
+# run sungguhan (butuh SUPABASE_URL + SUPABASE_SERVICE_ROLE_KEY)
+uv run python -m app.news_harvester.runner --once
+```
+
+Di dalam API, APScheduler menjalankan satu putaran tiap `NEWS_INTERVAL_HOURS` (default 6 jam).
+Lock di tabel `news_run_lock` membuat beberapa replica Railway aman — hanya satu yang menulis.
+
+Env:
+
+| Variabel | Default | Keterangan |
+|---|---|---|
+| `SUPABASE_URL` | — | Project URL. Tanpa ini endpoint tetap boot, `/api/news` balas `configured: false` |
+| `SUPABASE_SERVICE_ROLE_KEY` | — | Kunci tulis (bypass RLS). Jangan dipakai di frontend |
+| `NEWS_ENABLED` | `true` | Matikan scheduler bila `false` (CLI tetap bisa dipakai) |
+| `NEWS_RUN_ON_START` | `false` | Jalankan sekali saat cold start |
+| `NEWS_INTERVAL_HOURS` | `6` | Jarak antar run |
+
+Catatan: `robots.txt` Kompas memuat komentar ToS yang melarang pengambilan otomatis; robots sendiri
+mengizinkan `/read/`. Harvester berjalan dengan jeda 3 detik dan UA yang jelas. Risiko ditanggung
+pemilik proyek — tinjau ulang bila Kompas mengubah ketentuan.
 
 ## Training model
 
@@ -55,8 +100,10 @@ uv run pytest
 app/
   rules/        # R01–R10, deteksi teks & URL (murni, teruji)
   ml/           # model.py (loader/inferensi), train.py (offline), data/, artifacts/
+  news_harvester/  # browser.py, extract.py, store.py, runner.py, scheduler.py, parsers/
   engine.py     # gabung skor rule + ML, level risiko, rekomendasi skenario
-  routers/      # /api/check, /api/examples
+  routers/      # /api/check, /api/examples, /api/news
   schemas.py    # kontrak request/response
+supabase/migrations/   # SQL manual (scam_reports, news_run_lock)
 tests/
 ```
