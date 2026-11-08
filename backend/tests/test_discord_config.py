@@ -14,6 +14,7 @@ def test_default_config() -> None:
     assert out == {
         "guild_id": "42",
         "alert_channel_id": None,
+        "news_channel_id": None,
         "protection_enabled": True,
         "notification_categories": [],
         "updated_at": None,
@@ -47,6 +48,19 @@ def test_alert_channel_none_dianggap_dikirim_untuk_mengosongkan() -> None:
 def test_alert_channel_harus_angka() -> None:
     with pytest.raises(ValidationError):
         GuildConfigUpdate(alert_channel_id="bukan-angka")
+
+
+def test_news_channel_patch() -> None:
+    row = discord_store.build_upsert_row("42", {"news_channel_id": "123"})
+    assert row["news_channel_id"] == "123"
+    assert "alert_channel_id" not in row
+    with pytest.raises(ValidationError):
+        GuildConfigUpdate(news_channel_id="bukan-angka")
+
+
+def test_to_config_out_news_channel() -> None:
+    out = discord_store.to_config_out({"guild_id": "42", "news_channel_id": "5"}, "42")
+    assert out["news_channel_id"] == "5"
 
 
 def test_model_dump_exclude_unset_hanya_field_dikirim() -> None:

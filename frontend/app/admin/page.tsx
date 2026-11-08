@@ -22,6 +22,7 @@ import { API_BASE } from "@/lib/api";
 import { PageHead } from "@/components/ui";
 import ThreatTable from "@/components/admin/ThreatTable";
 import ThreatModal from "@/components/admin/ThreatModal";
+import RandomNewsPanel from "@/components/admin/RandomNewsPanel";
 
 const STATUS_TAB_LABEL: Record<ThreatStatusFilter, string> = {
   all: "Semua",
@@ -254,6 +255,8 @@ export default function AdminPage() {
           }}
         />
       )}
+
+      <RandomNewsPanel />
     </div>
   );
 }
