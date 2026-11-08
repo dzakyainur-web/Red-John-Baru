@@ -3,7 +3,9 @@ package config
 
 import (
 	"fmt"
+	"log/slog"
 	"os"
+	"strings"
 	"time"
 
 	"github.com/joho/godotenv"
@@ -19,10 +21,11 @@ type Config struct {
 	RedJohnAPIKey string
 
 	AppEnv   string
-	LogLevel string
+	LogLevel slog.Level
 
-	AlertPollInterval time.Duration
-	HTTPTimeout       time.Duration
+	AlertPollInterval     time.Duration
+	BroadcastPollInterval time.Duration
+	HTTPTimeout           time.Duration
 }
 
 // Load membaca .env (tanpa menimpa env shell) lalu validasi field wajib.
@@ -37,12 +40,17 @@ func Load() (*Config, error) {
 		RedJohnAPIURL: os.Getenv("REDJOHN_API_URL"),
 		RedJohnAPIKey: os.Getenv("REDJOHN_API_KEY"),
 
-		AppEnv:   getenvDefault("APP_ENV", "development"),
-		LogLevel: getenvDefault("LOG_LEVEL", "info"),
+		AppEnv: getenvDefault("APP_ENV", "development"),
 	}
 
 	var err error
+	if cfg.LogLevel, err = getLogLevel("LOG_LEVEL", slog.LevelInfo); err != nil {
+		return nil, err
+	}
 	if cfg.AlertPollInterval, err = getDuration("ALERT_POLL_INTERVAL", 60*time.Second); err != nil {
+		return nil, err
+	}
+	if cfg.BroadcastPollInterval, err = getDuration("BROADCAST_POLL_INTERVAL", 5*time.Second); err != nil {
 		return nil, err
 	}
 	if cfg.HTTPTimeout, err = getDuration("HTTP_TIMEOUT", 9*time.Second); err != nil {
@@ -78,4 +86,24 @@ func getDuration(key string, def time.Duration) (time.Duration, error) {
 		return 0, fmt.Errorf("%s: %w", key, err)
 	}
 	return d, nil
+}
+
+// getLogLevel memetakan text → slog level. Nilai tak dikenal = error konfigurasi
+// (lebih baik gagal saat start daripada diam-diam jatuh ke default).
+func getLogLevel(key string, def slog.Level) (slog.Level, error) {
+	raw := strings.ToLower(strings.TrimSpace(os.Getenv(key)))
+	switch raw {
+	case "":
+		return def, nil
+	case "debug":
+		return slog.LevelDebug, nil
+	case "info":
+		return slog.LevelInfo, nil
+	case "warn", "warning":
+		return slog.LevelWarn, nil
+	case "error":
+		return slog.LevelError, nil
+	default:
+		return 0, fmt.Errorf("%s: nilai %q tidak dikenal (debug|info|warn|error)", key, raw)
+	}
 }
