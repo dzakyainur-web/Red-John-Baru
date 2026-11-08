@@ -15,6 +15,9 @@ cd backend && uv run scraper.py
 
 # 3. Frontend — http://localhost:3000
 cd frontend && bun run dev
+
+# 4. Discord bot (opsional — butuh token Discord, lihat Agent-RJ/README.md)
+cd Agent-RJ && go run ./cmd/bot
 ```
 
 Ketiganya bisa hidup bersamaan. API **tidak** menjalankan scraper; scraper butuh prosesnya sendiri.
@@ -30,6 +33,7 @@ Migrasi SQL dijalankan manual di Supabase → SQL Editor, berurutan:
 
 1. `backend/supabase/migrations/001_scam_reports.sql`
 2. `backend/supabase/migrations/002_threat_admin.sql`
+3. `backend/supabase/migrations/004_discord_bot.sql` (hanya bila menjalankan Discord bot)
 
 ## Scraper: perintah lain
 
