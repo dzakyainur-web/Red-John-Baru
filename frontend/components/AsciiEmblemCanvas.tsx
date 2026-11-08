@@ -2,17 +2,17 @@
 
 import { useEffect, useRef, useState } from "react";
 
-interface AsciiHorseCanvasProps {
+interface AsciiEmblemCanvasProps {
   interactive?: boolean;
 }
 
-// Character density palette inspired by Orange Horse matrix
+// Character density palette inspired by matrix terminals
 const DENSITY_CHARS = " .:-=+*#%@EROSNH";
 
-export default function AsciiHorseCanvas({ interactive = true }: AsciiHorseCanvasProps) {
+export default function AsciiEmblemCanvas({ interactive = true }: AsciiEmblemCanvasProps) {
   const canvasRef = useRef<HTMLCanvasElement | null>(null);
   const containerRef = useRef<HTMLDivElement | null>(null);
-  const [loaded, setLoaded] = useState(false);
+  const [, setLoaded] = useState(false);
 
   useEffect(() => {
     const canvas = canvasRef.current;
@@ -26,12 +26,12 @@ export default function AsciiHorseCanvas({ interactive = true }: AsciiHorseCanva
     // Load background image
     const img = new Image();
     img.crossOrigin = "anonymous";
-    img.src = "/orange-horse-bg.webp";
+    img.src = "/red-john-logo.png";
 
     const offscreen = document.createElement("canvas");
     const offCtx = offscreen.getContext("2d", { willReadFrequently: true });
 
-    let mouse = { x: -1000, y: -1000, targetX: -1000, targetY: -1000, active: false };
+    const mouse = { x: -1000, y: -1000, targetX: -1000, targetY: -1000, active: false };
 
     const handleMouseMove = (e: MouseEvent) => {
       const rect = canvas.getBoundingClientRect();
@@ -88,38 +88,42 @@ export default function AsciiHorseCanvas({ interactive = true }: AsciiHorseCanva
     window.addEventListener("resize", resize);
 
     img.onload = () => {
-      if (isDestroyed) return;
       setLoaded(true);
     };
 
-    let time = 0;
+    let tick = 0;
 
     const render = () => {
       if (isDestroyed) return;
-      time += 0.03;
+      tick++;
 
-      // Smooth mouse position lerp
-      mouse.x += (mouse.targetX - mouse.x) * 0.15;
-      mouse.y += (mouse.targetY - mouse.y) * 0.15;
+      // Smooth mouse follow
+      mouse.x += (mouse.targetX - mouse.x) * 0.12;
+      mouse.y += (mouse.targetY - mouse.y) * 0.12;
 
-      ctx.fillStyle = "#070707";
-      ctx.fillRect(0, 0, canvas.width, canvas.height);
+      ctx.clearRect(0, 0, canvas.width, canvas.height);
 
       if (img.complete && img.naturalWidth > 0 && offCtx && cols > 0 && rows > 0) {
-        // Draw image stretched/contained into offscreen canvas
-        offCtx.drawImage(img, 0, 0, cols, rows);
-        const imgData = offCtx.getImageData(0, 0, cols, rows).data;
+        // Fit logo into the grid, preserving aspect ratio and centering it
+        offCtx.clearRect(0, 0, cols, rows);
+        const scale = Math.min(cols / img.naturalWidth, rows / img.naturalHeight) * 0.8;
+        const drawW = img.naturalWidth * scale;
+        const drawH = img.naturalHeight * scale;
+        offCtx.drawImage(img, (cols - drawW) / 2, (rows - drawH) / 2, drawW, drawH);
+        const imgData = offCtx.getImageData(0, 0, cols, rows);
+        const data = imgData.data;
 
-        ctx.font = `${cellH - 2}px "Geist Mono", monospace, monospace`;
-        ctx.textBaseline = "top";
+        ctx.font = `${cellH - 2}px monospace`;
+        ctx.textAlign = "center";
+        ctx.textBaseline = "middle";
 
         for (let r = 0; r < rows; r++) {
           for (let c = 0; c < cols; c++) {
             const idx = (r * cols + c) * 4;
-            const red = imgData[idx];
-            const green = imgData[idx + 1];
-            const blue = imgData[idx + 2];
-            const alpha = imgData[idx + 3];
+            const red = data[idx];
+            const green = data[idx + 1];
+            const blue = data[idx + 2];
+            const alpha = data[idx + 3];
 
             if (alpha < 10) continue;
 
@@ -129,35 +133,35 @@ export default function AsciiHorseCanvas({ interactive = true }: AsciiHorseCanva
             const posX = c * cellW;
             const posY = r * cellH;
 
-            // Distance to mouse for interactive spotlight & halo effect
+            // Distance to mouse for interactive spotlight
             const dx = posX - mouse.x;
             const dy = posY - mouse.y;
             const dist = Math.sqrt(dx * dx + dy * dy);
-            const mouseHoverRadius = 140;
+            const mouseHoverRadius = 150;
 
             let charIndex = Math.floor(brightness * (DENSITY_CHARS.length - 1));
-            let fillStyle = `rgba(180, 185, 195, ${Math.min(1, brightness * 0.95)})`;
+            // Subtle ambient opacity so text on top remains crystal clear
+            let fillStyle = `rgba(160, 175, 200, ${Math.min(0.25, brightness * 0.24)})`;
 
-            // Mouse proximity highlight (blue-cyan electric aura as seen in the screenshot!)
+            // Mouse proximity highlight (Electric Cyan & Violet aura ala Unkey)
             if (interactive && dist < mouseHoverRadius) {
               const proximity = 1 - dist / mouseHoverRadius;
-              // Random glitch roll when near cursor
-              if (Math.random() < 0.2) {
+              if (Math.random() < 0.15) {
                 charIndex = Math.floor(Math.random() * DENSITY_CHARS.length);
               }
 
-              // Glowing cyan/white lighting around cursor
-              const cyanR = Math.round(90 + 165 * proximity);
-              const cyanG = Math.round(180 + 75 * proximity);
-              const cyanB = Math.round(240 + 15 * proximity);
-              const op = Math.min(1, brightness * 0.5 + proximity * 0.9);
-              fillStyle = `rgba(${cyanR}, ${cyanG}, ${cyanB}, ${op})`;
-            } else if (red > green + 30 && red > blue + 30 && brightness > 0.3) {
-              // Subtle warm red/orange highlights from the image
-              fillStyle = `rgba(255, 90, 40, ${Math.min(1, brightness)})`;
-            } else if (blue > red + 15) {
-              // Subtle cool highlights
-              fillStyle = `rgba(100, 160, 210, ${Math.min(1, brightness * 0.85)})`;
+              // Subtle glowing cyan-blue spotlight around cursor
+              const rCol = Math.round(56 + 120 * proximity);
+              const gCol = Math.round(189 + 60 * proximity);
+              const bCol = Math.round(248 + 7 * proximity);
+              const op = Math.min(0.75, brightness * 0.25 + proximity * 0.5);
+              fillStyle = `rgba(${rCol}, ${gCol}, ${bCol}, ${op})`;
+            } else if (red > green + 20 && brightness > 0.3) {
+              // Brand red ink
+              fillStyle = `rgba(255, 56, 21, ${Math.min(0.45, brightness * 0.5)})`;
+            } else if (blue > red + 10) {
+              // Subtle sky-cyan highlights
+              fillStyle = `rgba(56, 189, 248, ${Math.min(0.25, brightness * 0.25)})`;
             }
 
             const char = DENSITY_CHARS[charIndex] || " ";
@@ -183,22 +187,8 @@ export default function AsciiHorseCanvas({ interactive = true }: AsciiHorseCanva
   }, [interactive]);
 
   return (
-    <div ref={containerRef} className="absolute inset-0 overflow-hidden pointer-events-none select-none z-0">
-      {/* Background canvas */}
-      <canvas ref={canvasRef} className="absolute inset-0 w-full h-full block" />
-
-      {/* Atmospheric vignette & radial dark gradient */}
-      <div className="absolute inset-0 bg-radial from-transparent via-[#070707]/60 to-[#070707] pointer-events-none" />
-
-      {/* Subtle scanline texture overlay */}
-      <div
-        className="absolute inset-0 opacity-[0.035] pointer-events-none mix-blend-overlay"
-        style={{
-          backgroundImage:
-            "linear-gradient(rgba(255,255,255,0.8) 50%, rgba(0,0,0,0.8) 50%)",
-          backgroundSize: "100% 4px",
-        }}
-      />
+    <div ref={containerRef} className="absolute inset-0 size-full overflow-hidden pointer-events-none select-none">
+      <canvas ref={canvasRef} className="block size-full" />
     </div>
   );
 }
