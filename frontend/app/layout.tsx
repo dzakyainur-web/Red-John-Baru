@@ -19,9 +19,9 @@ const bricolage = Bricolage_Grotesque({
 const publicSans = Public_Sans({ variable: "--font-body", subsets: ["latin"], display: "swap" });
 
 export const metadata: Metadata = {
-  title: "Orange Horse — Game Duel Red John & Intelijen Penipuan Siber",
+  title: "Red John — Platform Intelijen Siber & Forensik Digital",
   description:
-    "Game simulasi interaktif melawan dalang siber Red John didampingi bot Jane, dilengkapi pemindai anomali pesan dan forensik tautan digital.",
+    "Sistem pertahanan terbuka untuk mendeteksi rekayasa sosial, malware Android APK, quishing QRIS palsu, dan pencurian OTP di Indonesia secara real-time.",
 };
 
 export default function RootLayout({
@@ -34,7 +34,7 @@ export default function RootLayout({
       lang="id"
       className={`${geistMono.variable} ${jetbrainsMono.variable} ${bricolage.variable} ${publicSans.variable} h-full antialiased dark`}
     >
-      <body className="flex min-h-full flex-col bg-[#070707] text-white selection:bg-[#FF3815] selection:text-black">
+      <body className="flex min-h-full flex-col bg-[#000000] text-white selection:bg-white selection:text-black font-sans">
         <SoundProvider>
           <SiteHeader />
           <PageShell>{children}</PageShell>

@@ -1,6 +1,6 @@
-# Red John — Cyber Scam Radar
+# Red John
 
-GuardianAI: API FastAPI + panel admin Next.js + scraper berita penipuan → Supabase.
+Red John: API FastAPI + panel admin Next.js + scraper berita penipuan → Supabase.
 
 ## Menjalankan (3 terminal)
 
@@ -41,10 +41,10 @@ uv run scraper.py --once                            # harvest sekali lalu keluar
 
 ## Halaman
 
-| URL | Isi |
-|---|---|
-| `/` | Periksa pesan mencurigakan |
-| `/berita` | Feed penipuan terverifikasi |
-| `/admin` | Panel CRUD ancaman (tanpa auth — internal) |
+| URL       | Isi                                        |
+| --------- | ------------------------------------------ |
+| `/`       | Periksa pesan mencurigakan                 |
+| `/berita` | Feed penipuan terverifikasi                |
+| `/admin`  | Panel CRUD ancaman (tanpa auth — internal) |
 
 Dokumentasi backend lengkap: [`backend/README.md`](backend/README.md).
