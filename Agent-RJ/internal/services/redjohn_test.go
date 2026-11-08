@@ -168,3 +168,20 @@ func TestPatchGuildConfig(t *testing.T) {
 		t.Fatalf("patch: %v %+v", err, cfg)
 	}
 }
+
+func TestHealth(t *testing.T) {
+	client, _ := newTestClient(t, func(w http.ResponseWriter, r *http.Request) {
+		if r.Method != http.MethodGet || r.URL.Path != "/health" {
+			t.Errorf("unexpected request %s %s", r.Method, r.URL.Path)
+		}
+		w.Header().Set("Content-Type", "application/json")
+		_, _ = w.Write([]byte(`{"status":"degraded","ml_loaded":false,"model_version":null}`))
+	})
+	h, err := client.Health(context.Background())
+	if err != nil {
+		t.Fatalf("unexpected err: %v", err)
+	}
+	if h.Status != "degraded" || h.MLLoaded || h.ModelVersion != nil {
+		t.Errorf("health salah: %+v", h)
+	}
+}

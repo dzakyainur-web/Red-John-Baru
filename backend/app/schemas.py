@@ -322,6 +322,7 @@ class ReportStatusOut(BaseModel):
 class GuildConfigOut(BaseModel):
     guild_id: str
     alert_channel_id: str | None
+    news_channel_id: str | None = None
     protection_enabled: bool
     notification_categories: list[ThreatCategory]
     updated_at: str | None
@@ -330,14 +331,15 @@ class GuildConfigOut(BaseModel):
 class GuildConfigUpdate(BaseModel):
     """PATCH parsial: hanya field yang dikirim yang ditulis.
 
-    `alert_channel_id` memakai `model_fields_set` karena None sah (matikan channel).
+    Channel memakai `model_fields_set` karena None sah (matikan channel).
     """
 
     alert_channel_id: str | None = Field(default=None, max_length=32)
+    news_channel_id: str | None = Field(default=None, max_length=32)
     protection_enabled: bool | None = None
     notification_categories: list[ThreatCategory] | None = Field(default=None, max_length=5)
 
-    @field_validator("alert_channel_id")
+    @field_validator("alert_channel_id", "news_channel_id")
     @classmethod
     def digits_only(cls, value: str | None) -> str | None:
         if value is None:
@@ -346,3 +348,40 @@ class GuildConfigUpdate(BaseModel):
         if not value.isdigit():
             raise ValueError("ID channel Discord harus berupa angka.")
         return value
+
+
+# --- Outbox bot Discord (alur: panel admin -> backend -> bot polling) ----------
+
+
+class BroadcastRequest(BaseModel):
+    """Permintaan dari panel /admin agar bot memposting berita acak ke guild ini."""
+
+    guild_id: str = Field(min_length=1, max_length=32)
+
+    @field_validator("guild_id")
+    @classmethod
+    def guild_digits(cls, value: str) -> str:
+        value = value.strip()
+        if not value.isdigit():
+            raise ValueError("ID guild Discord harus berupa angka.")
+        return value
+
+
+class BroadcastQueuedOut(BaseModel):
+    status: Literal["queued"] = "queued"
+    message: str = (
+        "Permintaan diterima. Bot akan memposting 5 berita acak ke channel "
+        "berita server ini dalam beberapa detik."
+    )
+
+
+class BotEventOut(BaseModel):
+    """Job yang diklaim bot. Tanpa `error`/status internal lain."""
+
+    id: int
+    guild_id: str
+    kind: Literal["news_broadcast"]
+
+
+class BotEventFinishIn(BaseModel):
+    error: str | None = Field(default=None, max_length=1000)

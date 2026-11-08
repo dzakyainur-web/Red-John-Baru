@@ -54,6 +54,16 @@ type ScanRequest struct {
 	Source string `json:"source"`
 }
 
+// ---- /health -------------------------------------------------------------------
+
+// Health kontrak GET /health. Tidak butuh X-API-Key — dipakai /ping untuk cek
+// backend benar-benar hidup (bukan sekadar feed kosong).
+type Health struct {
+	Status       string  `json:"status"` // ok | degraded
+	MLLoaded     bool    `json:"ml_loaded"`
+	ModelVersion *string `json:"model_version"`
+}
+
 // ---- /api/news -----------------------------------------------------------------
 
 type NewsItem struct {
@@ -74,7 +84,17 @@ type NewsList struct {
 	Offset     int        `json:"offset"`
 	UpdatedAt  *string    `json:"updated_at"`
 	Configured bool       `json:"configured"`
+
+	// Query kata kunci pencarian yang dipakai untuk respons ini — diisi klien
+	// (bukan dari JSON) agar embed bisa menjelaskan hasil kosong.
+	QueryText string `json:"-"`
 }
+
+// HasQuery true bila daftar berita berasal dari pencarian.
+func (l *NewsList) HasQuery() bool { return l.QueryText != "" }
+
+// Query kata kunci pencarian (aman bila nil).
+func (l *NewsList) Query() string { return l.QueryText }
 
 // ---- /api/reports ---------------------------------------------------------------
 
@@ -105,6 +125,7 @@ type ReportStatus struct {
 type GuildConfig struct {
 	GuildID                string   `json:"guild_id"`
 	AlertChannelID         *string  `json:"alert_channel_id"`
+	NewsChannelID          *string  `json:"news_channel_id"`
 	ProtectionEnabled      bool     `json:"protection_enabled"`
 	NotificationCategories []string `json:"notification_categories"`
 	UpdatedAt              *string  `json:"updated_at"`
@@ -113,6 +134,7 @@ type GuildConfig struct {
 // GuildConfigUpdate PATCH parsial; nil = tidak dikirim.
 type GuildConfigUpdate struct {
 	AlertChannelID         *string   `json:"alert_channel_id,omitempty"`
+	NewsChannelID          *string   `json:"news_channel_id,omitempty"`
 	ProtectionEnabled      *bool     `json:"protection_enabled,omitempty"`
 	NotificationCategories *[]string `json:"notification_categories,omitempty"`
 }

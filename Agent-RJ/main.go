@@ -1,0 +1,15 @@
+// Perintah Red John untuk Discord — client tipis di atas backend FastAPI.
+package main
+
+import (
+	"context"
+	"os"
+
+	"github.com/r3nddy/Red-John/Agent-RJ/internal/app"
+)
+
+func main() {
+	if err := app.Run(context.Background()); err != nil {
+		os.Exit(1)
+	}
+}

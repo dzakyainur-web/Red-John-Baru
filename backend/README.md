@@ -72,7 +72,7 @@ utama (`og:image`) untuk card berita. Hasil masuk ke tabel `scam_reports` di Sup
 
 Migrasi SQL dijalankan manual: buka Supabase → SQL Editor → tempel isi
 `supabase/migrations/001_scam_reports.sql`, lalu `002_threat_admin.sql`,
-`003_news_image.sql`, dan `004_discord_bot.sql`.
+`003_news_image.sql`, `004_discord_bot.sql`, dan `005_discord_news_broadcast.sql`.
 
 > Catatan: upsert memakai `ignore_duplicates=True`, jadi baris lama **tidak** diperbarui. Artikel
 > yang sudah masuk sebelum `003_news_image.sql` tetap tanpa gambar (`image_url` NULL) sampai
