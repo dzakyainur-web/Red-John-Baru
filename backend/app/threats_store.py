@@ -23,7 +23,7 @@ logger = logging.getLogger(__name__)
 TABLE = "scam_reports"
 COLUMNS = (
     "id,title,category,description,scammer_indicators,source_url,source_media,"
-    "source_type,status,published_at,created_at,updated_at"
+    "source_type,status,published_at,created_at,updated_at,image_url"
 )
 
 

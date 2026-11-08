@@ -41,10 +41,14 @@ _ARTICLE_JS = """([bodySelector]) => {
             .filter(t => t.length > 0 && !filler.test(t))
         : [];
     const time = document.querySelector('time[datetime]');
+    const imageSrc = document.querySelector('link[rel="image_src"]');
     return {
         title: meta('og:title') || (document.querySelector('h1')?.textContent || '').trim(),
         published: meta('article:published_time')
             || (time ? (time.getAttribute('datetime') || '') : ''),
+        image: meta('og:image')
+            || meta('twitter:image')
+            || (imageSrc ? (imageSrc.getAttribute('href') || '') : ''),
         text: paragraphs.join('\\n')
     };
 }"""
@@ -55,6 +59,7 @@ class ArticleHtml:
     title: str
     published: str
     text: str
+    image: str = ""
 
 
 class PageReader:
@@ -87,6 +92,7 @@ class PageReader:
                 title=(data.get("title") or "").strip(),
                 published=(data.get("published") or "").strip(),
                 text=(data.get("text") or "").strip(),
+                image=(data.get("image") or "").strip(),
             )
         finally:
             await page.close()

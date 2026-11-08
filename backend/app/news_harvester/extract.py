@@ -10,7 +10,7 @@ import html
 import re
 from datetime import UTC, datetime, timedelta
 from typing import Literal
-from urllib.parse import urlparse
+from urllib.parse import urljoin, urlparse
 
 from app.rules.text_utils import find_urls, host_of
 
@@ -380,6 +380,27 @@ def classify(title: str, description: str) -> Category:
     }
     best = max(_TIE_ORDER, key=lambda c: (scores[c], -_TIE_ORDER.index(c)))
     return best if scores[best] else "phishing_link"
+
+
+def clean_image_url(raw: str, base_url: str) -> str | None:
+    """og:image mentah -> URL gambar absolut http(s), atau None bila tidak layak.
+
+    Sebagian situs menulis path relatif (`/img/hero.jpg`); resolve terhadap URL artikel.
+    """
+    value = (raw or "").strip()
+    if not value or len(value) > 2048:
+        return None
+    # `urljoin(base, "https://")` diam-diam mengembalikan base — tolak scheme kosong.
+    if value.startswith(("http://", "https://")) and not urlparse(value).netloc:
+        return None
+    try:
+        url = urljoin(base_url, value)
+    except ValueError:
+        return None
+    parts = urlparse(url)
+    if parts.scheme not in ("http", "https") or not parts.netloc:
+        return None
+    return url
 
 
 def parse_anchors(
