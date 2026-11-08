@@ -94,6 +94,7 @@ def to_row(article: dict[str, Any]) -> dict[str, Any]:
         "source_media": article["media"],
         "status": "verified",
         "published_at": article.get("published_at"),
+        "image_url": article.get("image_url") or None,
     }
 
 
@@ -144,7 +145,7 @@ async def list_reports(
         sb.table(TABLE)
         .select(
             "id,title,description,category,source_url,source_media,"
-            "published_at,created_at",
+            "published_at,created_at,image_url",
             count="exact",
         )
         .eq("status", "verified")
@@ -172,4 +173,5 @@ def to_news_item(row: dict[str, Any]) -> dict[str, Any]:
         "published_at": row.get("published_at") or row.get("created_at"),
         "snippet": truncate(row.get("description") or "", SNIPPET_CHARS),
         "categories": [row["category"]],
+        "image_url": row.get("image_url") or None,
     }

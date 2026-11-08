@@ -1,30 +1,29 @@
 @import "tailwindcss";
 
 /* ============================================================
-   Orange Horse x GuardianAI Design Language
-   Deep black, brutalist monospace metrics, vibrant flame orange.
+   Red John x HeroUI Design Architecture
+   True Pitch Black (#000000), Pure White Pill CTAs,
+   Translucent Glass Surface (#0C0C0E), Metallic Gradients,
+   and Sleek High-Contrast Typography.
    ============================================================ */
 :root {
-  --paper: #070707;
-  --surface: #0e0e0e;
-  --raised: #151515;
-  --ink: #f5f5f5;
-  --muted: #909090;
-  --rule: #222222;
-  --rule-strong: #3a3a3a;
+  --paper: #000000;       /* HeroUI True Pitch Black */
+  --surface: #0C0C0E;     /* HeroUI Deep Glass Surface */
+  --raised: #161619;      /* Elevated surface / hover */
+  --ink: #FFFFFF;         /* Primary pure white */
+  --muted: #A1A1AA;       /* Secondary zinc text */
+  --rule: rgba(255, 255, 255, 0.08); /* Border halus */
+  --rule-strong: rgba(255, 255, 255, 0.16);
 
-  --alert: #FF3815;
-  --alert-ink: #FF6644;
-  --alert-wash: #260a05;
-  --alert-line: #6b170c;
-  --on-alert: #000000;
+  --accent-primary: #FFFFFF;
+  --accent-muted: #71717A;
 
   --safe: #22c55e;
-  --safe-wash: #052e16;
-  --safe-line: #166534;
+  --safe-wash: rgba(34, 197, 94, 0.1);
+  --safe-line: rgba(34, 197, 94, 0.3);
   --warn: #eab308;
-  --warn-wash: #2e2005;
-  --warn-line: #854d0e;
+  --warn-wash: rgba(234, 179, 8, 0.1);
+  --warn-line: rgba(234, 179, 8, 0.3);
 
   color-scheme: dark;
 }
@@ -37,11 +36,6 @@
   --color-muted: var(--muted);
   --color-rule: var(--rule);
   --color-rule-strong: var(--rule-strong);
-  --color-alert: var(--alert);
-  --color-alert-ink: var(--alert-ink);
-  --color-alert-wash: var(--alert-wash);
-  --color-alert-line: var(--alert-line);
-  --color-on-alert: var(--on-alert);
   --color-safe: var(--safe);
   --color-safe-wash: var(--safe-wash);
   --color-safe-line: var(--safe-line);
@@ -55,23 +49,23 @@
 }
 
 body {
-  background: var(--paper);
-  color: var(--ink);
-  font-family: var(--font-body), ui-sans-serif, system-ui, sans-serif;
+  background: #000000;
+  color: #FFFFFF;
+  font-family: var(--font-body), ui-sans-serif, system-ui, -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif;
   font-size: 16px;
-  line-height: 1.65;
+  line-height: 1.6;
   overflow-x: hidden;
 }
 
 ::selection {
-  background: var(--alert);
-  color: var(--on-alert);
+  background: #FFFFFF;
+  color: #000000;
 }
 
 :focus-visible {
-  outline: 2px solid var(--alert);
+  outline: 2px solid rgba(255, 255, 255, 0.8);
   outline-offset: 2px;
-  border-radius: 2px;
+  border-radius: 9999px;
 }
 
 /* Custom scrollbars */
@@ -80,14 +74,14 @@ body {
   height: 6px;
 }
 ::-webkit-scrollbar-track {
-  background: #0a0a0a;
+  background: #000000;
 }
 ::-webkit-scrollbar-thumb {
-  background: #262626;
-  border-radius: 3px;
+  background: #27272A;
+  border-radius: 9999px;
 }
 ::-webkit-scrollbar-thumb:hover {
-  background: #3b3b3b;
+  background: #3F3F46;
 }
 
 @layer components {
@@ -101,94 +95,47 @@ body {
     .shell { padding-inline: 2rem; }
   }
 
-  .page-title {
-    font-family: var(--font-display), var(--font-body), sans-serif;
-    font-size: clamp(2rem, 1.4rem + 2.2vw, 3rem);
-    line-height: 1.05;
-    font-weight: 700;
-    letter-spacing: -0.03em;
-    text-transform: uppercase;
-  }
-
-  .section-title {
-    font-family: var(--font-display), var(--font-body), sans-serif;
-    font-size: 1.15rem;
-    font-weight: 700;
-    letter-spacing: -0.01em;
-    line-height: 1.3;
-    text-transform: uppercase;
-  }
-
-  .lead {
-    color: var(--muted);
-    max-width: 65ch;
-    font-size: 0.95rem;
-    font-family: var(--font-geist-mono), monospace;
-  }
-
+  /* HeroUI Pill Button */
   .btn {
     display: inline-flex;
     align-items: center;
     justify-content: center;
     gap: 0.5rem;
     min-height: 2.75rem;
-    padding-inline: 1.25rem;
-    border: 1px solid var(--rule-strong);
-    border-radius: 9999px;
-    background: var(--surface);
-    color: var(--ink);
-    font-family: var(--font-geist-mono), monospace;
-    font-size: 0.85rem;
-    font-weight: 600;
-    text-transform: uppercase;
-    letter-spacing: 0.05em;
+    padding-inline: 1.5rem;
+    border: 1px solid var(--rule);
+    border-radius: 9999px; /* Pill */
+    background: rgba(255, 255, 255, 0.06);
+    color: #FFFFFF;
+    font-size: 0.875rem;
+    font-weight: 500;
     text-align: center;
     cursor: pointer;
-    transition: all 0.2s;
+    transition: all 0.2s cubic-bezier(0.16, 1, 0.3, 1);
     text-decoration: none;
+    backdrop-filter: blur(12px);
   }
   .btn:hover:not(:disabled) {
-    border-color: var(--alert);
-    background: var(--raised);
-    color: var(--alert);
+    border-color: rgba(255, 255, 255, 0.2);
+    background: rgba(255, 255, 255, 0.12);
+    transform: translateY(-1px);
   }
-  .btn:disabled {
-    opacity: 0.45;
-    cursor: not-allowed;
+  .btn:active:not(:disabled) {
+    transform: scale(0.98);
   }
 
+  /* HeroUI Solid White Primary Button */
   .btn-primary {
-    background: var(--alert);
-    color: #000;
-    border-color: var(--alert);
-    font-weight: 700;
+    background: #FFFFFF;
+    color: #000000;
+    border-color: #FFFFFF;
+    font-weight: 600;
+    box-shadow: 0 0 25px rgba(255, 255, 255, 0.15);
   }
   .btn-primary:hover:not(:disabled) {
-    background: #ff5533;
-    border-color: #ff5533;
-    color: #000;
-  }
-
-  .card {
-    border: 1px solid var(--rule);
-    border-radius: 1rem;
-    background: var(--surface);
-    padding: 1.5rem;
-    box-shadow: 0 4px 20px rgba(0, 0, 0, 0.4);
-  }
-
-  .card-pad {
-    padding: 1.75rem;
-  }
-
-  .rule-accent {
-    height: 2px;
-    background: var(--alert);
-  }
-
-  .data {
-    font-family: var(--font-geist-mono), monospace;
-    font-size: 0.8rem;
-    color: var(--muted);
+    background: #F4F4F5;
+    border-color: #F4F4F5;
+    color: #000000;
+    box-shadow: 0 0 35px rgba(255, 255, 255, 0.25);
   }
 }

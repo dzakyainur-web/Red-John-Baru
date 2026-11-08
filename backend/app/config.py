@@ -77,7 +77,7 @@ class Settings:
     news_max_age_days: int = 90
     news_concurrency: int = 3
     news_lock_ttl_minutes: int = 45
-    news_user_agent: str = "GuardianAI-news/2.0 (+edukasi penipuan digital)"
+    news_user_agent: str = "RedJohn-news/2.0 (+edukasi penipuan digital)"
 
 
 settings = Settings()

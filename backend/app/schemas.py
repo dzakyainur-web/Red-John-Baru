@@ -84,6 +84,7 @@ class NewsItemOut(BaseModel):
     published_at: str | None
     snippet: str
     categories: list[str]
+    image_url: str | None = None
 
 
 class NewsListOut(BaseModel):

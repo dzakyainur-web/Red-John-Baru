@@ -1,4 +1,4 @@
-# Backend GuardianAI
+# Backend Red John
 
 API FastAPI untuk menilai pesan mencurigakan: **rules yang dapat dijelaskan + model ML lokal**
 (TF-IDF + Logistic Regression). Tidak ada panggilan API LLM maupun layanan pihak ketiga.
@@ -41,12 +41,17 @@ Teks hanya diproses di memori request; tidak disimpan dan tidak di-log.
 ## News harvester
 
 Parser Playwright async untuk Detik, Kompas, dan Liputan6. Tiap artikel diekstrak jadi judul,
-kutipan ≤1200 karakter, IOC (URL/APK/nomor telepon, selalu defanged), dan satu kategori modus
-(`fake_job`, `phishing_link`, `giveaway_palsu`, `malware_apk`, `pinjol_ilegal`). Hasil masuk ke tabel
-`scam_reports` di Supabase dengan dedupe `source_url`.
+kutipan ≤1200 karakter, IOC (URL/APK/nomor telepon, selalu defanged), satu kategori modus
+(`fake_job`, `phishing_link`, `giveaway_palsu`, `malware_apk`, `pinjol_ilegal`), dan URL gambar
+utama (`og:image`) untuk card berita. Hasil masuk ke tabel `scam_reports` di Supabase dengan dedupe
+`source_url`.
 
 Migrasi SQL dijalankan manual: buka Supabase → SQL Editor → tempel isi
-`supabase/migrations/001_scam_reports.sql`.
+`supabase/migrations/001_scam_reports.sql`, lalu `002_threat_admin.sql` dan `003_news_image.sql`.
+
+> Catatan: upsert memakai `ignore_duplicates=True`, jadi baris lama **tidak** diperbarui. Artikel
+> yang sudah masuk sebelum `003_news_image.sql` tetap tanpa gambar (`image_url` NULL) sampai
+> di-backfill manual atau barisnya dihapus.
 
 ```bash
 # pratinjau tanpa menyentuh database

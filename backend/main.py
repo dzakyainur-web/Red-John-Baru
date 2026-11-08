@@ -1,4 +1,4 @@
-"""Aplikasi FastAPI GuardianAI — rules + model ML lokal, tanpa API LLM/pihak ketiga."""
+"""Aplikasi FastAPI Red John — rules + model ML lokal, tanpa API LLM/pihak ketiga."""
 
 from __future__ import annotations
 
@@ -44,7 +44,7 @@ async def lifespan(_: FastAPI):
 
 
 app = FastAPI(
-    title="GuardianAI API",
+    title="Red John API",
     version=__version__,
     description=(
         "Penilaian pesan mencurigakan berbasis aturan yang dapat dijelaskan dan model ML lokal "
