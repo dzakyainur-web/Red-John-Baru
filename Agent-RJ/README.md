@@ -15,16 +15,22 @@ diteruskan ke backend via REST (`X-API-Key`).
 | `/news latest` / `/news search <kata>` | Berita penipuan terverifikasi |
 | `/report scam` | Formulir modal laporan → `POST /api/reports` (status `pending`, tidak dipublikasikan sebelum diverifikasi admin) |
 | `/report status <id>` | Cek status laporan milik sendiri |
-| `/config status\|alert-channel\|protection` | Pengaturan server (khusus admin: ManageGuild/Administrator) |
+| `/config status\|alert-channel\|news-channel\|protection` | Pengaturan server (khusus admin: ManageGuild/Administrator) |
 
 Semua hasil scan/laporan/config dikirim sebagai pesan **ephemeral** (hanya terlihat
-oleh pemanggil). URL di embed di-defang (`hxxps://`) agar tidak bisa diklik.
+oleh pemanggil), kecuali `/news` dan `/ping` yang memang data publik. URL di embed
+di-defang (`hxxps://`) agar tidak bisa diklik.
+
+`/config news-channel <#channel>` menentukan channel tujuan tombol "Tampilkan 5
+berita acak" di panel `/admin`. Bot mengambil permintaan dari outbox backend
+(`POST /api/discord/outbox/claim`, interval `BROADCAST_POLL_INTERVAL`, default 5s),
+lalu posting 5 berita acak. Fallback bila belum diatur: channel alert.
 
 ## Menjalankan (dev)
 
 ```bash
 cp .env.example .env   # isi DISCORD_TOKEN, DISCORD_APP_ID, REDJOHN_API_KEY
-go run ./cmd/bot
+go run main.go        # atau: go run ./cmd/bot
 ```
 
 `REDJOHN_API_KEY` harus sama dengan `DISCORD_BOT_API_KEY` di `backend/.env`.
@@ -48,7 +54,8 @@ docker run --env-file .env redjohn-bot
 ## Arsitektur
 
 ```
-cmd/bot/main.go          bootstrap + slog
+main.go, cmd/bot/main.go entry point (keduanya memanggil internal/app)
+internal/app             bootstrap + slog
 internal/config          env parsing (token tidak pernah di-log)
 internal/bot             sesi DiscordGo, alert delivery, shutdown
 internal/commands        definisi slash command + handler interaction
