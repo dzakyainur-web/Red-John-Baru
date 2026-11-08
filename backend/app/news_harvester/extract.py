@@ -209,6 +209,11 @@ def _tld_allowed(host: str) -> bool:
     return labels[-1] in _ALLOWED_TLDS
 
 
+def tld_allowed(host: str) -> bool:
+    """Versi publik `_tld_allowed` untuk validasi input endpoint scan."""
+    return _tld_allowed(host)
+
+
 def _defang(url: str) -> str:
     return re.sub(r"\.", "[.]", re.sub(r"^http", "hxxp", url, flags=re.IGNORECASE))
 

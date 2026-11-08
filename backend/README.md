@@ -31,12 +31,36 @@ Dokumentasi interaktif: <http://localhost:8000/docs>
 | Metode | Path | Keterangan |
 |---|---|---|
 | POST | `/api/check` | Body `{"text": "...", "context": "dm"}` → skor risiko, daftar tanda bahaya, probabilitas ML, rekomendasi skenario |
+| POST | `/api/scan/{kind}` | `kind` = `url`, `domain`, `text`, `phone`, `bank`, `email`. Body `{"target": "...", "source": "discord"}` → `assessment` berkontrak sama dengan `/api/check`. Wajib header `X-API-Key` |
 | GET | `/api/examples` | Contoh pesan fiktif (aman & tipuan) untuk tombol "Coba contoh" |
 | GET | `/api/news` | Daftar berita penipuan (`limit`, `offset`, `category`, `source`, `q`) dari Supabase |
+| GET | `/api/threats` | Daftar ancaman untuk panel admin (`status`, `source_type`, `category`, `q`, `limit`, `offset`) |
+| POST | `/api/threats` | Tambah ancaman manual dari admin (selalu `verified`) |
+| PATCH | `/api/threats/{id}` | Ubah sebagian field ancaman, termasuk `status` |
+| DELETE | `/api/threats/{id}` | Arsipkan (soft delete → `status: rejected`) |
 | GET | `/api/model/status` | Apakah model ML termuat beserta versinya |
+| POST | `/api/reports` | Laporan publik (website/Discord). **Selalu `pending`**, `source_media` = platform pelapor. Wajib `X-API-Key` |
+| GET | `/api/reports/{id}?reporter_id=&platform=` | Ringkasan status (tanpa judul/deskripsi) untuk pelapor aslinya. Wajib `X-API-Key` |
+| GET | `/api/discord/config/{guild_id}` | Konfigurasi bot per guild (default bila belum ada). Wajib `X-API-Key` |
+| PATCH | `/api/discord/config/{guild_id}` | Ubah `alert_channel_id`, `protection_enabled`, `notification_categories`. Wajib `X-API-Key` |
+| GET | `/api/discord/alert-channels` | Guild yang punya channel alert (untuk polling bot). Wajib `X-API-Key` |
 | GET | `/health` | Health check (`ok` / `degraded` bila model tidak termuat) |
 
 Teks hanya diproses di memori request; tidak disimpan dan tidak di-log.
+
+### Auth Discord Bot
+
+`/api/scan/*`, `/api/reports*`, dan `/api/discord/*` memerlukan header `X-API-Key`
+yang nilainya sama dengan `DISCORD_BOT_API_KEY`. Bila key kosong: di
+`APP_ENV=development` endpoint terbuka (warning sekali di log), di
+`APP_ENV=production` backend membalas `503`. Endpoint lain (frontend/admin) tidak terpengaruh.
+
+### Alur laporan
+
+Laporan dari website maupun Discord selalu masuk sebagai `pending` dengan
+`reporter_platform`/`reporter_id`/`reporter_name` terisi. Tidak ada laporan pelapor yang
+langsung tampil publik: admin meninjau di `/admin` lalu memilih verified/rejected.
+Migrasi: `supabase/migrations/004_discord_bot.sql`.
 
 ## News harvester
 
@@ -47,7 +71,8 @@ utama (`og:image`) untuk card berita. Hasil masuk ke tabel `scam_reports` di Sup
 `source_url`.
 
 Migrasi SQL dijalankan manual: buka Supabase → SQL Editor → tempel isi
-`supabase/migrations/001_scam_reports.sql`, lalu `002_threat_admin.sql` dan `003_news_image.sql`.
+`supabase/migrations/001_scam_reports.sql`, lalu `002_threat_admin.sql`,
+`003_news_image.sql`, dan `004_discord_bot.sql`.
 
 > Catatan: upsert memakai `ignore_duplicates=True`, jadi baris lama **tidak** diperbarui. Artikel
 > yang sudah masuk sebelum `003_news_image.sql` tetap tanpa gambar (`image_url` NULL) sampai
