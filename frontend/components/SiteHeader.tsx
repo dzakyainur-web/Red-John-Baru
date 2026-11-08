@@ -1,6 +1,7 @@
 "use client";
 
 import Link from "next/link";
+import Image from "next/image";
 import { usePathname } from "next/navigation";
 import { useState } from "react";
 import { useSound } from "./SoundManager";
@@ -10,103 +11,141 @@ export default function SiteHeader() {
   const { soundEnabled, toggleSound, playClick, playHover } = useSound();
   const [menuOpen, setMenuOpen] = useState(false);
 
-  const navLinks = [
-    { href: "/", label: "GAME" },
-    { href: "/pemindai", label: "PEMINDAI" },
-    { href: "/berita", label: "RADAR" },
-    { href: "/inspect", label: "INSPEKSI" },
-    { href: "/learn", label: "INTEL" },
-    { href: "/act", label: "PLAYBOOK" },
-    // ponytail: panel internal tanpa auth, hapus sebelum rilis.
-    { href: "/admin", label: "ADMIN" },
-    { href: "/login", label: "MASUK" },
-  ];
+  const isHome = pathname === "/";
 
   if (pathname === "/login" || pathname === "/register") {
     return null;
   }
 
   return (
-    <header className="fixed top-0 left-0 right-0 z-50 px-4 sm:px-8 py-5 transition-all">
-      <div className="max-w-[1440px] mx-auto flex items-center justify-between">
-        {/* Left: Circular Arrow Back/Home Button */}
-        <div className="flex items-center gap-3">
-          <Link
-            href="/"
-            onClick={playClick}
-            onMouseEnter={playHover}
-            aria-label="Kembali ke beranda"
-            className="group relative flex size-11 items-center justify-center rounded-full bg-[#181818]/80 border border-white/10 backdrop-blur-md text-white transition-all duration-200 hover:scale-105 hover:border-white/30 hover:bg-[#222]"
-          >
-            <svg
-              className="size-5 transition-transform duration-200 group-hover:-translate-x-0.5"
-              fill="none"
-              viewBox="0 0 24 24"
-              stroke="currentColor"
-              strokeWidth="2"
+    <header className="fixed top-0 left-0 right-0 z-50 bg-black/60 backdrop-blur-xl border-b border-white/[0.06] px-4 sm:px-8 py-3.5 transition-all">
+      <div className="max-w-[1340px] mx-auto flex items-center justify-between gap-6">
+        {/* Left: Brand Logo + Nav Links ala HeroUI */}
+        <div className="flex items-center gap-10 shrink-0">
+          {!isHome && (
+            <Link
+              href="/"
+              onClick={playClick}
+              onMouseEnter={playHover}
+              aria-label="Kembali ke beranda"
+              className="group flex size-8 items-center justify-center rounded-full bg-white/[0.05] border border-white/10 text-zinc-400 transition-all hover:border-white/30 hover:text-white hover:bg-white/10"
+              title="Kembali ke beranda"
             >
-              <path strokeLinecap="round" strokeLinejoin="round" d="M10.5 19.5 3 12m0 0 7.5-7.5M3 12h18" />
-            </svg>
-          </Link>
+              <svg
+                className="size-4 transition-transform group-hover:-translate-x-0.5"
+                fill="none"
+                viewBox="0 0 24 24"
+                stroke="currentColor"
+                strokeWidth="2"
+              >
+                <path strokeLinecap="round" strokeLinejoin="round" d="M10.5 19.5 3 12m0 0 7.5-7.5M3 12h18" />
+              </svg>
+            </Link>
+          )}
 
-          {/* Quick status pill */}
-          <div className="hidden md:flex items-center gap-2 px-3 py-1 rounded-full bg-white/[0.04] border border-white/[0.08] backdrop-blur-sm text-[11px] font-[family-name:var(--font-geist-mono)] text-zinc-400">
-            <span className="size-1.5 rounded-full bg-[#FF3815] animate-ping" />
-            <span>SISTEM AKTIF</span>
-          </div>
-        </div>
-
-        {/* Center: Brand Typography */}
-        <div className="absolute left-1/2 -translate-x-1/2 flex items-center gap-1.5">
+          {/* HeroUI-style clean Logo */}
           <Link
             href="/"
             onClick={playClick}
-            className="font-[family-name:var(--font-display)] text-xl sm:text-2xl font-light tracking-wider text-white hover:opacity-80 transition-opacity flex items-center"
+            className="flex items-center gap-2.5 group"
           >
-            <span>Orange Horse</span>
-            <sup className="text-xs ml-0.5 font-sans font-normal text-zinc-400">&reg;</sup>
+            <Image
+              src="/red-john-logo.png"
+              alt=""
+              width={215}
+              height={301}
+              priority
+              className="h-7 w-auto drop-shadow-[0_0_12px_rgba(255,0,0,0.45)]"
+            />
+            <span className="font-[family-name:var(--font-display)] text-lg font-bold tracking-tight text-white group-hover:text-zinc-200 transition-colors">
+              Red John
+            </span>
           </Link>
+
+          {/* Center Links ala HeroUI */}
+          <nav className="hidden lg:flex items-center gap-7 text-[13px] text-zinc-400 font-sans font-medium">
+            <Link
+              href="/berita"
+              onClick={playClick}
+              className="hover:text-white transition-colors flex items-center gap-1"
+            >
+              <span>Radar Berita</span>
+            </Link>
+
+            <Link
+              href="/pemindai"
+              onClick={playClick}
+              className="hover:text-white transition-colors flex items-center gap-1"
+            >
+              <span>Pemindai Pesan</span>
+            </Link>
+
+            <Link
+              href="/inspect"
+              onClick={playClick}
+              className="hover:text-white transition-colors"
+            >
+              Inspeksi Tautan
+            </Link>
+
+            <Link
+              href="/#game"
+              onClick={playClick}
+              className="hover:text-white transition-colors"
+            >
+              Simulasi Kognitif
+            </Link>
+
+            <Link
+              href="/act"
+              onClick={playClick}
+              className="hover:text-white transition-colors"
+            >
+              Playbook
+            </Link>
+
+            <Link
+              href="/learn"
+              onClick={playClick}
+              className="hover:text-white transition-colors"
+            >
+              Intelijen
+            </Link>
+          </nav>
         </div>
 
-        {/* Right: Sound Toggle + Menu */}
-        <div className="flex items-center gap-3">
-          {/* Sound Synthesizer Toggle */}
+        {/* Right side ala HeroUI: Status Pill + White Pill Button */}
+        <div className="flex items-center gap-3.5 shrink-0">
+          {/* Status Pill */}
+          <div className="hidden sm:flex items-center gap-2 px-3 py-1.5 rounded-full bg-white/[0.04] border border-white/[0.08] text-xs font-sans text-zinc-300">
+            <span className="size-1.5 rounded-full bg-[#10B981] animate-pulse" />
+            <span className="font-medium text-xs">Heuristik Lokal</span>
+          </div>
+
+          {/* Sound Toggle Pill */}
           <button
             type="button"
             onClick={toggleSound}
             onMouseEnter={playHover}
-            className={`hidden sm:flex items-center gap-2 px-3.5 py-1.5 rounded-full border text-xs font-[family-name:var(--font-geist-mono)] transition-all ${
+            className={`hidden md:flex items-center gap-1.5 px-3 py-1.5 rounded-full border text-xs font-[family-name:var(--font-geist-mono)] transition-all ${
               soundEnabled
-                ? "bg-[#FF3815]/15 border-[#FF3815]/40 text-[#FF5533]"
-                : "bg-white/[0.04] border-white/10 text-zinc-400 hover:text-white hover:border-white/20"
+                ? "bg-white/[0.1] border-white/30 text-white"
+                : "bg-white/[0.04] border-white/[0.08] text-zinc-400 hover:text-white hover:border-white/20"
             }`}
-            title={soundEnabled ? "Matikan audio" : "Aktifkan efek suara"}
+            title={soundEnabled ? "Matikan audio" : "Aktifkan efek audio"}
           >
-            <span className="size-1.5 rounded-full bg-current" />
-            <span>SUARA: {soundEnabled ? "NYALA" : "MATI"}</span>
+            <span className={`size-1.5 rounded-full ${soundEnabled ? "bg-white animate-pulse" : "bg-zinc-600"}`} />
+            <span>Audio {soundEnabled ? "ON" : "OFF"}</span>
           </button>
 
-          {/* Desktop Nav Links */}
-          <nav className="hidden lg:flex items-center gap-1 bg-[#141414]/80 border border-white/10 backdrop-blur-md px-2 py-1 rounded-full">
-            {navLinks.map((item) => {
-              const active = item.href === "/" ? pathname === "/" : pathname.startsWith(item.href);
-              return (
-                <Link
-                  key={item.href}
-                  href={item.href}
-                  onClick={playClick}
-                  onMouseEnter={playHover}
-                  className={`px-3 py-1 rounded-full text-xs font-[family-name:var(--font-geist-mono)] font-medium tracking-wider transition-colors ${
-                    active
-                      ? "bg-white text-black font-semibold"
-                      : "text-zinc-400 hover:text-white hover:bg-white/5"
-                  }`}
-                >
-                  {item.label}
-                </Link>
-              );
-            })}
-          </nav>
+          {/* HeroUI Solid White Pill "Get Started / Dashboard" */}
+          <Link
+            href="/admin"
+            onClick={playClick}
+            className="px-4 py-1.5 rounded-full bg-white hover:bg-zinc-200 text-black font-semibold text-xs font-sans transition-all shadow-[0_0_20px_rgba(255,255,255,0.2)] hover:scale-[1.02] active:scale-[0.98]"
+          >
+            Dashboard
+          </Link>
 
           {/* Mobile Menu Button */}
           <button
@@ -116,9 +155,9 @@ export default function SiteHeader() {
               setMenuOpen(!menuOpen);
             }}
             aria-label="Buka/tutup menu navigasi"
-            className="lg:hidden flex size-11 items-center justify-center rounded-full bg-[#181818]/80 border border-white/10 backdrop-blur-md text-white hover:border-white/30"
+            className="lg:hidden flex size-8 items-center justify-center rounded-full bg-white/[0.06] border border-white/10 text-white hover:border-white/20"
           >
-            <svg className="size-5" fill="none" viewBox="0 0 24 24" stroke="currentColor" strokeWidth="2">
+            <svg className="size-4" fill="none" viewBox="0 0 24 24" stroke="currentColor" strokeWidth="2">
               {menuOpen ? (
                 <path strokeLinecap="round" strokeLinejoin="round" d="M6 18L18 6M6 6l12 12" />
               ) : (
@@ -131,9 +170,16 @@ export default function SiteHeader() {
 
       {/* Mobile Drawer */}
       {menuOpen && (
-        <div className="lg:hidden mt-3 mx-auto max-w-[1440px] rounded-2xl bg-[#0e0e0e]/95 border border-white/10 p-5 backdrop-blur-xl animate-in fade-in slide-in-from-top-2">
+        <div className="lg:hidden mt-3 mx-auto max-w-[1340px] rounded-2xl bg-[#0C0C0E]/95 border border-white/10 p-5 backdrop-blur-2xl animate-in fade-in slide-in-from-top-2 shadow-2xl">
           <div className="flex flex-col gap-2">
-            {navLinks.map((item) => (
+            {[
+              { href: "/berita", label: "Radar Berita" },
+              { href: "/pemindai", label: "Pemindai Pesan" },
+              { href: "/inspect", label: "Inspeksi Tautan" },
+              { href: "/#game", label: "Simulasi Kognitif" },
+              { href: "/act", label: "Playbook" },
+              { href: "/learn", label: "Intelijen" },
+            ].map((item) => (
               <Link
                 key={item.href}
                 href={item.href}
@@ -141,22 +187,21 @@ export default function SiteHeader() {
                   playClick();
                   setMenuOpen(false);
                 }}
-                className="flex items-center justify-between py-2.5 px-3 rounded-lg text-sm font-[family-name:var(--font-geist-mono)] text-zinc-300 hover:bg-white/5 hover:text-white"
+                className="flex items-center justify-between py-2.5 px-3 rounded-lg text-sm text-zinc-300 hover:bg-white/[0.06] hover:text-white"
               >
                 <span>{item.label}</span>
-                <span className="text-zinc-600">&rarr;</span>
+                <span className="text-zinc-500">&rarr;</span>
               </Link>
             ))}
 
-            <div className="pt-3 border-t border-white/10 flex items-center justify-between">
-              <span className="text-xs font-[family-name:var(--font-geist-mono)] text-zinc-500">EFEK SUARA</span>
-              <button
-                type="button"
-                onClick={toggleSound}
-                className="text-xs font-[family-name:var(--font-geist-mono)] text-[#FF5533]"
+            <div className="pt-3 mt-1 border-t border-white/10 flex items-center justify-between">
+              <Link
+                href="/admin"
+                onClick={() => setMenuOpen(false)}
+                className="w-full text-center py-2.5 rounded-full bg-white text-black font-semibold text-xs shadow-lg"
               >
-                STATUS: {soundEnabled ? "NYALA" : "MATI"}
-              </button>
+                Buka Dashboard &rarr;
+              </Link>
             </div>
           </div>
         </div>

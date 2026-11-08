@@ -2,6 +2,7 @@
 
 import React, { useState } from "react";
 import Link from "next/link";
+import Image from "next/image";
 import RainbowRing from "./RainbowRing";
 
 interface Login06Props {
@@ -141,13 +142,17 @@ export default function Login06({
           <div className="flex flex-col justify-center">
             {/* Logo Badge (Red John in signature Login 06 circular badge style) */}
             <div className="mb-6 flex items-center">
-              <Link href="/" className="inline-flex items-center select-none cursor-pointer group">
-                {/* White circular pill badge with "Red" */}
-                <span className="flex items-center justify-center h-8 px-3 rounded-full bg-white text-black font-bold text-xs tracking-tight shadow-sm group-hover:bg-zinc-200 transition-colors">
-                  Red
-                </span>
-                <span className="text-white font-bold text-base tracking-tight ml-1.5 group-hover:text-zinc-200 transition-colors">
-                  John.
+              <Link href="/" className="inline-flex items-center gap-2 select-none cursor-pointer group">
+                {/* Brand mark */}
+                <Image
+                  src="/red-john-logo.png"
+                  alt=""
+                  width={215}
+                  height={301}
+                  className="h-8 w-auto drop-shadow-[0_0_10px_rgba(255,0,0,0.45)]"
+                />
+                <span className="text-white font-bold text-base tracking-tight group-hover:text-zinc-200 transition-colors">
+                  Red John.
                 </span>
               </Link>
             </div>
