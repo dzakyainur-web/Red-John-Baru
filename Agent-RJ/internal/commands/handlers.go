@@ -42,12 +42,24 @@ func (r *Registry) ctxFor() (context.Context, context.CancelFunc) {
 
 // deferEphemeral ACK cepat; hasil dikirim via followup (batas 3 detik Discord).
 func (r *Registry) deferEphemeral(s *discordgo.Session, i *discordgo.InteractionCreate) {
-	err := s.InteractionRespond(i.Interaction, &discordgo.InteractionResponse{
-		Type: discordgo.InteractionResponseDeferredChannelMessageWithSource,
-		Data: &discordgo.InteractionResponseData{Flags: discordgo.MessageFlagsEphemeral},
-	})
-	if err != nil {
-		r.deps.Logger.Warn("gagal ACK interaction", "err", err)
+	r.deferAC(discordgo.MessageFlagsEphemeral)(s, i)
+}
+
+// deferPublic ACK tanpa flag ephemeral: pesan "thinking" DAN followup terlihat
+// semua anggota channel. Hanya untuk command dengan data publik (mis. /news).
+func (r *Registry) deferPublic(s *discordgo.Session, i *discordgo.InteractionCreate) {
+	r.deferAC(0)(s, i)
+}
+
+func (r *Registry) deferAC(flags discordgo.MessageFlags) func(*discordgo.Session, *discordgo.InteractionCreate) {
+	return func(s *discordgo.Session, i *discordgo.InteractionCreate) {
+		err := s.InteractionRespond(i.Interaction, &discordgo.InteractionResponse{
+			Type: discordgo.InteractionResponseDeferredChannelMessageWithSource,
+			Data: &discordgo.InteractionResponseData{Flags: flags},
+		})
+		if err != nil {
+			r.deps.Logger.Warn("gagal ACK interaction", "err", err)
+		}
 	}
 }
 
@@ -79,24 +91,40 @@ func apiMessage(err error) string {
 }
 
 func followupEmbed(s *discordgo.Session, i *discordgo.InteractionCreate, emb *discordgo.MessageEmbed) {
-	_, _ = s.FollowupMessageCreate(i.Interaction, true, &discordgo.WebhookParams{
+	// Interaction sudah di-ACK dengan flag ephemeral; followup harus menambahkan
+	// Flush agar pesan benar-benar tampil (default discordgo Ephemeral=true).
+	_, _ = s.FollowupMessageCreate(i.Interaction, false, &discordgo.WebhookParams{
 		Embeds: []*discordgo.MessageEmbed{emb},
 		Flags:  discordgo.MessageFlagsEphemeral,
+	})
+}
+
+// followupPublicEmbed kirim embed yang terlihat semua anggota channel.
+// Hanya untuk data publik (mis. daftar berita terverifikasi).
+func followupPublicEmbed(s *discordgo.Session, i *discordgo.InteractionCreate, emb *discordgo.MessageEmbed) {
+	_, _ = s.FollowupMessageCreate(i.Interaction, false, &discordgo.WebhookParams{
+		Embeds: []*discordgo.MessageEmbed{emb},
 	})
 }
 
 // ---- /ping -----------------------------------------------------------------------
 
 func (r *Registry) handlePing(s *discordgo.Session, i *discordgo.InteractionCreate) {
-	r.deferEphemeral(s, i)
+	// ACK publik: ACK ephemeral membuat seluruh followup tetap privat.
+	r.deferPublic(s, i)
 	ctx, cancel := r.ctxFor()
 	defer cancel()
 
 	backend := "✅ terhubung"
-	if _, err := r.deps.Client.News(ctx, "", 1, 0); err != nil {
+	if health, err := r.deps.Client.Health(ctx); err != nil {
 		backend = "❌ tidak terhubung: " + apiMessage(err)
+	} else if health.Status != "ok" {
+		backend = "⚠️ hidup, status `" + health.Status + "`"
+		if !health.MLLoaded {
+			backend += " (model ML tidak termuat)"
+		}
 	}
-	followupEmbed(s, i, &discordgo.MessageEmbed{
+	followupPublicEmbed(s, i, &discordgo.MessageEmbed{
 		Title: "🏓 Pong",
 		Description: fmt.Sprintf("Gateway latency: **%d ms**\nBackend: %s",
 			s.HeartbeatLatency().Milliseconds(), backend),
@@ -119,7 +147,7 @@ func (r *Registry) handleHelp(s *discordgo.Session, i *discordgo.InteractionCrea
 					"**/news latest|search** — berita penipuan terverifikasi",
 					"**/report scam** — laporkan dugaan penipuan (formulir)",
 					"**/report status** — cek status laporanmu",
-					"**/config status|alert-channel|protection** — pengaturan server (admin)",
+					"**/config status|alert-channel|news-channel|protection** — pengaturan server (admin)",
 					"**/ping** — status bot & backend",
 				}, "\n"),
 				Footer: &discordgo.MessageEmbedFooter{
@@ -192,15 +220,17 @@ func (r *Registry) handleScam(s *discordgo.Session, i *discordgo.InteractionCrea
 // ---- /news -----------------------------------------------------------------------
 
 func (r *Registry) handleNews(s *discordgo.Session, i *discordgo.InteractionCreate) {
-	r.deferEphemeral(s, i)
+	// ACK juga publik: ACK ephemeral membuat seluruh followup tetap privat.
+	r.deferPublic(s, i)
 	ctx, cancel := r.ctxFor()
 	defer cancel()
 
 	query := ""
-	title := "📰 Berita Penipuan Terbaru"
+	title := "📰 Berita Penipuan Terverifikasi"
 	if sub, ok := subcommandName(i); ok && sub == "search" {
 		query, _ = optionString(i, "kata")
-		title = "📰 Hasil Pencarian Berita"
+		query = strings.TrimSpace(query)
+		title = "🔎 Hasil Pencarian Berita"
 	}
 
 	list, err := r.deps.Client.News(ctx, query, 5, 0)
@@ -208,7 +238,8 @@ func (r *Registry) handleNews(s *discordgo.Session, i *discordgo.InteractionCrea
 		followupEmbed(s, i, ui.ErrorEmbed(apiMessage(err)))
 		return
 	}
-	followupEmbed(s, i, ui.NewsEmbed(list, title))
+	// Berita adalah data publik → tampil untuk semua anggota channel.
+	followupPublicEmbed(s, i, ui.NewsEmbed(list, title))
 }
 
 // ---- /report -----------------------------------------------------------------------
@@ -231,10 +262,12 @@ func (r *Registry) handleReport(s *discordgo.Session, i *discordgo.InteractionCr
 			Title:    "Laporkan Penipuan",
 			Components: []discordgo.MessageComponent{
 				discordgo.TextInput{
-					CustomID:    "category",
-					Label:       "Kategori: " + strings.Join(reportCategories, "/"),
+					CustomID: "category",
+					// Label input Discord maks 45 karakter; daftar kategori ada di
+					// placeholder (maks 100) — label panjang ditolak server.
+					Label:       "Kategori",
 					Style:       discordgo.TextInputShort,
-					Placeholder: "phishing_link",
+					Placeholder: strings.Join(reportCategories, " | "),
 					Required:    true,
 					MaxLength:   40,
 				},
@@ -381,6 +414,20 @@ func (r *Registry) handleConfig(s *discordgo.Session, i *discordgo.InteractionCr
 		}
 		cfg, err := r.deps.Client.PatchGuildConfig(ctx, guildID, map[string]any{
 			"alert_channel_id": channelID,
+		})
+		if err != nil {
+			followupEmbed(s, i, ui.ErrorEmbed(apiMessage(err)))
+			return
+		}
+		followupEmbed(s, i, ui.ConfigEmbed(cfg))
+	case "news-channel":
+		channelID := optionChannel(i, "channel")
+		if channelID == "" {
+			followupEmbed(s, i, ui.ErrorEmbed("Channel tidak valid."))
+			return
+		}
+		cfg, err := r.deps.Client.PatchGuildConfig(ctx, guildID, map[string]any{
+			"news_channel_id": channelID,
 		})
 		if err != nil {
 			followupEmbed(s, i, ui.ErrorEmbed(apiMessage(err)))

@@ -58,12 +58,16 @@ func NewRegistry(cfg *config.Config, logger *slog.Logger) *Registry {
 // (dev, instan), global bila tidak (production, propagasi bisa sampai ~1 jam).
 func (r *Registry) Register(s *discordgo.Session) error {
 	if r.deps.Cfg.DiscordGuildID != "" {
-		_, err := s.ApplicationCommandBulkOverwrite(
-			r.deps.Cfg.DiscordAppID, r.deps.Cfg.DiscordGuildID, r.defs)
-		return fmt.Errorf("register command guild %s: %w", r.deps.Cfg.DiscordGuildID, err)
+		if _, err := s.ApplicationCommandBulkOverwrite(
+			r.deps.Cfg.DiscordAppID, r.deps.Cfg.DiscordGuildID, r.defs); err != nil {
+			return fmt.Errorf("register command guild %s: %w", r.deps.Cfg.DiscordGuildID, err)
+		}
+		return nil
 	}
-	_, err := s.ApplicationCommandBulkOverwrite(r.deps.Cfg.DiscordAppID, "", r.defs)
-	return fmt.Errorf("register command global: %w", err)
+	if _, err := s.ApplicationCommandBulkOverwrite(r.deps.Cfg.DiscordAppID, "", r.defs); err != nil {
+		return fmt.Errorf("register command global: %w", err)
+	}
+	return nil
 }
 func Definitions() []*discordgo.ApplicationCommand {
 	return []*discordgo.ApplicationCommand{
@@ -120,6 +124,8 @@ func Definitions() []*discordgo.ApplicationCommand {
 				sub("status", "Lihat konfigurasi server ini"),
 				sub("alert-channel", "Atur channel notifikasi ancaman",
 					channelOpt("channel", "Channel tujuan alert")),
+				sub("news-channel", "Atur channel untuk berita yang dibagikan dari panel admin",
+					channelOpt("channel", "Channel tujuan berita")),
 				sub("protection", "Aktif/nonaktifkan perlindungan",
 					boolOpt("aktif", "ON atau OFF")),
 			},
