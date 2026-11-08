@@ -216,6 +216,18 @@ func (c *Client) News(ctx context.Context, q string, limit, offset int) (*models
 	if err != nil {
 		return nil, err
 	}
+	out.QueryText = q
+	return &out, nil
+}
+
+// RandomNews GET /api/news/random — sampel acak berita terverifikasi.
+func (c *Client) RandomNews(ctx context.Context, limit int) (*models.NewsList, error) {
+	params := url.Values{}
+	params.Set("limit", strconv.Itoa(clamp(limit, 1, 20)))
+	var out models.NewsList
+	if err := c.do(ctx, http.MethodGet, "/api/news/random?"+params.Encode(), nil, &out); err != nil {
+		return nil, err
+	}
 	return &out, nil
 }
 
@@ -263,6 +275,16 @@ func (c *Client) PatchGuildConfig(ctx context.Context, guildID string, patch map
 	return &out, nil
 }
 
+// Health GET /health — sengaja di luar /api agar juga mendeteksi backend yang
+// hidup tapi routing /api rusak. Tidak butuh X-API-Key.
+func (c *Client) Health(ctx context.Context) (*models.Health, error) {
+	var out models.Health
+	if err := c.do(ctx, http.MethodGet, "/health", nil, &out); err != nil {
+		return nil, err
+	}
+	return &out, nil
+}
+
 // VerifiedThreats GET /api/threats?status=verified&source_type=scraped untuk polling alert.
 func (c *Client) VerifiedThreats(ctx context.Context, limit int) (*models.ThreatList, error) {
 	params := url.Values{}
@@ -285,6 +307,51 @@ func (c *Client) AlertChannels(ctx context.Context) ([]models.GuildConfig, error
 		return nil, err
 	}
 	return out, nil
+}
+
+// ---- Antrian pekerjaan dari panel admin (/api/discord/outbox) --------------------
+
+// PendingBroadcast satu permintaan "kirim 5 berita acak" dari panel admin.
+type PendingBroadcast struct {
+	ID      int64  `json:"id"`
+	GuildID string `json:"guild_id"`
+}
+
+// NewsChannels GET /api/discord/news-channels — guild beserta channel beritanya.
+// Dipakai polling agar posting ke channel tujuan tanpa query per guild.
+func (c *Client) NewsChannels(ctx context.Context) ([]models.GuildConfig, error) {
+	var out []models.GuildConfig
+	err := c.do(ctx, http.MethodGet, "/api/discord/news-channels", nil, &out)
+	if err != nil {
+		return nil, err
+	}
+	return out, nil
+}
+
+// ClaimBroadcast POST /api/discord/outbox/claim — ambil dan kunci job yang
+// menunggu dibagikan ke channel berita. Antrian kosong = backend 204 (result nil).
+func (c *Client) ClaimBroadcast(ctx context.Context) (*PendingBroadcast, error) {
+	var out PendingBroadcast
+	err := c.do(ctx, http.MethodPost, "/api/discord/outbox/claim", struct{}{}, &out)
+	if err != nil {
+		var apiErr *APIError
+		// 404 dipertahankan untuk kompatibilitas backend lama.
+		if errors.As(err, &apiErr) && apiErr.HTTPStatus == http.StatusNotFound {
+			return nil, nil
+		}
+		return nil, err
+	}
+	if out.ID == 0 {
+		return nil, nil
+	}
+	return &out, nil
+}
+
+// FinishBroadcast POST /api/discord/outbox/{id}/finish — tandai selesai/gagal.
+// `errMsg` kosong = sukses.
+func (c *Client) FinishBroadcast(ctx context.Context, id int64, errMsg string) error {
+	path := "/api/discord/outbox/" + strconv.FormatInt(id, 10) + "/finish"
+	return c.do(ctx, http.MethodPost, path, map[string]string{"error": errMsg}, nil)
 }
 
 func clamp(v, lo, hi int) int {

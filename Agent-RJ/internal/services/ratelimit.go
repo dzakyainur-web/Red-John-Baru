@@ -12,6 +12,7 @@ type RateLimiter struct {
 	buckets map[string]*bucket
 	limit   int
 	window  time.Duration
+	lastGC  time.Time
 }
 
 type bucket struct {
@@ -34,6 +35,8 @@ func (r *RateLimiter) Allow(key string) bool {
 	defer r.mu.Unlock()
 
 	now := time.Now()
+	r.sweep(now)
+
 	b, ok := r.buckets[key]
 	if !ok {
 		r.buckets[key] = &bucket{tokens: float64(r.limit) - 1, last: now}
@@ -50,6 +53,28 @@ func (r *RateLimiter) Allow(key string) bool {
 	}
 	b.tokens--
 	return true
+}
+
+// sweep membuang bucket yang sudah penuh lagi (idle ≥ window). Tanpa ini map
+// tumbuh satu entri per user selamanya selama proses bot hidup.
+// Biaya O(n) per window, bukan per request.
+func (r *RateLimiter) sweep(now time.Time) {
+	if now.Sub(r.lastGC) < r.window {
+		return
+	}
+	for k, b := range r.buckets {
+		if now.Sub(b.last) >= r.window {
+			delete(r.buckets, k)
+		}
+	}
+	r.lastGC = now
+}
+
+// size untuk test — jumlah bucket aktif.
+func (r *RateLimiter) size() int {
+	r.mu.Lock()
+	defer r.mu.Unlock()
+	return len(r.buckets)
 }
 
 // RetryAfter perkiraan waktu tunggu (min. 1 detik) — untuk pesan pengguna.

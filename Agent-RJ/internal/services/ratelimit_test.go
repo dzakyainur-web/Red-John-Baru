@@ -32,6 +32,22 @@ func TestRateLimiterRefill(t *testing.T) {
 	}
 }
 
+func TestRateLimiterSweepIdleBuckets(t *testing.T) {
+	rl := NewRateLimiter(1, 20*time.Millisecond)
+	for i := 0; i < 50; i++ {
+		_ = rl.Allow("user" + string(rune('a'+i%26)) + string(rune('0'+i/26)))
+	}
+	before := rl.size()
+	time.Sleep(30 * time.Millisecond)
+	_ = rl.Allow("fresh-user") // memicu sweep
+	if after := rl.size(); after >= before {
+		t.Fatalf("bucket idle harus dibuang: sebelum %d, sesudah %d", before, after)
+	}
+	if !rl.Allow("fresh-user-2") {
+		t.Fatal("user baru tetap harus lolos setelah sweep")
+	}
+}
+
 func TestRetryAfter(t *testing.T) {
 	rl := NewRateLimiter(1, time.Minute)
 	_ = rl.Allow("u1")
