@@ -23,7 +23,8 @@ logger = logging.getLogger(__name__)
 TABLE = "scam_reports"
 COLUMNS = (
     "id,title,category,description,scammer_indicators,source_url,source_media,"
-    "source_type,status,published_at,created_at,updated_at"
+    "source_type,status,published_at,created_at,updated_at,image_url,"
+    "reporter_platform,reporter_id,reporter_name"
 )
 
 
@@ -92,6 +93,81 @@ async def create_threat(payload: dict[str, Any]) -> dict[str, Any] | None:
     return data[0] if data else row
 
 
+def build_report_row(payload: dict[str, Any]) -> dict[str, Any]:
+    """Laporan publik (website/Discord) -> baris `pending`, tidak pernah auto-publish.
+
+    Berbeda dari `build_create_row` (jalur admin, selalu `verified`). `source_media`
+    ditentukan server dari platform pelapor, bukan dari input klien.
+    """
+    reporter = payload["reporter"]
+    platform = reporter["platform"]
+    return {
+        "id": article_id(f"report:{platform}:{reporter['id']}:{uuid4()}"),
+        "title": truncate(clean_text(payload["title"]), 300),
+        "category": payload["category"],
+        "description": truncate(clean_text(payload["description"]), 1200),
+        "scammer_indicators": sanitize_indicators(payload.get("scammer_indicators") or []),
+        # Target pelaku sengaja tidak disimpan sebagai source_url: jangan pernah
+        # menjadikannya tautan publik sebelum diverifikasi admin.
+        "source_url": None,
+        "source_media": platform,
+        "source_type": "user_report",
+        "status": "pending",
+        "published_at": None,
+        "reporter_platform": platform,
+        "reporter_id": reporter["id"],
+        "reporter_name": reporter.get("name"),
+    }
+
+
+async def create_report(payload: dict[str, Any]) -> dict[str, Any] | None:
+    sb = store.get_store()
+    if sb is None:
+        return None
+    row = build_report_row(payload)
+    response = await sb.table(TABLE).insert(row).execute()
+    data = response.data or []
+    return data[0] if data else row
+
+
+async def get_report_for_reporter(
+    report_id: str, *, platform: str, reporter_id: str
+) -> dict[str, Any] | None:
+    """Satu laporan milik pelapor tertentu. Filter di query -> tidak bocorkan keberadaan."""
+    sb = store.get_store()
+    if sb is None:
+        return None
+    response = await (
+        sb.table(TABLE)
+        .select("id,category,status,created_at,updated_at")
+        .eq("id", report_id)
+        .eq("reporter_platform", platform)
+        .eq("reporter_id", reporter_id)
+        .limit(1)
+        .execute()
+    )
+    data = response.data or []
+    return data[0] if data else None
+
+
+async def count_active_reports(
+    *, platform: str, reporter_id: str, statuses: tuple[str, ...] = ("pending",)
+) -> int:
+    """Jumlah laporan aktif pelapor — untuk batas antrean per pengguna."""
+    sb = store.get_store()
+    if sb is None:
+        return 0
+    response = await (
+        sb.table(TABLE)
+        .select("id", count="exact")
+        .eq("reporter_platform", platform)
+        .eq("reporter_id", reporter_id)
+        .in_("status", list(statuses))
+        .execute()
+    )
+    return int(response.count or 0)
+
+
 def build_update_row(patch: dict[str, Any]) -> dict[str, Any]:
     """PATCH parsial -> kolom yang berubah saja. Nilai None (field tak dikirim) dilewati."""
     row: dict[str, Any] = {"updated_at": _now()}
@@ -142,4 +218,7 @@ def to_threat_out(row: dict[str, Any]) -> dict[str, Any]:
         "published_at": row.get("published_at"),
         "created_at": row.get("created_at"),
         "updated_at": row.get("updated_at"),
+        "reporter_platform": row.get("reporter_platform"),
+        "reporter_id": row.get("reporter_id"),
+        "reporter_name": row.get("reporter_name"),
     }

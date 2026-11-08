@@ -1,0 +1,12 @@
+# dotenv dengan kredensial — JANGAN commit
+.env
+
+# binary build (hanya di root modul; tanpa "/" pola ini juga mengabaikan
+# direktori internal/bot dan cmd/bot)
+/bot
+/bot.exe
+/dist/
+
+# Go
+*.test
+*.out

@@ -5,6 +5,7 @@ from __future__ import annotations
 from app.news_harvester.extract import (
     article_id,
     classify,
+    clean_image_url,
     clean_text,
     extract_iocs,
     is_fresh,
@@ -106,6 +107,26 @@ def test_classify_empty_defaults_to_phishing() -> None:
 def test_classify_respects_word_boundaries() -> None:
     # "menangkap" bukan "menang"; "hubungan" bukan "bunga".
     assert classify("Polisi menangkap pelaku", "kasus hubungan asmara") == "phishing_link"
+
+
+def test_clean_image_url_absolute_and_relative() -> None:
+    article = "https://www.detik.com/berita/d-123/judul"
+    absolute = "https://cdn.detik.net.id/visual/2026/11/foto.jpg?w=650"
+    assert clean_image_url(absolute, article) == absolute
+    assert clean_image_url("  /assets/img/hero.jpg  ", article) == (
+        "https://www.detik.com/assets/img/hero.jpg"
+    )
+    assert clean_image_url("//cdn.kompas.com/a.jpg", article) == "https://cdn.kompas.com/a.jpg"
+
+
+def test_clean_image_url_rejects_non_http() -> None:
+    article = "https://www.detik.com/berita/d-123/judul"
+    assert clean_image_url("", article) is None
+    assert clean_image_url("   ", article) is None
+    assert clean_image_url("data:image/png;base64,AAAA", article) is None
+    assert clean_image_url("javascript:alert(1)", article) is None
+    assert clean_image_url("https://", article) is None
+    assert clean_image_url("https://cdn.detik.com/" + "a" * 2100, article) is None
 
 
 def test_parse_anchors_filters_by_pattern_and_length() -> None:

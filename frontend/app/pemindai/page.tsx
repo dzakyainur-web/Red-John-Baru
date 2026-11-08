@@ -3,7 +3,7 @@ import ScamTerminal from "@/components/ScamTerminal";
 import { PageHead, SourceNote } from "@/components/ui";
 
 export const metadata: Metadata = {
-  title: "Pemindai Anomali Pesan — Orange Horse & GuardianAI",
+  title: "Pemindai Anomali Pesan — Red John",
   description:
     "Deteksi anomali dan manipulasi pesan mencurigakan secara real-time. Memeriksa urgensi palsu, pencurian OTP, nomor rekening pribadi, dan file APK berbahaya.",
 };

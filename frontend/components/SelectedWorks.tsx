@@ -23,7 +23,7 @@ const WORKS: WorkItem[] = [
     category: "GAME SIMULASI & KOGNITIF",
     description:
       "Game simulasi interaktif menghadapi tipu daya Red John dengan pendampingan bot Jane yang mengintervensi saat pilihanmu berisiko.",
-    tag: "GAME UTAMA",
+    tag: "SIMULASI KOGNITIF",
     href: "/#game",
     status: "ARENA AKTIF",
   },
@@ -33,8 +33,8 @@ const WORKS: WorkItem[] = [
     title: "PEMINDAI ANOMALI PESAN",
     category: "CORE INFERENCE ENGINE",
     description:
-      "Analisis mendalam teks SMS, WhatsApp, dan lowongan kerja mencurigakan berbasis aturan heuristik tanda bahaya dan machine learning lokal.",
-    tag: "PEMINDAI / NLP",
+      "Analisis mendalam teks SMS, WhatsApp, dan lowongan kerja mencurigakan berbasis aturan heuristik tanda bahaya dan deteksi APK lokal.",
+    tag: "HEURISTIK LOKAL",
     href: "/pemindai",
     status: "SIAP PAKAI",
   },
@@ -56,7 +56,7 @@ const WORKS: WorkItem[] = [
     category: "INTELIJEN ANCAMAN",
     description:
       "Agregasi otomatis RSS dan deteksi tren heuristik untuk memetakan gelombang modus penipuan di Indonesia.",
-    tag: "RSS AKTIF / NLP",
+    tag: "AUTO-SYNC 6 JAM",
     href: "/berita",
     status: "RADAR AKTIF",
   },
@@ -67,36 +67,36 @@ const WORKS: WorkItem[] = [
     category: "TANGGAP INSIDEN",
     description:
       "Buku saku tanggap darurat: pemblokiran rekening bank, pemulihan kartu SIM, kanal lapor resmi kepolisian, dan pengamanan bukti digital.",
-    tag: "PANDUAN / TRIAGE",
+    tag: "PLAYBOOK DARURAT",
     href: "/act",
     status: "SIAP DARURAT",
   },
 ];
 
 export default function SelectedWorks() {
-  const [activeHover, setActiveHover] = useState<string | null>(null);
+  const [, setActiveHover] = useState<string | null>(null);
   const { playClick, playHover } = useSound();
 
   return (
-    <section className="py-24 border-t border-white/10 relative z-10">
-      <div className="max-w-[1440px] mx-auto px-4 sm:px-8">
-        {/* Section Header */}
-        <div className="flex flex-wrap items-baseline justify-between gap-4 mb-16">
+    <section className="py-20 border-t border-white/[0.06] bg-[#000000] relative z-10">
+      <div className="max-w-[1340px] mx-auto px-4 sm:px-8">
+        {/* Section Header ala HeroUI */}
+        <div className="flex flex-wrap items-baseline justify-between gap-4 mb-10">
           <div>
-            <span className="text-xs font-[family-name:var(--font-geist-mono)] tracking-widest text-[#FF3815] uppercase font-bold">
-              [ KAPABILITAS // ARSITEKTUR ]
+            <span className="text-xs font-mono tracking-wider text-zinc-400 uppercase font-semibold">
+              [ ARSITEKTUR PLATFORM // SEMUA MODUL ]
             </span>
-            <h2 className="mt-2 text-3xl sm:text-5xl font-black tracking-tight text-white font-[family-name:var(--font-display)] uppercase">
-              MODUL UTAMA
+            <h2 className="mt-2 text-2xl sm:text-4xl font-bold tracking-tight text-white font-sans uppercase">
+              Direktori Modul Lengkap
             </h2>
           </div>
-          <p className="max-w-md text-xs sm:text-sm font-[family-name:var(--font-geist-mono)] text-zinc-400">
-            DIRANCANG UNTUK MENANGKAL MANIPULASI MODERN. TANPA KOMPROMI PRIVASI. SEMUA HEURISTIK BERJALAN DI SISI KLIEN ATAU INFERENSI DEDIKASI.
+          <p className="max-w-md text-xs sm:text-sm font-sans text-zinc-400">
+            Dirancang untuk menangkal manipulasi digital tanpa kompromi privasi. Semua heuristik berjalan aman di sisi klien.
           </p>
         </div>
 
-        {/* Works List / Interactive Brutalist Rows */}
-        <div className="divide-y divide-white/10">
+        {/* Works List / HeroUI sleek rows */}
+        <div className="divide-y divide-white/[0.06]">
           {WORKS.map((work) => (
             <Link
               key={work.id}
@@ -107,24 +107,24 @@ export default function SelectedWorks() {
                 playHover();
               }}
               onMouseLeave={() => setActiveHover(null)}
-              className="group block py-10 transition-all duration-300 hover:bg-white/[0.02] px-2 sm:px-4"
+              className="group block py-6 transition-all duration-200 hover:bg-white/[0.03] px-4 rounded-2xl"
             >
-              <div className="grid grid-cols-1 lg:grid-cols-12 gap-6 items-center">
+              <div className="grid grid-cols-1 lg:grid-cols-12 gap-5 items-center">
                 {/* Number & Category */}
-                <div className="lg:col-span-3 flex items-baseline gap-4">
-                  <span className="font-[family-name:var(--font-geist-mono)] text-sm text-[#FF3815] font-bold">
+                <div className="lg:col-span-3 flex items-baseline gap-3">
+                  <span className="font-mono text-sm text-zinc-400 font-bold">
                     {work.number}
                   </span>
-                  <span className="font-[family-name:var(--font-geist-mono)] text-xs tracking-widest text-zinc-500 uppercase">
+                  <span className="font-mono text-xs tracking-wider text-zinc-500 uppercase">
                     {work.category}
                   </span>
                 </div>
 
                 {/* Title */}
                 <div className="lg:col-span-4">
-                  <h3 className="text-2xl sm:text-4xl font-extrabold uppercase tracking-tight text-white group-hover:text-[#FF3815] transition-colors font-[family-name:var(--font-display)] flex items-center gap-3">
+                  <h3 className="text-base sm:text-lg font-bold uppercase tracking-tight text-white group-hover:text-zinc-200 transition-colors font-sans flex items-center gap-2">
                     <span>{work.title}</span>
-                    <span className="opacity-0 group-hover:opacity-100 transition-opacity text-xl text-[#FF3815]">
+                    <span className="opacity-0 group-hover:opacity-100 transition-opacity text-base text-white">
                       &rarr;
                     </span>
                   </h3>
@@ -132,14 +132,14 @@ export default function SelectedWorks() {
 
                 {/* Description */}
                 <div className="lg:col-span-3">
-                  <p className="text-xs sm:text-sm font-[family-name:var(--font-geist-mono)] text-zinc-400 leading-relaxed">
+                  <p className="text-xs sm:text-sm font-sans text-zinc-400 leading-relaxed">
                     {work.description}
                   </p>
                 </div>
 
                 {/* Badges / CTA */}
                 <div className="lg:col-span-2 flex items-center justify-end gap-3">
-                  <span className="px-3 py-1 rounded-full bg-white/5 border border-white/10 text-[11px] font-[family-name:var(--font-geist-mono)] text-zinc-400 group-hover:border-[#FF3815]/40 group-hover:text-zinc-200 transition-colors">
+                  <span className="px-3 py-1 rounded-full bg-white/[0.05] border border-white/10 text-[11px] font-mono text-zinc-300 group-hover:border-white/25 group-hover:text-white transition-colors">
                     {work.tag}
                   </span>
                 </div>

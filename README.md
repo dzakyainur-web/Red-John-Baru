@@ -1,6 +1,6 @@
-# Red John — Cyber Scam Radar
+# Red John
 
-GuardianAI: API FastAPI + panel admin Next.js + scraper berita penipuan → Supabase.
+Red John: API FastAPI + panel admin Next.js + scraper berita penipuan → Supabase.
 
 ## Menjalankan (3 terminal)
 
@@ -15,6 +15,9 @@ cd backend && uv run scraper.py
 
 # 3. Frontend — http://localhost:3000
 cd frontend && bun run dev
+
+# 4. Discord bot (opsional — butuh token Discord, lihat Agent-RJ/README.md)
+cd Agent-RJ && go run main.go   # atau: go run ./cmd/bot
 ```
 
 Ketiganya bisa hidup bersamaan. API **tidak** menjalankan scraper; scraper butuh prosesnya sendiri.
@@ -30,6 +33,9 @@ Migrasi SQL dijalankan manual di Supabase → SQL Editor, berurutan:
 
 1. `backend/supabase/migrations/001_scam_reports.sql`
 2. `backend/supabase/migrations/002_threat_admin.sql`
+3. `backend/supabase/migrations/003_news_image.sql`
+4. `backend/supabase/migrations/004_discord_bot.sql` (hanya bila menjalankan Discord bot)
+5. `backend/supabase/migrations/005_discord_news_broadcast.sql` (hanya bila menjalankan Discord bot)
 
 ## Scraper: perintah lain
 
@@ -41,10 +47,10 @@ uv run scraper.py --once                            # harvest sekali lalu keluar
 
 ## Halaman
 
-| URL | Isi |
-|---|---|
-| `/` | Periksa pesan mencurigakan |
-| `/berita` | Feed penipuan terverifikasi |
-| `/admin` | Panel CRUD ancaman (tanpa auth — internal) |
+| URL       | Isi                                        |
+| --------- | ------------------------------------------ |
+| `/`       | Periksa pesan mencurigakan                 |
+| `/berita` | Feed penipuan terverifikasi                |
+| `/admin`  | Panel CRUD ancaman (tanpa auth — internal) |
 
 Dokumentasi backend lengkap: [`backend/README.md`](backend/README.md).

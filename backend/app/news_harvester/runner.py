@@ -15,6 +15,7 @@ from app.news_harvester import store
 from app.news_harvester.browser import PageReader, browser_session, polite_pause, robots_allows
 from app.news_harvester.extract import (
     classify,
+    clean_image_url,
     clean_text,
     extract_iocs,
     is_fresh,
@@ -106,6 +107,7 @@ async def _harvest_source(reader: PageReader, source: Source, stats: HarvestStat
             "description": truncate(body),
             "iocs": extract_iocs(body),
             "category": classify(title, body),
+            "image_url": clean_image_url(detail.image, link["url"]),
         }
 
     results = await asyncio.gather(*(fetch(link) for link in links))

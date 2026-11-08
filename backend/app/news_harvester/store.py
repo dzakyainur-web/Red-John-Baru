@@ -3,6 +3,7 @@
 from __future__ import annotations
 
 import logging
+import random
 from typing import Any
 
 from supabase import AsyncClient, create_async_client
@@ -94,6 +95,7 @@ def to_row(article: dict[str, Any]) -> dict[str, Any]:
         "source_media": article["media"],
         "status": "verified",
         "published_at": article.get("published_at"),
+        "image_url": article.get("image_url") or None,
     }
 
 
@@ -135,8 +137,14 @@ async def list_reports(
     category: str | None = None,
     media: str | None = None,
     query: str | None = None,
+    order: str = "created_at",
+    descending: bool = True,
 ) -> tuple[list[dict[str, Any]], int]:
-    """Feed berita terverifikasi, terbaru dulu. Return (rows, total)."""
+    """Feed berita terverifikasi. Return (rows, total).
+
+    Default terbaru dulu; `order`/`descending` bisa diubah pemanggil (lihat
+    `count_reports` + endpoint `/api/news/random`).
+    """
     sb = get_store()
     if sb is None:
         return [], 0
@@ -144,7 +152,7 @@ async def list_reports(
         sb.table(TABLE)
         .select(
             "id,title,description,category,source_url,source_media,"
-            "published_at,created_at",
+            "published_at,created_at,image_url",
             count="exact",
         )
         .eq("status", "verified")
@@ -155,10 +163,55 @@ async def list_reports(
         builder = builder.eq("source_media", media)
     if query:
         builder = builder.ilike("title", f"%{query}%")
-    response = await builder.order("created_at", desc=True).range(
+    response = await builder.order(order, desc=descending).range(
         offset, offset + limit - 1
     ).execute()
     return list(response.data or []), int(response.count or 0)
+
+
+async def count_reports() -> int:
+    """Jumlah berita terverifikasi — dasar pemilihan offset acak."""
+    sb = get_store()
+    if sb is None:
+        return 0
+    response = (
+        await sb.table(TABLE)
+        .select("id", count="exact")
+        .eq("status", "verified")
+        .limit(1)
+        .execute()
+    )
+    return int(response.count or 0)
+
+
+async def random_reports(limit: int) -> list[dict[str, Any]]:
+    """Sampel acak berita terverifikasi, tanpa menarik seluruh tabel.
+
+    Populasi kecil -> ambil semua lalu `random.sample`. Selain itu offset acak
+    lalu jendela berurutan (`order=id`); bila jendela melewati akhir tabel,
+    sisanya dilengkapi dari awal.
+    """
+    sb = get_store()
+    if sb is None:
+        return []
+    total = await count_reports()
+    if total == 0:
+        return []
+    if total <= limit * 2:
+        rows, _ = await list_reports(limit=total, offset=0)
+    else:
+        start = random.randrange(total)
+        span = min(limit * 2, total)
+        rows, _ = await list_reports(
+            limit=min(span, total - start), offset=start, order="id", descending=False
+        )
+        if len(rows) < limit:
+            more, _ = await list_reports(
+                limit=limit - len(rows), offset=0, order="id", descending=False
+            )
+            rows += more
+    unique = list({row["id"]: row for row in rows}.values())
+    return random.sample(unique, k=min(limit, len(unique)))
 
 
 def to_news_item(row: dict[str, Any]) -> dict[str, Any]:
@@ -172,4 +225,5 @@ def to_news_item(row: dict[str, Any]) -> dict[str, Any]:
         "published_at": row.get("published_at") or row.get("created_at"),
         "snippet": truncate(row.get("description") or "", SNIPPET_CHARS),
         "categories": [row["category"]],
+        "image_url": row.get("image_url") or None,
     }

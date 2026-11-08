@@ -42,6 +42,14 @@ load_env_file()
 @dataclass(frozen=True)
 class Settings:
     max_input_chars: int = 5000
+    # Environment aplikasi. `production` mematikan bypass dev pada endpoint bot.
+    app_env: str = field(
+        default_factory=lambda: os.environ.get("APP_ENV", "development").strip().lower()
+    )
+    # Kunci service-to-service untuk Discord Bot (header X-API-Key).
+    discord_bot_api_key: str = field(
+        default_factory=lambda: os.environ.get("DISCORD_BOT_API_KEY", "")
+    )
     cors_origins: tuple[str, ...] = field(
         default_factory=lambda: tuple(
             o.strip()
@@ -77,7 +85,7 @@ class Settings:
     news_max_age_days: int = 90
     news_concurrency: int = 3
     news_lock_ttl_minutes: int = 45
-    news_user_agent: str = "GuardianAI-news/2.0 (+edukasi penipuan digital)"
+    news_user_agent: str = "RedJohn-news/2.0 (+edukasi penipuan digital)"
 
 
 settings = Settings()

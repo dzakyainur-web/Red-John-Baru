@@ -2,8 +2,8 @@ import type { Metadata } from "next";
 import { PageHead } from "@/components/ui";
 
 export const metadata: Metadata = {
-  title: "Transparansi & keamanan — GuardianAI",
-  description: "Cara kerja, keterbatasan, dan perlakuan data GuardianAI.",
+  title: "Transparansi & keamanan — Red John",
+  description: "Cara kerja, keterbatasan, dan perlakuan data Red John.",
 };
 
 const FACTS = [

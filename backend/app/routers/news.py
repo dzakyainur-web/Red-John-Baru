@@ -16,6 +16,39 @@ NEWS_CATEGORIES = (
 )
 
 
+@router.get("/news/random", response_model=NewsListOut)
+async def random_news(
+    limit: int = Query(default=5, ge=1, le=20),
+) -> NewsListOut:
+    """Sampel acak berita terverifikasi — dipakai tombol "Tampilkan acak" di /admin.
+
+    Pemilihan di `store.random_reports` (offset acak, tidak menarik seluruh tabel).
+    `total` = jumlah berita terverifikasi.
+    """
+    if store.get_store() is None:
+        return NewsListOut(
+            items=[], total=0, limit=limit, offset=0, updated_at=None, configured=False
+        )
+
+    try:
+        total = await store.count_reports()
+        sampled = await store.random_reports(limit) if total else []
+    except Exception:  # noqa: BLE001 - jangan 500; panel bisa tampilkan kosong
+        return NewsListOut(
+            items=[], total=0, limit=limit, offset=0, updated_at=None, configured=True
+        )
+
+    items = [NewsItemOut(**store.to_news_item(row)) for row in sampled]
+    return NewsListOut(
+        items=items,
+        total=total,
+        limit=limit,
+        offset=0,
+        updated_at=items[0].published_at if items else None,
+        configured=True,
+    )
+
+
 @router.get("/news", response_model=NewsListOut)
 async def list_news(
     limit: int = Query(default=20, ge=1, le=100),

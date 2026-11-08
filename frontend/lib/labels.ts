@@ -2,11 +2,57 @@
 // Next 16 menolak file ber-"use cache" inline di dalam Client Component.
 
 export const CATEGORY_LABEL: Record<string, string> = {
-  fake_job: "Kerja palsu",
-  phishing_link: "Phishing",
-  giveaway_palsu: "Hadiah palsu",
+  fake_job: "Kerja Palsu",
+  phishing_link: "Phishing & Web",
+  giveaway_palsu: "Hadiah Palsu",
   malware_apk: "Malware APK",
-  pinjol_ilegal: "Pinjol ilegal",
+  pinjol_ilegal: "Pinjol & Investasi",
+  social_engineering: "Rekayasa Sosial & OTP",
+  quishing: "QRIS Palsu (Quishing)",
+  crypto_scam: "Investasi Kripto Bodong",
+};
+
+export const CATEGORY_STYLES: Record<string, { bg: string; text: string; border: string }> = {
+  malware_apk: {
+    bg: "bg-red-500/10",
+    text: "text-red-400",
+    border: "border-red-500/30",
+  },
+  phishing_link: {
+    bg: "bg-amber-500/10",
+    text: "text-amber-400",
+    border: "border-amber-500/30",
+  },
+  social_engineering: {
+    bg: "bg-orange-500/10",
+    text: "text-orange-400",
+    border: "border-orange-500/30",
+  },
+  fake_job: {
+    bg: "bg-blue-500/10",
+    text: "text-blue-400",
+    border: "border-blue-500/30",
+  },
+  pinjol_ilegal: {
+    bg: "bg-purple-500/10",
+    text: "text-purple-400",
+    border: "border-purple-500/30",
+  },
+  giveaway_palsu: {
+    bg: "bg-emerald-500/10",
+    text: "text-emerald-400",
+    border: "border-emerald-500/30",
+  },
+  quishing: {
+    bg: "bg-cyan-500/10",
+    text: "text-cyan-400",
+    border: "border-cyan-500/30",
+  },
+  crypto_scam: {
+    bg: "bg-rose-500/10",
+    text: "text-rose-400",
+    border: "border-rose-500/30",
+  },
 };
 
 // Tanggal absolut (bukan "x hari lalu") supaya render server == klien.

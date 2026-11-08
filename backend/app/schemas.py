@@ -84,6 +84,7 @@ class NewsItemOut(BaseModel):
     published_at: str | None
     snippet: str
     categories: list[str]
+    image_url: str | None = None
 
 
 class NewsListOut(BaseModel):
@@ -95,6 +96,40 @@ class NewsListOut(BaseModel):
     configured: bool
 
 
+# --- Scan terstruktur (dipakai Discord Bot via /api/scan/{kind}) ---------------
+
+ScanKind = Literal["url", "domain", "text", "phone", "bank", "email"]
+ScanSource = Literal["discord", "web", "api"]
+
+
+class ScanRequest(BaseModel):
+    """Input satu target. Validasi format per `kind` ada di router scan."""
+
+    target: str = Field(
+        ...,
+        min_length=1,
+        max_length=settings.max_input_chars,
+        description="URL, domain, teks, nomor telepon, nomor rekening, atau email.",
+    )
+    source: ScanSource = Field(default="discord")
+
+    @field_validator("target")
+    @classmethod
+    def not_blank(cls, value: str) -> str:
+        if not value.strip():
+            raise ValueError("Target tidak boleh kosong.")
+        return value
+
+
+class ScanResponse(BaseModel):
+    """Hasil pemeriksaan. `assessment` memakai kontrak `CheckResponse` yang sama."""
+
+    kind: ScanKind
+    target: str
+    source: ScanSource
+    assessment: CheckResponse
+
+
 # --- Panel admin: CRUD ancaman ------------------------------------------------
 
 ThreatStatus = Literal["pending", "verified", "rejected"]
@@ -103,6 +138,7 @@ ThreatCategory = Literal[
 ]
 ThreatSource = Literal["scraped", "user_report"]
 IndicatorType = Literal["url", "apk", "phone", "bank_account"]
+ReporterPlatform = Literal["discord", "web"]
 
 _STATUS_ALIASES = {"pending", "verified", "rejected"}
 
@@ -150,6 +186,9 @@ class ThreatOut(BaseModel):
     published_at: str | None
     created_at: str | None
     updated_at: str | None
+    reporter_platform: ReporterPlatform | None = None
+    reporter_id: str | None = None
+    reporter_name: str | None = None
 
 
 class ThreatListOut(BaseModel):
@@ -222,3 +261,127 @@ SourceFilter = Literal["all", "scraped", "user_report"]
 CategoryFilter = Literal[
     "all", "fake_job", "phishing_link", "giveaway_palsu", "malware_apk", "pinjol_ilegal"
 ]
+
+
+# --- Laporan publik (website & Discord Bot) ------------------------------------
+
+
+class Reporter(BaseModel):
+    """Identitas pelapor. `id` = Discord user id atau id akun website."""
+
+    platform: ReporterPlatform
+    id: str = Field(..., min_length=1, max_length=64)
+    name: str | None = Field(default=None, max_length=100)
+
+
+class ReportCreate(BaseModel):
+    """Laporan publik. Server memaksa `status=pending`; klien tidak bisa memilih status."""
+
+    category: ThreatCategory
+    title: str = Field(..., min_length=10, max_length=300)
+    description: str = Field(..., min_length=1, max_length=1200)
+    target: str | None = Field(
+        default=None,
+        max_length=2000,
+        description="URL/nomor/rekening/nama file APK milik pelaku (opsional).",
+    )
+    reporter: Reporter
+
+    @field_validator("title")
+    @classmethod
+    def clean_title(cls, value: str) -> str:
+        return _clean(value, low=10, high=300, field="Judul") or ""
+
+    @field_validator("description")
+    @classmethod
+    def clean_description(cls, value: str) -> str:
+        return _clean(value, low=1, high=1200, field="Deskripsi") or ""
+
+    @field_validator("target")
+    @classmethod
+    def clean_target(cls, value: str | None) -> str | None:
+        if value is None:
+            return None
+        cleaned = clean_text(value)
+        return cleaned or None
+
+
+class ReportStatusOut(BaseModel):
+    """Ringkasan status untuk pelapor. Sengaja tanpa judul/deskripsi/indikator."""
+
+    id: str
+    category: ThreatCategory
+    status: ThreatStatus
+    created_at: str | None
+    updated_at: str | None
+
+
+# --- Konfigurasi per Discord Guild --------------------------------------------
+
+
+class GuildConfigOut(BaseModel):
+    guild_id: str
+    alert_channel_id: str | None
+    news_channel_id: str | None = None
+    protection_enabled: bool
+    notification_categories: list[ThreatCategory]
+    updated_at: str | None
+
+
+class GuildConfigUpdate(BaseModel):
+    """PATCH parsial: hanya field yang dikirim yang ditulis.
+
+    Channel memakai `model_fields_set` karena None sah (matikan channel).
+    """
+
+    alert_channel_id: str | None = Field(default=None, max_length=32)
+    news_channel_id: str | None = Field(default=None, max_length=32)
+    protection_enabled: bool | None = None
+    notification_categories: list[ThreatCategory] | None = Field(default=None, max_length=5)
+
+    @field_validator("alert_channel_id", "news_channel_id")
+    @classmethod
+    def digits_only(cls, value: str | None) -> str | None:
+        if value is None:
+            return None
+        value = value.strip()
+        if not value.isdigit():
+            raise ValueError("ID channel Discord harus berupa angka.")
+        return value
+
+
+# --- Outbox bot Discord (alur: panel admin -> backend -> bot polling) ----------
+
+
+class BroadcastRequest(BaseModel):
+    """Permintaan dari panel /admin agar bot memposting berita acak ke guild ini."""
+
+    guild_id: str = Field(min_length=1, max_length=32)
+
+    @field_validator("guild_id")
+    @classmethod
+    def guild_digits(cls, value: str) -> str:
+        value = value.strip()
+        if not value.isdigit():
+            raise ValueError("ID guild Discord harus berupa angka.")
+        return value
+
+
+class BroadcastQueuedOut(BaseModel):
+    status: Literal["queued"] = "queued"
+    message: str = (
+        "Permintaan diterima. Bot akan memposting 5 berita acak ke channel "
+        "berita server ini dalam beberapa detik."
+    )
+
+
+class BotEventOut(BaseModel):
+    """Job yang diklaim bot. Tanpa `error`/status internal lain."""
+
+    id: int
+    guild_id: str
+    kind: Literal["news_broadcast"]
+
+
+class BotEventFinishIn(BaseModel):
+    error: str | None = Field(default=None, max_length=1000)
