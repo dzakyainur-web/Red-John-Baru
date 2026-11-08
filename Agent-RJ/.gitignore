@@ -1,0 +1,11 @@
+# dotenv dengan kredensial — JANGAN commit
+.env
+
+# binary build
+bot
+bot.exe
+dist/
+
+# Go
+*.test
+*.out
