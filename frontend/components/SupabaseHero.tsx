@@ -8,7 +8,7 @@ import Link from "next/link";
 
 export default function SupabaseHero() {
   return (
-    <section className="pt-28 sm:pt-36 pb-14 px-6 bg-[#0c0d0d]">
+    <section className="pt-28 sm:pt-36 pb-14 px-6 bg-[#0c0d0d] [font-family:var(--font-jetbrains-mono)]">
       <div className="max-w-[1200px] mx-auto">
         {/* 2-column layout: headline left, description right */}
         <div className="flex flex-col lg:flex-row lg:items-start lg:justify-between gap-8 lg:gap-16">
@@ -18,7 +18,7 @@ export default function SupabaseHero() {
             {/* Headline — Manrope, tight tracking, exact Supabase scale */}
             <h1
               className="text-[44px] sm:text-[56px] lg:text-[64px] font-black text-white leading-[1.08] tracking-[-0.03em]"
-              style={{ fontFamily: "var(--font-supa-heading)" }}
+              style={{ fontFamily: "var(--font-jetbrains-mono)" }}
             >
               Build in a weekend
               <br />
@@ -30,14 +30,14 @@ export default function SupabaseHero() {
               <Link
                 href="/pemindai"
                 className="inline-flex items-center justify-center px-4 py-2 rounded-md bg-[#006239] hover:bg-[#007544] text-white font-medium text-[14px] transition-all hover:scale-[1.01] active:scale-[0.99] border border-[#007544]/40 shadow-sm"
-                style={{ fontFamily: "var(--font-supa-body)", letterSpacing: "-0.01em" }}
+                style={{ fontFamily: "var(--font-jetbrains-mono)", letterSpacing: "0" }}
               >
                 Start your project
               </Link>
               <Link
                 href="/tentang-keamanan"
                 className="inline-flex items-center justify-center px-4 py-2 rounded-md bg-[#161817] border border-white/10 text-zinc-300 font-medium text-[14px] hover:border-white/20 hover:text-white hover:bg-white/[0.04] transition-all"
-                style={{ fontFamily: "var(--font-supa-body)", letterSpacing: "-0.01em" }}
+                style={{ fontFamily: "var(--font-jetbrains-mono)", letterSpacing: "0" }}
               >
                 Request a demo
               </Link>
@@ -48,7 +48,7 @@ export default function SupabaseHero() {
           <div className="lg:max-w-[340px] lg:pt-4">
             <p
               className="text-[15px] sm:text-[16px] text-[#A0A0A0] leading-[1.65]"
-              style={{ fontFamily: "var(--font-supa-body)", fontWeight: 400 }}
+              style={{ fontFamily: "var(--font-jetbrains-mono)", fontWeight: 400 }}
             >
               Start your project with a Postgres database. Add Authentication, Data APIs, Edge Functions, Realtime Data, Storage, and Vector embeddings.
             </p>
