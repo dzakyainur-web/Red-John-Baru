@@ -1,4 +1,4 @@
-"use client";
+﻿"use client";
 
 import Link from "next/link";
 import { useEffect, useState } from "react";
@@ -24,7 +24,7 @@ export default function StudioFooter() {
   }, []);
 
   return (
-    <footer className="border-t border-white/[0.06] bg-[#000000] pt-16 pb-12 relative z-10 font-sans">
+    <footer className="border-t border-white/[0.06] bg-[#0a0a0a] pt-16 pb-12 relative z-10 font-sans">
       <div className="max-w-[1340px] mx-auto px-4 sm:px-8">
         {/* Giant brand lettering ala HeroUI footer */}
         <div className="mb-14 flex items-center gap-6 sm:gap-10">

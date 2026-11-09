@@ -1,23 +1,34 @@
-@import "tailwindcss";
+﻿@import "tailwindcss";
 
 /* ============================================================
-   Red John x HeroUI Design Architecture
-   True Pitch Black (#000000), Pure White Pill CTAs,
-   Translucent Glass Surface (#0C0C0E), Metallic Gradients,
-   and Sleek High-Contrast Typography.
+   SUPABASE DESIGN TOKENS -- Exact Landing Page Clone
+   Fonts: Inter (body/UI) + Manrope (headings) + Source Code Pro (mono)
    ============================================================ */
 :root {
-  --paper: #000000;       /* HeroUI True Pitch Black */
-  --surface: #0C0C0E;     /* HeroUI Deep Glass Surface */
-  --raised: #161619;      /* Elevated surface / hover */
-  --ink: #FFFFFF;         /* Primary pure white */
-  --muted: #A1A1AA;       /* Secondary zinc text */
-  --rule: rgba(255, 255, 255, 0.08); /* Border halus */
-  --rule-strong: rgba(255, 255, 255, 0.16);
+  /* -- Supabase color tokens -- */
+  --supa-bg: #0c0d0d;
+  --supa-surface: #161817;
+  --supa-green: #3ECF8E;
+  --supa-green-hover: #4adeaa;
+  --supa-text: #EDEDED;
+  --supa-muted: #A0A0A0;
+  --supa-border: rgba(255, 255, 255, 0.08);
 
+  /* -- Supabase font tokens -- */
+  --font-supa-body: var(--font-inter), -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, Helvetica, Arial, sans-serif;
+  --font-supa-heading: var(--font-manrope), var(--font-supa-body);
+  --font-supa-mono: var(--font-source-code-pro), ui-monospace, SFMono-Regular, Menlo, Monaco, Consolas, monospace;
+
+  /* -- Red John / HeroUI legacy tokens (used by other pages) -- */
+  --paper: #000000;
+  --surface: #0C0C0E;
+  --raised: #161619;
+  --ink: #FFFFFF;
+  --muted: #A1A1AA;
+  --rule: rgba(255, 255, 255, 0.08);
+  --rule-strong: rgba(255, 255, 255, 0.16);
   --accent-primary: #FFFFFF;
   --accent-muted: #71717A;
-
   --safe: #22c55e;
   --safe-wash: rgba(34, 197, 94, 0.1);
   --safe-line: rgba(34, 197, 94, 0.3);
@@ -29,6 +40,7 @@
 }
 
 @theme inline {
+  /* Legacy Red John tokens */
   --color-paper: var(--paper);
   --color-surface: var(--surface);
   --color-raised: var(--raised);
@@ -42,19 +54,46 @@
   --color-warn: var(--warn);
   --color-warn-wash: var(--warn-wash);
   --color-warn-line: var(--warn-line);
-  --font-sans: var(--font-body);
-  --font-mono: var(--font-geist-mono);
+  --font-sans: var(--font-supa-body);
+  --font-mono: var(--font-supa-mono);
+  --font-geist: var(--font-geist-mono);
   --font-jetbrains: var(--font-jetbrains-mono);
-  --font-heading: var(--font-display);
+  --font-heading: var(--font-supa-heading);
+  --font-display: var(--font-display);
+  /* Supabase named aliases for utility classes */
+  --font-inter: var(--font-supa-body);
+  --font-manrope: var(--font-supa-heading);
+  --font-code: var(--font-supa-mono);
 }
 
+/* ============================================================
+   BASE BODY -- Supabase typography system
+   font-weight 450 = Inter variable font sweet spot
+   -webkit-font-smoothing: antialiased = crisp rendering
+   ============================================================ */
 body {
-  background: #000000;
-  color: #FFFFFF;
-  font-family: var(--font-body), ui-sans-serif, system-ui, -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif;
+  background: #0c0d0d;
+  color: #EDEDED;
+  font-family: var(--font-supa-body);
   font-size: 16px;
+  font-weight: 400;
   line-height: 1.6;
+  -webkit-font-smoothing: antialiased;
+  -moz-osx-font-smoothing: grayscale;
   overflow-x: hidden;
+}
+
+/* -- Supabase heading typography -- */
+h1, h2, h3, h4, h5, h6 {
+  font-family: var(--font-supa-heading);
+  letter-spacing: -0.02em;
+  line-height: 1.1;
+}
+
+/* -- Supabase code/mono typography -- */
+code, pre, kbd, samp {
+  font-family: var(--font-supa-mono);
+  font-size: 0.875em;
 }
 
 ::selection {
@@ -68,21 +107,11 @@ body {
   border-radius: 9999px;
 }
 
-/* Custom scrollbars */
-::-webkit-scrollbar {
-  width: 6px;
-  height: 6px;
-}
-::-webkit-scrollbar-track {
-  background: #000000;
-}
-::-webkit-scrollbar-thumb {
-  background: #27272A;
-  border-radius: 9999px;
-}
-::-webkit-scrollbar-thumb:hover {
-  background: #3F3F46;
-}
+/* -- Custom scrollbars (Supabase style: dark, minimal) -- */
+::-webkit-scrollbar { width: 6px; height: 6px; }
+::-webkit-scrollbar-track { background: #0c0d0d; }
+::-webkit-scrollbar-thumb { background: #333; border-radius: 9999px; }
+::-webkit-scrollbar-thumb:hover { background: #444; }
 
 @layer components {
   .shell {
@@ -95,47 +124,58 @@ body {
     .shell { padding-inline: 2rem; }
   }
 
-  /* HeroUI Pill Button */
+  /* Supabase-style button: ghost pill */
   .btn {
     display: inline-flex;
     align-items: center;
     justify-content: center;
     gap: 0.5rem;
-    min-height: 2.75rem;
-    padding-inline: 1.5rem;
-    border: 1px solid var(--rule);
-    border-radius: 9999px; /* Pill */
-    background: rgba(255, 255, 255, 0.06);
+    min-height: 2.5rem;
+    padding-inline: 1.25rem;
+    border: 1px solid rgba(255, 255, 255, 0.15);
+    border-radius: 9999px;
+    background: transparent;
     color: #FFFFFF;
+    font-family: var(--font-supa-body);
     font-size: 0.875rem;
     font-weight: 500;
     text-align: center;
     cursor: pointer;
-    transition: all 0.2s cubic-bezier(0.16, 1, 0.3, 1);
+    transition: all 0.15s ease;
     text-decoration: none;
-    backdrop-filter: blur(12px);
   }
   .btn:hover:not(:disabled) {
-    border-color: rgba(255, 255, 255, 0.2);
-    background: rgba(255, 255, 255, 0.12);
-    transform: translateY(-1px);
+    border-color: rgba(255, 255, 255, 0.3);
+    background: rgba(255, 255, 255, 0.06);
   }
   .btn:active:not(:disabled) {
     transform: scale(0.98);
   }
 
-  /* HeroUI Solid White Primary Button */
+  /* Supabase green primary button */
   .btn-primary {
+    background: #3ECF8E;
+    color: #000000;
+    border-color: #3ECF8E;
+    font-weight: 600;
+  }
+  .btn-primary:hover:not(:disabled) {
+    background: #4adeaa;
+    border-color: #4adeaa;
+    color: #000000;
+  }
+
+  /* HeroUI Solid White Primary Button (legacy) */
+  .btn-white {
     background: #FFFFFF;
     color: #000000;
     border-color: #FFFFFF;
     font-weight: 600;
     box-shadow: 0 0 25px rgba(255, 255, 255, 0.15);
   }
-  .btn-primary:hover:not(:disabled) {
+  .btn-white:hover:not(:disabled) {
     background: #F4F4F5;
     border-color: #F4F4F5;
     color: #000000;
-    box-shadow: 0 0 35px rgba(255, 255, 255, 0.25);
   }
 }
