@@ -3,77 +3,77 @@
 import Link from "next/link";
 
 // Supabase exact bento features grid clone
-// Row 1: 3 cards — Postgres Database | Authentication | Radar Berita
+// Row 1: 3 cards — Automatic Crime Quiz | Authentication | News Feeds
 // Row 2: 4 cards — Storage | Realtime | Vector | Data APIs
 
 export default function BentoFeatures() {
   return (
-    <section id="modul" className="pb-20 px-6 bg-[#0c0d0d] [font-family:var(--font-jetbrains-mono)]">
+    <section id="modul" className="pb-20 px-6 bg-[#0c0d0d] font-sans">
       <div className="max-w-[1200px] mx-auto">
 
         {/* =====================================================================
-            ROW 1 — 3 Cards: Postgres (large) | Auth | Edge Functions
+            ROW 1 — 3 Cards: Crime Quiz (large) | Auth | News Feeds
             ===================================================================== */}
-        <div className="grid grid-cols-1 lg:grid-cols-3 gap-4 mb-4">
+        <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-4 mb-4">
 
-          {/* ── CARD 1: Postgres Database ── */}
-          <div className="rounded-2xl bg-[#161817] border border-white/[0.08] p-7 flex flex-col justify-between relative overflow-hidden min-h-[340px] hover:border-white/[0.14] transition-colors">
+          {/* ── CARD 1: Automatic Crime Quiz ── */}
+          <Link
+            href="/quiz"
+            className="group md:col-span-2 rounded-2xl bg-[#161817] border border-white/[0.08] p-7 flex flex-col justify-between relative overflow-hidden min-h-[340px] hover:border-white/[0.14] transition-colors"
+          >
+            {/* Background video — dekoratif, overlay menjaga kontras teks */}
+            <video
+              className="absolute inset-0 size-full object-cover opacity-70 pointer-events-none motion-reduce:hidden"
+              src="/pixel-boat.mp4"
+              autoPlay
+              muted
+              loop
+              playsInline
+              preload="metadata"
+              aria-hidden
+              tabIndex={-1}
+            />
+            <div className="absolute inset-0 bg-gradient-to-t from-[#161817]/90 via-[#161817]/30 to-transparent pointer-events-none" />
+
             {/* Header */}
-            <div>
+            <div className="relative">
               <div className="flex items-center gap-2.5 mb-3">
-                {/* DB Icon */}
-                <svg className="size-5 text-white opacity-70" fill="none" viewBox="0 0 24 24" stroke="currentColor" strokeWidth="1.5">
-                  <path strokeLinecap="round" strokeLinejoin="round" d="M20.25 6.375c0 2.278-3.694 4.125-8.25 4.125S3.75 8.653 3.75 6.375m16.5 0c0-2.278-3.694-4.125-8.25-4.125S3.75 4.097 3.75 6.375m16.5 0v11.25c0 2.278-3.694 4.125-8.25 4.125s-8.25-1.847-8.25-4.125V6.375m16.5 2.625c0 2.278-3.694 4.125-8.25 4.125s-8.25-1.847-8.25-4.125m16.5 2.625c0 2.278-3.694 4.125-8.25 4.125s-8.25-1.847-8.25-4.125" />
+                {/* Quiz / clipboard-check icon */}
+                <svg className="size-6 text-white opacity-70" fill="none" viewBox="0 0 24 24" stroke="currentColor" strokeWidth="1.5">
+                  <path strokeLinecap="round" strokeLinejoin="round" d="M9 12.75 11.25 15 15 9.75M9 3.75h6a1.5 1.5 0 0 1 1.5 1.5v.75H16.5a1.5 1.5 0 0 0-1.5 1.5v.75h-6v-.75a1.5 1.5 0 0 0-1.5-1.5H6.75v-.75a1.5 1.5 0 0 1 1.5-1.5Zm7.5 3.75h2.25a1.5 1.5 0 0 1 1.5 1.5v10.5a1.5 1.5 0 0 1-1.5 1.5H5.25a1.5 1.5 0 0 1-1.5-1.5V9a1.5 1.5 0 0 1 1.5-1.5H7.5" />
                 </svg>
-                <h3 className="text-[13px] font-semibold text-white" style={{ fontFamily: "var(--font-jetbrains-mono)", letterSpacing: "-0.01em" }}>Postgres Database</h3>
+                <h3 className="text-[16px] font-semibold text-white" style={{ letterSpacing: "-0.01em" }}>Kuis Kriminal Otomatis</h3>
               </div>
 
-              <p className="text-[13px] text-[#A0A0A0] leading-relaxed max-w-[260px]">
-                Every project is a <strong className="text-white font-semibold">full Postgres database</strong>, the world&apos;s most trusted relational database.
+              <p className="text-[13.5px] text-[#D4D4D4] leading-relaxed max-w-[280px]">
+                Uji naluri waspada dengan <strong className="text-white font-semibold">kuis otomatis</strong> berisi modus kriminal digital yang benar-benar terjadi di Indonesia.
               </p>
             </div>
 
             {/* Checklist */}
-            <div className="mt-auto">
-              <ul className="space-y-1.5 text-[13px] text-[#A0A0A0]">
+            <div className="relative mt-auto">
+              <ul className="space-y-2 text-[14px] text-[#D4D4D4] drop-shadow-[0_1px_2px_rgba(0,0,0,0.8)]">
                 <li className="flex items-center gap-2">
-                  <span className="text-[#3ECF8E] text-xs">✓</span>
-                  <span>100% portable</span>
+                  <span className="text-[#3ECF8E] text-sm">✓</span>
+                  <span>Modus asli Indonesia</span>
                 </li>
                 <li className="flex items-center gap-2">
-                  <span className="text-[#3ECF8E] text-xs">✓</span>
-                  <span>Built-in <span className="text-[#3ECF8E] underline underline-offset-2">Auth with RLS</span></span>
+                  <span className="text-[#3ECF8E] text-sm">✓</span>
+                  <span>Diperbarui <span className="text-[#3ECF8E] underline underline-offset-2">setiap hari</span></span>
                 </li>
                 <li className="flex items-center gap-2">
-                  <span className="text-[#3ECF8E] text-xs">✓</span>
-                  <span>Easy to extend</span>
+                  <span className="text-[#3ECF8E] text-sm">✓</span>
+                  <span>Tanpa biaya</span>
                 </li>
               </ul>
+
+              <div className="mt-5 inline-flex items-center gap-2 text-[12px] text-[#3ECF8E] drop-shadow-[0_1px_2px_rgba(0,0,0,0.8)]">
+                <span>Mulai kuis</span>
+                <span className="transition-transform group-hover:translate-x-0.5" aria-hidden>→</span>
+              </div>
             </div>
 
-            {/* PostgreSQL Elephant Wireframe — bottom right */}
-            <div className="absolute right-2 bottom-0 w-44 h-44 opacity-20 pointer-events-none select-none">
-              <svg viewBox="0 0 200 220" fill="none" className="w-full h-full stroke-zinc-400">
-                {/* Elephant body */}
-                <ellipse cx="105" cy="130" rx="62" ry="58" strokeWidth="1.5" />
-                {/* Head */}
-                <ellipse cx="105" cy="78" rx="40" ry="36" strokeWidth="1.5" />
-                {/* Trunk */}
-                <path d="M80 100 Q55 120 60 150 Q62 165 72 162" strokeWidth="1.5" strokeLinecap="round" />
-                {/* Ear */}
-                <ellipse cx="143" cy="72" rx="22" ry="28" strokeWidth="1.5" />
-                {/* Eye */}
-                <circle cx="118" cy="68" r="3.5" strokeWidth="1.5" />
-                {/* Legs */}
-                <path d="M78 185 L73 210" strokeWidth="2" strokeLinecap="round" />
-                <path d="M96 188 L94 213" strokeWidth="2" strokeLinecap="round" />
-                <path d="M118 188 L120 213" strokeWidth="2" strokeLinecap="round" />
-                <path d="M136 183 L141 208" strokeWidth="2" strokeLinecap="round" />
-                {/* Tail */}
-                <path d="M165 125 Q185 120 180 108 Q176 98 165 100" strokeWidth="1.5" strokeLinecap="round" />
-              </svg>
-            </div>
-          </div>
+          </Link>
 
           {/* ── CARD 2: Authentication ── */}
           <div className="rounded-2xl bg-[#161817] border border-white/[0.08] p-7 flex flex-col justify-between relative overflow-hidden min-h-[340px] hover:border-white/[0.14] transition-colors">
@@ -83,7 +83,7 @@ export default function BentoFeatures() {
                 <svg className="size-5 text-white opacity-70" fill="none" viewBox="0 0 24 24" stroke="currentColor" strokeWidth="1.5">
                   <path strokeLinecap="round" strokeLinejoin="round" d="M16.5 10.5V6.75a4.5 4.5 0 1 0-9 0v3.75m-.75 11.25h10.5a2.25 2.25 0 0 0 2.25-2.25v-6.75a2.25 2.25 0 0 0-2.25-2.25H6.75a2.25 2.25 0 0 0-2.25 2.25v6.75a2.25 2.25 0 0 0 2.25 2.25z" />
                 </svg>
-                <h3 className="text-[13px] font-semibold text-white" style={{ fontFamily: "var(--font-jetbrains-mono)", letterSpacing: "-0.01em" }}>Authentication</h3>
+                <h3 className="text-[13px] font-semibold text-white" style={{ letterSpacing: "-0.01em" }}>Authentication</h3>
               </div>
 
               <p className="text-[13px] text-[#A0A0A0] leading-relaxed">
@@ -95,10 +95,10 @@ export default function BentoFeatures() {
             <div className="mt-6 space-y-2">
               {/* Row 1 */}
               <div className="grid grid-cols-2 gap-2">
-                <div className="px-3 py-2 rounded-lg bg-[#0d0e0d] border border-white/[0.08] text-[11px] text-[#666] truncate" style={{ fontFamily: "var(--font-jetbrains-mono)" }}>
+                <div className="px-3 py-2 rounded-lg bg-[#0d0e0d] border border-white/[0.08] text-[11px] text-[#666] truncate" style={{ fontFamily: "var(--font-supa-mono)" }}>
                   j1980@gmail.com
                 </div>
-                <div className="px-3 py-2 rounded-lg bg-[#0d0e0d] border border-white/[0.08] text-[11px] text-[#666] truncate" style={{ fontFamily: "var(--font-jetbrains-mono)" }}>
+                <div className="px-3 py-2 rounded-lg bg-[#0d0e0d] border border-white/[0.08] text-[11px] text-[#666] truncate" style={{ fontFamily: "var(--font-supa-mono)" }}>
                   alex1601
                 </div>
               </div>
@@ -117,28 +117,42 @@ export default function BentoFeatures() {
               </div>
               {/* Row 3 */}
               <div className="grid grid-cols-2 gap-2">
-                <div className="px-3 py-2 rounded-lg bg-[#0d0e0d] border border-white/[0.08] text-[11px] text-[#666] truncate" style={{ fontFamily: "var(--font-jetbrains-mono)" }}>
+                <div className="px-3 py-2 rounded-lg bg-[#0d0e0d] border border-white/[0.08] text-[11px] text-[#666] truncate" style={{ fontFamily: "var(--font-supa-mono)" }}>
                   j567@gmail.com
                 </div>
-                <div className="px-3 py-2 rounded-lg bg-[#0d0e0d] border border-white/[0.08] text-[11px] text-[#666] truncate" style={{ fontFamily: "var(--font-jetbrains-mono)" }}>
+                <div className="px-3 py-2 rounded-lg bg-[#0d0e0d] border border-white/[0.08] text-[11px] text-[#666] truncate" style={{ fontFamily: "var(--font-supa-mono)" }}>
                   mememaster
                 </div>
               </div>
             </div>
           </div>
 
-          {/* ── CARD 3: Radar Berita (teks statis, klik ke /berita) ── */}
+          {/* ── CARD 3: News Feeds (teks statis, klik ke /berita) ── */}
           <Link
             href="/berita"
             className="group rounded-2xl bg-[#161817] border border-white/[0.08] p-7 flex flex-col justify-between relative overflow-hidden min-h-[340px] hover:border-white/[0.14] transition-colors"
           >
-            <div>
+            {/* Background video — dekoratif, overlay menjaga kontras teks */}
+            <video
+              className="absolute inset-0 size-full object-cover opacity-70 pointer-events-none motion-reduce:hidden"
+              src="/pixel-floating-island.mp4"
+              autoPlay
+              muted
+              loop
+              playsInline
+              preload="metadata"
+              aria-hidden
+              tabIndex={-1}
+            />
+            <div className="absolute inset-0 bg-gradient-to-t from-[#161817]/90 via-[#161817]/30 to-transparent pointer-events-none" />
+
+            <div className="relative">
               <div className="flex items-center gap-2.5 mb-3">
                 {/* Radar / broadcast icon */}
                 <svg className="size-5 text-white opacity-70" fill="none" viewBox="0 0 24 24" stroke="currentColor" strokeWidth="1.5">
                   <path strokeLinecap="round" strokeLinejoin="round" d="M12 7.5h1.5m-1.5 3h1.5m-7.5 3h7.5m-7.5 3h7.5m3-9h3.375c.621 0 1.125.504 1.125 1.125V18a2.25 2.25 0 0 1-2.25 2.25M16.5 7.5V18a2.25 2.25 0 0 0 2.25 2.25M16.5 7.5V4.875c0-.621-.504-1.125-1.125-1.125H4.125C3.504 3.75 3 4.254 3 4.875V18a2.25 2.25 0 0 0 2.25 2.25h13.5M6 7.5h3v3H6v-3Z" />
                 </svg>
-                <h3 className="text-[13px] font-semibold text-white" style={{ fontFamily: "var(--font-jetbrains-mono)", letterSpacing: "-0.01em" }}>Radar Berita</h3>
+                <h3 className="text-[13px] font-semibold text-white" style={{ letterSpacing: "-0.01em" }}>News Feeds</h3>
                 <span className="ml-auto flex items-center gap-1.5 text-[10px] tracking-wider text-[#3ECF8E] uppercase">
                   <span className="relative flex size-1.5">
                     <span className="animate-ping absolute inline-flex h-full w-full rounded-full bg-[#3ECF8E] opacity-75" />
@@ -153,8 +167,8 @@ export default function BentoFeatures() {
               </p>
             </div>
 
-            <div className="mt-auto pt-6">
-              <div className="inline-flex items-center gap-2 px-3.5 py-2 rounded-full bg-[#0d0e0d] border border-[#3ECF8E]/30 text-[12px]" style={{ fontFamily: "var(--font-jetbrains-mono)" }}>
+            <div className="relative mt-auto pt-6">
+              <div className="inline-flex items-center gap-2 px-3.5 py-2 rounded-full bg-[#0d0e0d]/80 backdrop-blur-sm border border-[#3ECF8E]/30 text-[12px]" style={{ fontFamily: "var(--font-supa-mono)" }}>
                 <span className="text-[#3ECF8E]">$</span>
                 <span className="text-white">redjohn</span>
                 <span className="text-[#3ECF8E]">news</span>
@@ -178,7 +192,7 @@ export default function BentoFeatures() {
                 <svg className="size-4.5 text-white opacity-70" fill="none" viewBox="0 0 24 24" stroke="currentColor" strokeWidth="1.5">
                   <path strokeLinecap="round" strokeLinejoin="round" d="m20.25 7.5-.625 10.632a2.25 2.25 0 0 1-2.247 2.118H6.622a2.25 2.25 0 0 1-2.247-2.118L3.75 7.5M10 11.25h4M3.375 7.5h17.25c.621 0 1.125-.504 1.125-1.125v-1.5c0-.621-.504-1.125-1.125-1.125H3.375c-.621 0-1.125.504-1.125 1.125v1.5c0 .621.504 1.125 1.125 1.125z" />
                 </svg>
-                <h3 className="text-[13px] font-semibold text-white" style={{ fontFamily: "var(--font-jetbrains-mono)", letterSpacing: "-0.01em" }}>Storage</h3>
+                <h3 className="text-[13px] font-semibold text-white" style={{ letterSpacing: "-0.01em" }}>Storage</h3>
               </div>
               <p className="text-[13px] text-[#A0A0A0] leading-relaxed">
                 Store, organize, and serve large files, from <span className="text-[#3ECF8E]">videos</span> to <span className="text-[#3ECF8E]">images</span>.
@@ -222,7 +236,7 @@ export default function BentoFeatures() {
                 <svg className="size-4.5 text-white opacity-70" fill="none" viewBox="0 0 24 24" stroke="currentColor" strokeWidth="1.5">
                   <path strokeLinecap="round" strokeLinejoin="round" d="M15.042 21.672 13.684 16.6m0 0-2.51 2.225.569-9.47 5.227 7.917-3.286-.672ZM12 2.25V4.5m5.834.166-1.591 1.591M20.25 10.5H18M7.757 14.743l-1.59 1.59M6 10.5H3.75m4.007-4.243-1.59-1.59" />
                 </svg>
-                <h3 className="text-[13px] font-semibold text-white" style={{ fontFamily: "var(--font-jetbrains-mono)", letterSpacing: "-0.01em" }}>Realtime</h3>
+                <h3 className="text-[13px] font-semibold text-white" style={{ letterSpacing: "-0.01em" }}>Realtime</h3>
               </div>
               <p className="text-[13px] text-[#A0A0A0] leading-relaxed">
                 Build multiplayer experiences with <span className="text-white font-bold">real-time data synchronization</span>.
@@ -269,7 +283,7 @@ export default function BentoFeatures() {
                 <svg className="size-4.5 text-white opacity-70" fill="none" viewBox="0 0 24 24" stroke="currentColor" strokeWidth="1.5">
                   <path strokeLinecap="round" strokeLinejoin="round" d="m21 7.5-9-5.25L3 7.5m18 0-9 5.25m9-5.25v9l-9 5.25M3 7.5l9 5.25M3 7.5v9l9 5.25m0-9v9" />
                 </svg>
-                <h3 className="text-[13px] font-semibold text-white" style={{ fontFamily: "var(--font-jetbrains-mono)", letterSpacing: "-0.01em" }}>Vector</h3>
+                <h3 className="text-[13px] font-semibold text-white" style={{ letterSpacing: "-0.01em" }}>Vector</h3>
               </div>
               <p className="text-[13px] text-[#A0A0A0] leading-relaxed">
                 Integrate your favorite ML-models to <span className="text-white font-bold">store, index</span> and <span className="text-white font-bold">search vector embeddings</span>.
@@ -320,7 +334,7 @@ export default function BentoFeatures() {
                 <svg className="size-4.5 text-white opacity-70" fill="none" viewBox="0 0 24 24" stroke="currentColor" strokeWidth="1.5">
                   <path strokeLinecap="round" strokeLinejoin="round" d="M17.25 6.75 22.5 12l-5.25 5.25m-10.5 0L1.5 12l5.25-5.25m7.5-3-4.5 16.5" />
                 </svg>
-                <h3 className="text-[13px] font-semibold text-white" style={{ fontFamily: "var(--font-jetbrains-mono)", letterSpacing: "-0.01em" }}>Data APIs</h3>
+                <h3 className="text-[13px] font-semibold text-white" style={{ letterSpacing: "-0.01em" }}>Data APIs</h3>
               </div>
               <p className="text-[13px] text-[#A0A0A0] leading-relaxed">
                 Instant ready-to-use <span className="text-white font-bold">REST APIs</span>.
@@ -328,7 +342,7 @@ export default function BentoFeatures() {
             </div>
 
             {/* Endpoint table */}
-            <div className="mt-6 space-y-1 text-[11px]" style={{ fontFamily: "var(--font-jetbrains-mono)" }}>
+            <div className="mt-6 space-y-1 text-[11px]" style={{ fontFamily: "var(--font-supa-mono)" }}>
               {[
                 { table: "countries", route: "/v1/countries" },
                 { table: "continents", route: "/v1/continents" },
