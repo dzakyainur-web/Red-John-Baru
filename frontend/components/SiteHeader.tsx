@@ -1,4 +1,4 @@
-"use client";
+﻿"use client";
 
 import Link from "next/link";
 import Image from "next/image";
@@ -13,12 +13,13 @@ export default function SiteHeader() {
 
   const isHome = pathname === "/";
 
-  if (pathname === "/login" || pathname === "/register") {
+  // Home page uses SupabaseNavbar directly in page.tsx
+  if (pathname === "/" || pathname === "/login" || pathname === "/register") {
     return null;
   }
 
   return (
-    <header className="fixed top-0 left-0 right-0 z-50 bg-black/60 backdrop-blur-xl border-b border-white/[0.06] px-4 sm:px-8 py-3.5 transition-all">
+    <header className="fixed top-0 left-0 right-0 z-50 bg-[#1a1a1a]/95 backdrop-blur-xl border-b border-white/[0.06] px-4 sm:px-8 py-3.5 transition-all">
       <div className="max-w-[1340px] mx-auto flex items-center justify-between gap-6">
         {/* Left: Brand Logo + Nav Links ala HeroUI */}
         <div className="flex items-center gap-10 shrink-0">
@@ -170,7 +171,7 @@ export default function SiteHeader() {
 
       {/* Mobile Drawer */}
       {menuOpen && (
-        <div className="lg:hidden mt-3 mx-auto max-w-[1340px] rounded-2xl bg-[#0C0C0E]/95 border border-white/10 p-5 backdrop-blur-2xl animate-in fade-in slide-in-from-top-2 shadow-2xl">
+        <div className="lg:hidden mt-3 mx-auto max-w-[1340px] rounded-2xl bg-[#1c1c1c]/98 border border-white/10 p-5 backdrop-blur-2xl animate-in fade-in slide-in-from-top-2 shadow-2xl">
           <div className="flex flex-col gap-2">
             {[
               { href: "/berita", label: "Radar Berita" },

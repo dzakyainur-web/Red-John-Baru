@@ -1,4 +1,4 @@
-"use client";
+﻿"use client";
 
 import { useEffect, useRef, useState } from "react";
 import Link from "next/link";
@@ -88,7 +88,7 @@ export default function NewsCarousel({ items, total, updatedAt }: NewsCarouselPr
       onMouseLeave={() => setIsPaused(false)}
       onTouchStart={handleTouchStart}
       onTouchEnd={handleTouchEnd}
-      className="relative z-10 py-20 px-4 sm:px-8 border-t border-white/[0.06] bg-[#000000]"
+      className="relative z-10 py-20 px-4 sm:px-8 border-t border-white/[0.06] bg-[#0c0d0d]"
     >
       <div className="max-w-[1340px] mx-auto space-y-8">
         {/* Section Header & Telemetry ala HeroUI */}
@@ -127,7 +127,7 @@ export default function NewsCarousel({ items, total, updatedAt }: NewsCarouselPr
         </div>
 
         {/* Featured Main Carousel Card ala HeroUI Glass Card */}
-        <div className="relative rounded-3xl bg-[#0C0C0E] border border-white/[0.08] p-7 sm:p-10 shadow-2xl overflow-hidden group">
+        <div className="relative rounded-3xl bg-[#161817] border border-white/[0.08] p-7 sm:p-10 shadow-2xl overflow-hidden group">
           {/* Subtle Ambient Radial Glow */}
           <div className="absolute -top-24 -right-24 size-96 rounded-full bg-white/[0.04] blur-3xl pointer-events-none" />
 
@@ -303,7 +303,7 @@ export default function NewsCarousel({ items, total, updatedAt }: NewsCarouselPr
                 className={`rounded-2xl p-4 transition-all cursor-pointer flex flex-col justify-between ${
                   isActive
                     ? "bg-[#141416] border border-white/40 shadow-lg shadow-white/5"
-                    : "bg-[#0C0C0E] border border-white/[0.06] hover:border-white/20 hover:bg-[#121214]"
+                    : "bg-[#161817] border border-white/[0.06] hover:border-white/20 hover:bg-[#121214]"
                 }`}
               >
                 <NewsImage

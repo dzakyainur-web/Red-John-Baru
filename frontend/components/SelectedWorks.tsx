@@ -1,4 +1,4 @@
-"use client";
+﻿"use client";
 
 import Link from "next/link";
 import { useState } from "react";
@@ -78,7 +78,7 @@ export default function SelectedWorks() {
   const { playClick, playHover } = useSound();
 
   return (
-    <section className="py-20 border-t border-white/[0.06] bg-[#000000] relative z-10">
+    <section className="py-20 border-t border-white/[0.06] bg-[#0c0d0d] relative z-10">
       <div className="max-w-[1340px] mx-auto px-4 sm:px-8">
         {/* Section Header ala HeroUI */}
         <div className="flex flex-wrap items-baseline justify-between gap-4 mb-10">
