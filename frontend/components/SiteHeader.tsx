@@ -1,4 +1,4 @@
-﻿"use client";
+"use client";
 
 import Link from "next/link";
 import Image from "next/image";
@@ -19,7 +19,7 @@ export default function SiteHeader() {
   }
 
   return (
-    <header className="fixed top-0 left-0 right-0 z-50 bg-[#1a1a1a]/95 backdrop-blur-xl border-b border-white/[0.06] px-4 sm:px-8 py-3.5 transition-all">
+    <header className={`fixed top-0 left-0 right-0 z-50 ${pathname === "/berita" ? "bg-black/80 border-b border-white/[0.08]" : "bg-[#1a1a1a]/95 border-b border-white/[0.06]"} backdrop-blur-xl px-4 sm:px-8 py-3.5 transition-all`}>
       <div className="max-w-[1340px] mx-auto flex items-center justify-between gap-6">
         {/* Left: Brand Logo + Nav Links ala HeroUI */}
         <div className="flex items-center gap-10 shrink-0">

@@ -3,9 +3,8 @@
 import { useMemo, useState } from "react";
 import Link from "next/link";
 import { NewsItem } from "@/lib/news";
-import NewsImage from "./NewsImage";
-import { CATEGORY_LABEL, CATEGORY_STYLES, formatNewsDate } from "@/lib/labels";
 import { useSound } from "./SoundManager";
+import ExplanatoryVisual from "./ExplanatoryVisual";
 
 interface BeritaFeedClientProps {
   initialItems: NewsItem[];
@@ -13,24 +12,67 @@ interface BeritaFeedClientProps {
   updatedAt: string | null;
 }
 
-// Rekomendasi tindakan instan berdasarkan kategori
+// ─── Format Tanggal ala Vercel: "4 November", "28 Oktober" ─────────────────
+function formatVercelDate(value: string | null): string {
+  if (!value) return "Terbaru";
+  const date = new Date(value);
+  if (Number.isNaN(date.getTime())) return "Terbaru";
+
+  const day = date.getDate();
+  const months = [
+    "Januari",
+    "Februari",
+    "Maret",
+    "April",
+    "Mei",
+    "Juni",
+    "Juli",
+    "Agustus",
+    "September",
+    "Oktober",
+    "November",
+    "Desember",
+  ];
+  return `${day} ${months[date.getMonth()]}`;
+}
+
+// ─── Kategori & Label Bersih ────────────────────────────────────────────────
+const CATEGORY_NAMES: Record<string, string> = {
+  all: "All",
+  engineering: "Engineering",
+  security: "Security",
+  malware_apk: "Malware APK",
+  quishing: "Quishing QRIS",
+  social_engineering: "Rekayasa Sosial",
+  phishing_link: "Phishing Web",
+  fake_job: "Kerja Freelance",
+  pinjol_ilegal: "Pinjol Ilegal",
+  crypto_scam: "Kripto Bodong",
+  giveaway_palsu: "Hadiah Palsu",
+  general: "General",
+  press: "Press",
+};
+
+// ─── Tips Pencegahan Instan Tiap Kategori ───────────────────────────────────
 const CATEGORY_TIPS: Record<string, string> = {
-  malware_apk: "Jangan pernah klik file .apk di WhatsApp atau menyetujui izin 'Aksesibilitas' ponsel.",
-  phishing_link: "Perhatikan domain URL dengan teliti. Hindari login akun perbankan dari tautan chat.",
-  social_engineering: "Ingat: Bank & kepolisian resmi TIDAK PERNAH meminta kode OTP, PIN, atau 3 angka CVV.",
-  fake_job: "Pekerjaan resmi tidak pernah memungut biaya atau meminta deposit 'tugas rating' terlebih dahulu.",
-  pinjol_ilegal: "Cek legalitas pinjaman di situs resmi ojk.go.id sebelum memberikan data identitas KTP.",
-  quishing: "Periksa nama merchant (NMID) pada layar aplikasi saat scan QRIS sebelum mengetikkan PIN.",
-  crypto_scam: "Waspada ajakan investasi dari kenalan kencan online; platform bodong menolak penarikan modal.",
-  giveaway_palsu: "Abaikan tautan hadiah kuota/uang gratis berantai; sering kali menjebak SMS premium.",
+  malware_apk: "Jangan pernah mengunduh berkas .apk di WhatsApp atau menyetujui izin Aksesibilitas Android.",
+  quishing: "Selalu cocokkan nama merchant NMID di layar aplikasi saat memindai QRIS sebelum mengetikkan PIN.",
+  fake_job: "Pekerjaan freelance resmi tidak pernah memungut biaya deposit atau meminta transfer tugas komisi.",
+  social_engineering: "Bank resmi TIDAK PERNAH meminta kode OTP SMS, PIN ATM, atau 3 digit kode CVV di kartu debit/kredit.",
+  pinjol_ilegal: "Verifikasi legalitas penyelenggara pinjol di portal resmi ojk.go.id atau kontak OJK 157.",
+  crypto_scam: "Waspada ajakan investasi dari kenalan kencan online (pig butchering); aset tidak akan bisa ditarik.",
+  giveaway_palsu: "Hindari tautan subsidi/hadiah gratis berantai; sering kali menjebak pendaftaran SMS premium.",
+  phishing_link: "Periksa kembali URL domain situs sebelum memasukkan username, kata sandi, dan data akun keuangan.",
 };
 
 export default function BeritaFeedClient({ initialItems, total, updatedAt }: BeritaFeedClientProps) {
   const { playClick, playHover } = useSound();
   const [selectedCategory, setSelectedCategory] = useState<string>("all");
   const [searchQuery, setSearchQuery] = useState<string>("");
+  const [copyToast, setCopyToast] = useState(false);
+  const [activeModalItem, setActiveModalItem] = useState<NewsItem | null>(null);
 
-  // Daftar kategori unik yang tersedia
+  // Kategori unik dari artikel yang tersedia
   const availableCategories = useMemo(() => {
     const cats = new Set<string>();
     initialItems.forEach((item) => {
@@ -39,7 +81,7 @@ export default function BeritaFeedClient({ initialItems, total, updatedAt }: Ber
     return Array.from(cats);
   }, [initialItems]);
 
-  // Filter berita berdasarkan kategori dan kata kunci
+  // Filter berita berdasarkan kategori dan pencarian
   const filteredItems = useMemo(() => {
     return initialItems.filter((item) => {
       const matchCat =
@@ -57,80 +99,33 @@ export default function BeritaFeedClient({ initialItems, total, updatedAt }: Ber
     });
   }, [initialItems, selectedCategory, searchQuery]);
 
-  // Pisahkan lead (laporan utama) dan stream berita lainnya
-  const [lead, ...stream] = filteredItems;
+  // Salin URL Feed RSS ke Clipboard
+  const handleCopyRss = () => {
+    playClick();
+    const rssUrl = typeof window !== "undefined" ? `${window.location.origin}/api/news` : "/api/news";
+    navigator.clipboard?.writeText(rssUrl);
+    setCopyToast(true);
+    setTimeout(() => setCopyToast(false), 2500);
+  };
 
   return (
-    <div className="space-y-10">
+    <div className="w-full text-white font-sans">
       {/* =========================================================================
-          TELEMETRY & STATS BAR
+          VERCEL BLOG HEADER
           ========================================================================= */}
-      <div className="grid grid-cols-2 md:grid-cols-4 gap-3 sm:gap-4 font-[family-name:var(--font-geist-mono)]">
-        <div className="rounded-xl bg-[#111] border border-white/10 p-3.5 sm:p-4">
-          <div className="text-[11px] text-zinc-500 uppercase tracking-wider mb-1 flex items-center gap-1.5">
-            <span className="size-2 rounded-full bg-[#FF3815] animate-pulse" />
-            <span>STATUS RADAR</span>
-          </div>
-          <div className="text-sm sm:text-base font-bold text-white tracking-tight">AKTIF 24/7</div>
-          <div className="text-[10px] text-zinc-400 mt-0.5">Pemantau media siber</div>
-        </div>
-
-        <div className="rounded-xl bg-[#111] border border-white/10 p-3.5 sm:p-4">
-          <div className="text-[11px] text-zinc-500 uppercase tracking-wider mb-1">TOTAL LAPORAN</div>
-          <div className="text-sm sm:text-base font-bold text-[#FF5533] tracking-tight">{total} ARTIKEL</div>
-          <div className="text-[10px] text-zinc-400 mt-0.5">Media terpercaya nasional</div>
-        </div>
-
-        <div className="rounded-xl bg-[#111] border border-white/10 p-3.5 sm:p-4">
-          <div className="text-[11px] text-zinc-500 uppercase tracking-wider mb-1">TREN ANCAMAN</div>
-          <div className="text-sm sm:text-base font-bold text-amber-400 tracking-tight">APK &amp; QUISHING</div>
-          <div className="text-[10px] text-zinc-400 mt-0.5">Risiko manipulasi tertinggi</div>
-        </div>
-
-        <div className="rounded-xl bg-[#111] border border-white/10 p-3.5 sm:p-4">
-          <div className="text-[11px] text-zinc-500 uppercase tracking-wider mb-1">SINKRONISASI</div>
-          <div className="text-sm sm:text-base font-bold text-zinc-200 tracking-tight">
-            {updatedAt ? formatNewsDate(updatedAt) : "HARI INI"}
-          </div>
-          <div className="text-[10px] text-zinc-400 mt-0.5">Pembaruan otomatis berkala</div>
-        </div>
+      <div className="mb-8 sm:mb-10">
+        <h1 className="text-4xl sm:text-5xl lg:text-6xl font-bold tracking-tight text-white font-sans">
+          Blog
+        </h1>
       </div>
 
       {/* =========================================================================
-          SEARCH & CATEGORY FILTER CONTROL
+          CATEGORY FILTER TABS & SEARCH BAR (EXACT VERCEL BLOG BAR)
           ========================================================================= */}
-      <div className="rounded-2xl bg-[#0f0f0f] border border-white/10 p-4 sm:p-5 space-y-4">
-        {/* Search Bar */}
-        <div className="relative">
-          <svg
-            className="absolute left-3.5 top-1/2 -translate-y-1/2 size-4 text-zinc-500"
-            fill="none"
-            viewBox="0 0 24 24"
-            stroke="currentColor"
-            strokeWidth="2"
-          >
-            <path strokeLinecap="round" strokeLinejoin="round" d="m21 21-5.197-5.197m0 0A7.5 7.5 0 1 0 5.196 5.196a7.5 7.5 0 0 0 10.607 10.607Z" />
-          </svg>
-          <input
-            type="text"
-            value={searchQuery}
-            onChange={(e) => setSearchQuery(e.target.value)}
-            placeholder="Cari kata kunci: 'APK', 'Bank', 'Undangan', 'QRIS', 'Freelance'..."
-            className="w-full bg-[#181818] border border-white/10 focus:border-[#FF3815] rounded-xl pl-10 pr-10 py-2.5 text-xs sm:text-sm font-[family-name:var(--font-geist-mono)] text-white placeholder:text-zinc-500 outline-none transition-colors"
-          />
-          {searchQuery && (
-            <button
-              type="button"
-              onClick={() => setSearchQuery("")}
-              className="absolute right-3 top-1/2 -translate-y-1/2 text-xs text-zinc-500 hover:text-white px-1.5 py-0.5 rounded"
-            >
-              &times; Hapus
-            </button>
-          )}
-        </div>
-
-        {/* Category Pills */}
-        <div className="flex flex-wrap items-center gap-2">
+      <div className="flex flex-col md:flex-row md:items-center justify-between gap-4 border-b border-white/[0.08] pb-6 mb-10">
+        {/* Category Pills (Horizontal scrollable) */}
+        <div className="flex items-center gap-1.5 overflow-x-auto no-scrollbar py-1 -mx-2 px-2">
+          {/* Pill "All" */}
           <button
             type="button"
             onClick={() => {
@@ -138,18 +133,20 @@ export default function BeritaFeedClient({ initialItems, total, updatedAt }: Ber
               setSelectedCategory("all");
             }}
             onMouseEnter={playHover}
-            className={`px-3 py-1.5 rounded-lg text-xs font-[family-name:var(--font-geist-mono)] tracking-wider transition-all cursor-pointer ${
+            className={`rounded-full px-3.5 py-1 text-sm font-medium transition-colors shrink-0 cursor-pointer ${
               selectedCategory === "all"
-                ? "bg-[#FF3815] text-black font-bold shadow-[0_0_15px_rgba(255,56,21,0.4)]"
-                : "bg-white/[0.04] text-zinc-400 hover:text-white hover:bg-white/10 border border-white/10"
+                ? "bg-[#222222] text-white border border-white/10"
+                : "text-zinc-400 hover:text-white hover:bg-white/[0.04]"
             }`}
           >
-            Semua Modus ({initialItems.length})
+            All
           </button>
 
+          {/* Dynamic Available Categories */}
           {availableCategories.map((catKey) => {
-            const count = initialItems.filter((i) => i.categories.includes(catKey)).length;
             const active = selectedCategory === catKey;
+            const label = CATEGORY_NAMES[catKey] ?? catKey;
+
             return (
               <button
                 key={catKey}
@@ -159,323 +156,311 @@ export default function BeritaFeedClient({ initialItems, total, updatedAt }: Ber
                   setSelectedCategory(catKey);
                 }}
                 onMouseEnter={playHover}
-                className={`px-3 py-1.5 rounded-lg text-xs font-[family-name:var(--font-geist-mono)] tracking-wider transition-all cursor-pointer ${
+                className={`rounded-full px-3.5 py-1 text-sm transition-colors shrink-0 cursor-pointer ${
                   active
-                    ? "bg-white text-black font-bold shadow-md"
-                    : "bg-white/[0.04] text-zinc-400 hover:text-white hover:bg-white/10 border border-white/10"
+                    ? "bg-[#222222] text-white font-medium border border-white/10"
+                    : "text-zinc-400 hover:text-white hover:bg-white/[0.04]"
                 }`}
               >
-                {CATEGORY_LABEL[catKey] ?? catKey} ({count})
+                {label}
               </button>
             );
           })}
         </div>
+
+        {/* Right side: Search Bar + RSS Button */}
+        <div className="flex items-center gap-3 shrink-0 self-end md:self-auto">
+          {/* Search Input Box */}
+          <div className="relative flex items-center">
+            <svg
+              className="absolute left-3 size-3.5 text-zinc-500 pointer-events-none"
+              fill="none"
+              viewBox="0 0 24 24"
+              stroke="currentColor"
+              strokeWidth="2"
+            >
+              <path
+                strokeLinecap="round"
+                strokeLinejoin="round"
+                d="m21 21-5.197-5.197m0 0A7.5 7.5 0 1 0 5.196 5.196a7.5 7.5 0 0 0 10.607 10.607Z"
+              />
+            </svg>
+
+            <input
+              type="text"
+              value={searchQuery}
+              onChange={(e) => setSearchQuery(e.target.value)}
+              placeholder="Search..."
+              className="w-36 sm:w-48 bg-transparent border border-zinc-800/90 focus:border-zinc-500 rounded-full pl-8 pr-3 py-1 text-xs sm:text-sm text-white placeholder:text-zinc-500 outline-none transition-all"
+            />
+
+            {searchQuery && (
+              <button
+                type="button"
+                onClick={() => setSearchQuery("")}
+                className="absolute right-2.5 text-xs text-zinc-500 hover:text-white"
+                title="Hapus pencarian"
+              >
+                &times;
+              </button>
+            )}
+          </div>
+
+          {/* RSS Feed Button */}
+          <button
+            type="button"
+            onClick={handleCopyRss}
+            onMouseEnter={playHover}
+            className="size-8 rounded-full border border-zinc-800/90 hover:border-zinc-600 flex items-center justify-center text-zinc-400 hover:text-white transition-colors cursor-pointer"
+            title="Salin tautan RSS Feed"
+          >
+            <svg
+              className="size-4"
+              fill="currentColor"
+              viewBox="0 0 24 24"
+            >
+              <circle cx="6.18" cy="17.82" r="2.18" />
+              <path d="M4 4.44v2.83c7.03 0 12.73 5.7 12.73 12.73h2.83c0-8.59-6.97-15.56-15.56-15.56zm0 5.66v2.83c3.9 0 7.07 3.17 7.07 7.07h2.83c0-5.46-4.44-9.9-9.9-9.9z" />
+            </svg>
+          </button>
+        </div>
       </div>
 
       {/* =========================================================================
-          NEWS CONTENT FEED
+          VERCEL BLOG CARDS GRID (3-COLUMN RESPONSIVE)
           ========================================================================= */}
-      {lead ? (
-        <div className="space-y-8">
-          {/* FEATURED / LEAD ARTICLE */}
-          <article className="relative overflow-hidden rounded-2xl bg-[#111111] border-2 border-[#FF3815]/40 hover:border-[#FF3815] p-6 sm:p-8 transition-all shadow-xl group">
-            <div className="flex flex-wrap items-center justify-between gap-3 mb-4 font-[family-name:var(--font-geist-mono)]">
-              <div className="inline-flex items-center gap-2 px-3 py-1 rounded-full bg-[#FF3815]/15 border border-[#FF3815]/40 text-xs font-bold text-[#FF5533]">
-                <span className="size-1.5 rounded-full bg-[#FF3815] animate-ping" />
-                <span>LAPORAN UTAMA // RISIKO TINGGI</span>
-              </div>
+      {filteredItems.length > 0 ? (
+        <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6 sm:gap-8">
+          {filteredItems.map((item) => {
+            const primaryCat = item.categories[0] || "general";
+            const categoryName = CATEGORY_NAMES[primaryCat] || "General";
 
-              <div className="flex items-center gap-2 text-xs text-zinc-400">
-                <span className="px-2 py-0.5 rounded bg-white/5 border border-white/10 font-bold text-white">
-                  {lead.source}
-                </span>
-                <span>&bull;</span>
-                {lead.published_at && (
-                  <time dateTime={lead.published_at}>{formatNewsDate(lead.published_at)}</time>
-                )}
-              </div>
-            </div>
-
-            <div className="grid grid-cols-1 md:grid-cols-[minmax(0,1fr)_minmax(0,38%)] gap-6 items-start">
-              <div>
-                {/* Headline */}
-                {lead.url ? (
-                  <a
-                    href={lead.url}
-                    target="_blank"
-                    rel="noopener noreferrer"
-                    onClick={playClick}
-                    className="block text-2xl sm:text-3xl font-extrabold text-white group-hover:text-[#FF5533] transition-colors leading-tight tracking-tight font-[family-name:var(--font-display)]"
-                  >
-                    {lead.title}
-                    <span className="inline-block ml-2 text-zinc-500 group-hover:text-[#FF5533] group-hover:translate-x-1 group-hover:-translate-y-1 transition-transform">
-                      &nearr;
-                    </span>
-                  </a>
-                ) : (
-                  <h2 className="text-2xl sm:text-3xl font-extrabold text-white leading-tight tracking-tight font-[family-name:var(--font-display)]">
-                    {lead.title}
-                  </h2>
-                )}
-
-                {/* Excerpt */}
-                {lead.snippet && (
-                  <p className="mt-4 text-sm sm:text-base text-zinc-300 leading-relaxed font-sans max-w-4xl">
-                    {lead.snippet}
-                  </p>
-                )}
-              </div>
-
-            <NewsImage
-              key={lead.id}
-              src={lead.image_url}
-              alt={lead.title}
-              source={lead.source}
-              category={lead.categories[0]}
-              className="aspect-[16/9] w-full"
-            />
-            </div>
-
-            {/* Safety Tip Box for Lead Category */}
-            {lead.categories[0] && CATEGORY_TIPS[lead.categories[0]] && (
-              <div className="mt-6 rounded-xl bg-black/60 border border-white/10 p-3.5 sm:p-4 flex items-start gap-3">
-                <span className="text-base sm:text-lg">🛡️</span>
-                <div className="text-xs font-[family-name:var(--font-geist-mono)] text-zinc-300">
-                  <strong className="text-white">PANDUAN PENCEGAHAN: </strong>
-                  {CATEGORY_TIPS[lead.categories[0]]}
-                </div>
-              </div>
-            )}
-
-            {/* Footer metadata */}
-            <div className="mt-6 pt-5 border-t border-white/10 flex flex-wrap items-center justify-between gap-4">
-              <div className="flex flex-wrap items-center gap-2">
-                {lead.categories.map((c) => {
-                  const style = CATEGORY_STYLES[c] || { bg: "bg-zinc-800", text: "text-zinc-300", border: "border-zinc-700" };
-                  return (
-                    <span
-                      key={c}
-                      className={`px-2.5 py-1 rounded-md text-[11px] font-[family-name:var(--font-geist-mono)] font-bold border ${style.bg} ${style.text} ${style.border}`}
-                    >
-                      {CATEGORY_LABEL[c] ?? c}
-                    </span>
-                  );
-                })}
-              </div>
-
-              {lead.url && (
+            return (
+              <article
+                key={item.id}
+                className="group relative flex flex-col justify-between rounded-2xl p-5 sm:p-6 transition-all duration-150 ease-out hover:bg-[#161616] border border-transparent hover:border-white/[0.08] cursor-pointer min-h-[300px]"
+              >
+                {/* Clickable Overlay Link */}
                 <a
-                  href={lead.url}
-                  target="_blank"
-                  rel="noopener noreferrer"
-                  className="inline-flex items-center gap-2 text-xs font-[family-name:var(--font-geist-mono)] font-bold text-[#FF5533] hover:underline"
+                  href={item.url || "#"}
+                  target={item.url ? "_blank" : undefined}
+                  rel={item.url ? "noopener noreferrer" : undefined}
+                  onClick={(e) => {
+                    playClick();
+                    if (!item.url) {
+                      e.preventDefault();
+                      setActiveModalItem(item);
+                    }
+                  }}
+                  className="absolute inset-0 z-10 rounded-2xl"
                 >
-                  <span>BACA ARTIKEL ASLI DI {lead.source.toUpperCase()}</span>
-                  <span>&rarr;</span>
+                  <span className="sr-only">{item.title}</span>
                 </a>
-              )}
-            </div>
-          </article>
 
-          {/* STREAM / CARDS GRID */}
-          {stream.length > 0 && (
-            <div>
-              <div className="mb-4 flex items-center justify-between">
-                <h3 className="text-xs font-[family-name:var(--font-geist-mono)] uppercase tracking-wider text-zinc-400 font-bold">
-                  [ ARTIKEL &amp; TREN LAINNYA ({stream.length}) ]
-                </h3>
-                <span className="text-xs font-[family-name:var(--font-geist-mono)] text-zinc-500">
-                  Klik untuk membuka rilis pers
-                </span>
-              </div>
+                {/* Top Section: Explanatory Visual + Date, Category & Source + Title + Excerpt */}
+                <div>
+                  {/* Gambar Penjelasan Alur Modus Operandi / Media Image */}
+                  <div className="relative aspect-[16/9] w-full overflow-hidden rounded-xl mb-4 bg-[#0a0a0b] border border-white/[0.08] group-hover:border-white/20 transition-all">
+                    <ExplanatoryVisual
+                      category={primaryCat}
+                      source={item.source}
+                      title={item.title}
+                      imageUrl={item.image_url}
+                    />
+                  </div>
 
-              <div className="grid grid-cols-1 md:grid-cols-2 gap-5">
-                {stream.map((item) => {
-                  const cat = item.categories[0];
-                  const style = (cat && CATEGORY_STYLES[cat]) || {
-                    bg: "bg-zinc-800",
-                    text: "text-zinc-300",
-                    border: "border-zinc-700",
-                  };
-                  const tip = cat ? CATEGORY_TIPS[cat] : null;
+                  {/* Date, Category & Media Source */}
+                  <div className="flex items-center gap-2 text-sm text-zinc-400 font-normal mb-3">
+                    <span>{formatVercelDate(item.published_at)}</span>
+                    <span className="text-zinc-600">•</span>
+                    <span className="text-zinc-400">{categoryName}</span>
+                    <span className="text-zinc-600">•</span>
+                    <span className="text-zinc-400 font-medium">{item.source}</span>
+                  </div>
 
-                  return (
-                    <article
-                      key={item.id}
-                      className="rounded-2xl bg-[#111111] border border-white/10 hover:border-white/25 hover:bg-[#141414] p-5 sm:p-6 transition-all flex flex-col justify-between group shadow-md"
-                    >
-                      <div>
-                        <NewsImage
-                          src={item.image_url}
-                          alt={item.title}
-                          source={item.source}
-                          category={cat}
-                          className="aspect-[16/9] w-full mb-4"
-                        />
-                        {/* Top Meta */}
-                        <div className="flex items-center justify-between gap-2 mb-3 text-[11px] font-[family-name:var(--font-geist-mono)]">
-                          <span
-                            className={`px-2 py-0.5 rounded font-bold border ${style.bg} ${style.text} ${style.border}`}
-                          >
-                            {cat ? CATEGORY_LABEL[cat] ?? cat : "Siber"}
-                          </span>
+                  {/* Headline Title */}
+                  <h2 className="text-xl sm:text-[22px] font-bold text-white tracking-tight leading-snug group-hover:text-zinc-100 transition-colors">
+                    {item.title}
+                  </h2>
 
-                          <div className="text-zinc-400">
-                            {item.published_at && (
-                              <time dateTime={item.published_at}>{formatNewsDate(item.published_at)}</time>
-                            )}
-                          </div>
-                        </div>
-
-                        {/* Title */}
-                        {item.url ? (
-                          <a
-                            href={item.url}
-                            target="_blank"
-                            rel="noopener noreferrer"
-                            onClick={playClick}
-                            className="block font-bold text-base sm:text-lg text-white group-hover:text-[#FF5533] leading-snug transition-colors tracking-tight font-[family-name:var(--font-display)]"
-                          >
-                            {item.title}
-                          </a>
-                        ) : (
-                          <h4 className="font-bold text-base sm:text-lg text-white leading-snug tracking-tight font-[family-name:var(--font-display)]">
-                            {item.title}
-                          </h4>
-                        )}
-
-                        {/* Snippet */}
-                        {item.snippet && (
-                          <p className="mt-3 text-xs sm:text-sm text-zinc-300 leading-relaxed font-sans line-clamp-3">
-                            {item.snippet}
-                          </p>
-                        )}
-
-                        {/* Quick Tip Pill */}
-                        {tip && (
-                          <div className="mt-3.5 p-2.5 rounded-lg bg-black/40 border border-white/5 text-[11px] font-[family-name:var(--font-geist-mono)] text-zinc-400">
-                            <span className="text-[#FF5533] font-bold">Tips: </span>
-                            {tip}
-                          </div>
-                        )}
-                      </div>
-
-                      {/* Card Footer */}
-                      <div className="mt-5 pt-3 border-t border-white/10 flex items-center justify-between text-xs font-[family-name:var(--font-geist-mono)]">
-                        <span className="text-zinc-400">Sumber: <strong className="text-zinc-200">{item.source}</strong></span>
-
-                        {item.url && (
-                          <a
-                            href={item.url}
-                            target="_blank"
-                            rel="noopener noreferrer"
-                            className="text-[#FF5533] group-hover:underline flex items-center gap-1 font-semibold"
-                          >
-                            <span>Buka Media</span>
-                            <span>&rarr;</span>
-                          </a>
-                        )}
-                      </div>
-                    </article>
-                  );
-                })}
-              </div>
-            </div>
-          )}
+                  {/* Body Snippet */}
+                  {item.snippet && (
+                    <p className="mt-3 text-sm text-zinc-400 leading-relaxed line-clamp-3 font-normal">
+                      {item.snippet}
+                    </p>
+                  )}
+                </div>
+              </article>
+            );
+          })}
         </div>
       ) : (
-        <div className="rounded-2xl bg-[#111] border border-white/10 p-10 text-center space-y-3 font-[family-name:var(--font-geist-mono)]">
-          <div className="text-3xl">🔍</div>
-          <div className="text-base font-bold text-white">Tidak ada artikel yang cocok dengan pencarian</div>
-          <p className="text-xs text-zinc-400 max-w-md mx-auto">
-            Coba ganti kata kunci atau pilih kategori &quot;Semua Modus&quot; untuk melihat seluruh pantauan berita.
-          </p>
+        /* Empty State */
+        <div className="rounded-2xl border border-white/10 p-12 text-center space-y-3">
+          <div className="text-zinc-500 text-sm">Tidak ada artikel yang cocok dengan pencarian</div>
           <button
             type="button"
             onClick={() => {
+              playClick();
               setSearchQuery("");
               setSelectedCategory("all");
             }}
-            className="mt-2 px-4 py-2 rounded-full bg-white text-black font-bold text-xs"
+            className="text-xs text-white hover:underline mt-2 font-medium"
           >
-            Reset Filter
+            Reset filter pencarian &rarr;
           </button>
         </div>
       )}
 
       {/* =========================================================================
-          EMERGENCY DEFENSE & OFFICIAL REPORTING CHANNELS
+          OFFICIAL ASSISTANCE & REPORTING CHANNELS (SLEEK VERCEL DARK THEME)
           ========================================================================= */}
-      <section className="rounded-2xl bg-gradient-to-br from-[#121212] to-[#0a0a0a] border border-white/15 p-6 sm:p-8 space-y-6">
-        <div className="flex flex-wrap items-center justify-between gap-4 border-b border-white/10 pb-5">
+      <section className="mt-20 pt-10 border-t border-white/[0.08] space-y-6">
+        <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-4">
           <div>
-            <span className="text-xs font-[family-name:var(--font-geist-mono)] text-[#FF3815] uppercase tracking-wider font-bold">
-              [ SALURAN BANTUAN RESMI ]
-            </span>
-            <h3 className="mt-1 text-xl sm:text-2xl font-black uppercase text-white font-[family-name:var(--font-display)]">
-              TERLANJUR JADI KORBAN ATAU MENEMUKAN REKENING PENIPU?
+            <h3 className="text-lg font-bold text-white tracking-tight">
+              Saluran Bantuan &amp; Pengaduan Siber Resmi
             </h3>
+            <p className="text-xs sm:text-sm text-zinc-400 mt-1">
+              Bila Anda menemukan transaksi mencurigakan atau menjadi korban rekayasa sosial, hubungi otoritas berikut:
+            </p>
           </div>
 
-          <div className="flex flex-wrap gap-2">
+          <div className="flex items-center gap-3">
             <Link
               href="/#game"
-              className="px-4 py-2 rounded-full bg-[#FF3815] hover:bg-[#FF5533] text-black font-bold text-xs font-[family-name:var(--font-geist-mono)] tracking-wider uppercase transition-colors"
+              onClick={playClick}
+              className="text-xs font-medium text-zinc-300 hover:text-white bg-white/[0.06] hover:bg-white/[0.1] border border-white/10 rounded-full px-4 py-2 transition-all"
             >
-              Uji Naluri di Game &rarr;
+              Uji Nalar di Game &rarr;
             </Link>
             <Link
               href="/pemindai"
-              className="px-4 py-2 rounded-full bg-white/10 hover:bg-white/20 text-white font-bold text-xs font-[family-name:var(--font-geist-mono)] tracking-wider uppercase transition-colors"
+              onClick={playClick}
+              className="text-xs font-medium text-white bg-white/10 hover:bg-white/20 border border-white/15 rounded-full px-4 py-2 transition-all"
             >
               Pemindai Pesan &rarr;
             </Link>
           </div>
         </div>
 
-        <div className="grid grid-cols-1 md:grid-cols-3 gap-4 font-[family-name:var(--font-geist-mono)] text-xs">
-          <div className="p-4 rounded-xl bg-black/50 border border-white/10 space-y-1.5">
-            <div className="text-zinc-400 font-bold uppercase text-[11px]">1. KEPOLISIAN SIBER</div>
-            <div className="text-white font-bold text-sm">Patroli Siber Polri</div>
-            <p className="text-zinc-400 text-[11px] leading-relaxed">
-              Laporkan tindak pidana siber, pemerasan, peretasan akun, dan sindikat malware.
+        <div className="grid grid-cols-1 md:grid-cols-3 gap-4">
+          <a
+            href="https://patrolisiber.id"
+            target="_blank"
+            rel="noopener noreferrer"
+            onClick={playClick}
+            className="group block p-5 rounded-xl bg-[#111111] border border-white/[0.06] hover:border-white/20 transition-all"
+          >
+            <div className="text-xs font-medium text-zinc-500 uppercase tracking-wider mb-1">
+              1. Kepolisian Siber
+            </div>
+            <div className="text-sm font-semibold text-white group-hover:text-zinc-200">
+              Patroli Siber Polri &nearr;
+            </div>
+            <p className="text-xs text-zinc-400 mt-1.5 leading-relaxed">
+              Pelaporan tindak pidana siber, penipuan online, malware APK, dan peretasan rekening.
             </p>
-            <a
-              href="https://patrolisiber.id"
-              target="_blank"
-              rel="noopener noreferrer"
-              className="text-[#FF5533] hover:underline inline-block pt-1 text-[11px]"
-            >
-              patrolisiber.id &nearr;
-            </a>
-          </div>
+          </a>
 
-          <div className="p-4 rounded-xl bg-black/50 border border-white/10 space-y-1.5">
-            <div className="text-zinc-400 font-bold uppercase text-[11px]">2. CEK REKENING BANK</div>
-            <div className="text-white font-bold text-sm">CekRekening.id (Kominfo)</div>
-            <p className="text-zinc-400 text-[11px] leading-relaxed">
+          <a
+            href="https://cekrekening.id"
+            target="_blank"
+            rel="noopener noreferrer"
+            onClick={playClick}
+            className="group block p-5 rounded-xl bg-[#111111] border border-white/[0.06] hover:border-white/20 transition-all"
+          >
+            <div className="text-xs font-medium text-zinc-500 uppercase tracking-wider mb-1">
+              2. Rekening &amp; E-Wallet
+            </div>
+            <div className="text-sm font-semibold text-white group-hover:text-zinc-200">
+              CekRekening.id (Kominfo) &nearr;
+            </div>
+            <p className="text-xs text-zinc-400 mt-1.5 leading-relaxed">
               Periksa riwayat rekam jejak nomor rekening atau e-wallet sebelum Anda mentransfer uang.
             </p>
-            <a
-              href="https://cekrekening.id"
-              target="_blank"
-              rel="noopener noreferrer"
-              className="text-[#FF5533] hover:underline inline-block pt-1 text-[11px]"
-            >
-              cekrekening.id &nearr;
-            </a>
-          </div>
+          </a>
 
-          <div className="p-4 rounded-xl bg-black/50 border border-white/10 space-y-1.5">
-            <div className="text-zinc-400 font-bold uppercase text-[11px]">3. KEUANGAN &amp; PINJOL</div>
-            <div className="text-white font-bold text-sm">Kontak OJK 157 / Satgas PASTI</div>
-            <p className="text-zinc-400 text-[11px] leading-relaxed">
-              Pengaduan korban investasi bodong, robot trading abal-abal, dan teror pinjol ilegal.
+          <div className="p-5 rounded-xl bg-[#111111] border border-white/[0.06]">
+            <div className="text-xs font-medium text-zinc-500 uppercase tracking-wider mb-1">
+              3. Keuangan &amp; Pinjol
+            </div>
+            <div className="text-sm font-semibold text-white">
+              Kontak OJK 157 / Satgas PASTI
+            </div>
+            <p className="text-xs text-zinc-400 mt-1.5 leading-relaxed">
+              Pengaduan investasi ilegal dan teror pinjol. Telepon: 157 &bull; WhatsApp: 081-157-157-157.
             </p>
-            <div className="text-zinc-300 pt-1 text-[11px]">Telepon: 157 &bull; WA: 081-157-157-157</div>
           </div>
         </div>
       </section>
+
+      {/* =========================================================================
+          TOAST NOTIFICATION (RSS URL COPIED)
+          ========================================================================= */}
+      {copyToast && (
+        <div className="fixed bottom-6 left-1/2 -translate-x-1/2 z-50 px-4 py-2 rounded-full bg-[#1e1e1e] border border-white/20 text-xs text-white shadow-2xl flex items-center gap-2">
+          <span className="text-emerald-400 font-bold">✓</span>
+          <span>Tautan RSS Feed berhasil disalin ke clipboard</span>
+        </div>
+      )}
+
+      {/* =========================================================================
+          DETAIL MODAL (FOR ARTICLES WITHOUT EXTERNAL URL)
+          ========================================================================= */}
+      {activeModalItem && (
+        <div className="fixed inset-0 z-50 flex items-center justify-center p-4 bg-black/80 backdrop-blur-sm">
+          <div className="w-full max-w-lg rounded-2xl bg-[#161616] border border-white/10 p-6 space-y-4">
+            <div className="flex items-center justify-between">
+              <span className="text-xs text-zinc-400">
+                {formatVercelDate(activeModalItem.published_at)} &bull; {activeModalItem.source}
+              </span>
+              <button
+                type="button"
+                onClick={() => setActiveModalItem(null)}
+                className="text-zinc-400 hover:text-white text-lg p-1"
+              >
+                &times;
+              </button>
+            </div>
+
+            <h3 className="text-xl font-bold text-white tracking-tight leading-snug">
+              {activeModalItem.title}
+            </h3>
+
+            {/* Gambar Penjelasan di Modal */}
+            <div className="relative aspect-[16/9] w-full overflow-hidden rounded-xl bg-[#090a0b] border border-white/10">
+              <ExplanatoryVisual
+                category={activeModalItem.categories[0] || "general"}
+                source={activeModalItem.source}
+                title={activeModalItem.title}
+                imageUrl={activeModalItem.image_url}
+              />
+            </div>
+
+            <p className="text-sm text-zinc-300 leading-relaxed">
+              {activeModalItem.snippet}
+            </p>
+
+            {activeModalItem.categories[0] && CATEGORY_TIPS[activeModalItem.categories[0]] && (
+              <div className="p-3.5 rounded-xl bg-black/50 border border-white/10 text-xs text-zinc-300">
+                <strong className="text-white">Panduan Pencegahan: </strong>
+                {CATEGORY_TIPS[activeModalItem.categories[0]]}
+              </div>
+            )}
+
+            <div className="pt-2 flex justify-end">
+              <button
+                type="button"
+                onClick={() => setActiveModalItem(null)}
+                className="px-4 py-1.5 rounded-full bg-white text-black font-semibold text-xs"
+              >
+                Tutup
+              </button>
+            </div>
+          </div>
+        </div>
+      )}
     </div>
   );
 }

@@ -1,12 +1,14 @@
 ﻿"use client";
 
+import Link from "next/link";
+
 // Supabase exact bento features grid clone
-// Row 1: 3 cards — Postgres Database | Authentication | Edge Functions
+// Row 1: 3 cards — Postgres Database | Authentication | Radar Berita
 // Row 2: 4 cards — Storage | Realtime | Vector | Data APIs
 
 export default function BentoFeatures() {
   return (
-    <section id="modul" className="pb-20 px-6 bg-[#0c0d0d]" style={{ fontFamily: "var(--font-supa-body)" }}>
+    <section id="modul" className="pb-20 px-6 bg-[#0c0d0d] [font-family:var(--font-jetbrains-mono)]">
       <div className="max-w-[1200px] mx-auto">
 
         {/* =====================================================================
@@ -23,7 +25,7 @@ export default function BentoFeatures() {
                 <svg className="size-5 text-white opacity-70" fill="none" viewBox="0 0 24 24" stroke="currentColor" strokeWidth="1.5">
                   <path strokeLinecap="round" strokeLinejoin="round" d="M20.25 6.375c0 2.278-3.694 4.125-8.25 4.125S3.75 8.653 3.75 6.375m16.5 0c0-2.278-3.694-4.125-8.25-4.125S3.75 4.097 3.75 6.375m16.5 0v11.25c0 2.278-3.694 4.125-8.25 4.125s-8.25-1.847-8.25-4.125V6.375m16.5 2.625c0 2.278-3.694 4.125-8.25 4.125s-8.25-1.847-8.25-4.125m16.5 2.625c0 2.278-3.694 4.125-8.25 4.125s-8.25-1.847-8.25-4.125" />
                 </svg>
-                <h3 className="text-[13px] font-semibold text-white" style={{ fontFamily: "var(--font-supa-heading)", letterSpacing: "-0.01em" }}>Postgres Database</h3>
+                <h3 className="text-[13px] font-semibold text-white" style={{ fontFamily: "var(--font-jetbrains-mono)", letterSpacing: "-0.01em" }}>Postgres Database</h3>
               </div>
 
               <p className="text-[13px] text-[#A0A0A0] leading-relaxed max-w-[260px]">
@@ -81,7 +83,7 @@ export default function BentoFeatures() {
                 <svg className="size-5 text-white opacity-70" fill="none" viewBox="0 0 24 24" stroke="currentColor" strokeWidth="1.5">
                   <path strokeLinecap="round" strokeLinejoin="round" d="M16.5 10.5V6.75a4.5 4.5 0 1 0-9 0v3.75m-.75 11.25h10.5a2.25 2.25 0 0 0 2.25-2.25v-6.75a2.25 2.25 0 0 0-2.25-2.25H6.75a2.25 2.25 0 0 0-2.25 2.25v6.75a2.25 2.25 0 0 0 2.25 2.25z" />
                 </svg>
-                <h3 className="text-[13px] font-semibold text-white" style={{ fontFamily: "var(--font-supa-heading)", letterSpacing: "-0.01em" }}>Authentication</h3>
+                <h3 className="text-[13px] font-semibold text-white" style={{ fontFamily: "var(--font-jetbrains-mono)", letterSpacing: "-0.01em" }}>Authentication</h3>
               </div>
 
               <p className="text-[13px] text-[#A0A0A0] leading-relaxed">
@@ -93,10 +95,10 @@ export default function BentoFeatures() {
             <div className="mt-6 space-y-2">
               {/* Row 1 */}
               <div className="grid grid-cols-2 gap-2">
-                <div className="px-3 py-2 rounded-lg bg-[#0d0e0d] border border-white/[0.08] text-[11px] text-[#666] truncate" style={{ fontFamily: "var(--font-supa-mono)" }}>
+                <div className="px-3 py-2 rounded-lg bg-[#0d0e0d] border border-white/[0.08] text-[11px] text-[#666] truncate" style={{ fontFamily: "var(--font-jetbrains-mono)" }}>
                   j1980@gmail.com
                 </div>
-                <div className="px-3 py-2 rounded-lg bg-[#0d0e0d] border border-white/[0.08] text-[11px] text-[#666] truncate" style={{ fontFamily: "var(--font-supa-mono)" }}>
+                <div className="px-3 py-2 rounded-lg bg-[#0d0e0d] border border-white/[0.08] text-[11px] text-[#666] truncate" style={{ fontFamily: "var(--font-jetbrains-mono)" }}>
                   alex1601
                 </div>
               </div>
@@ -115,63 +117,51 @@ export default function BentoFeatures() {
               </div>
               {/* Row 3 */}
               <div className="grid grid-cols-2 gap-2">
-                <div className="px-3 py-2 rounded-lg bg-[#0d0e0d] border border-white/[0.08] text-[11px] text-[#666] truncate" style={{ fontFamily: "var(--font-supa-mono)" }}>
+                <div className="px-3 py-2 rounded-lg bg-[#0d0e0d] border border-white/[0.08] text-[11px] text-[#666] truncate" style={{ fontFamily: "var(--font-jetbrains-mono)" }}>
                   j567@gmail.com
                 </div>
-                <div className="px-3 py-2 rounded-lg bg-[#0d0e0d] border border-white/[0.08] text-[11px] text-[#666] truncate" style={{ fontFamily: "var(--font-supa-mono)" }}>
+                <div className="px-3 py-2 rounded-lg bg-[#0d0e0d] border border-white/[0.08] text-[11px] text-[#666] truncate" style={{ fontFamily: "var(--font-jetbrains-mono)" }}>
                   mememaster
                 </div>
               </div>
             </div>
           </div>
 
-          {/* ── CARD 3: Edge Functions ── */}
-          <div className="rounded-2xl bg-[#161817] border border-white/[0.08] p-7 flex flex-col justify-between relative overflow-hidden min-h-[340px] hover:border-white/[0.14] transition-colors">
+          {/* ── CARD 3: Radar Berita (teks statis, klik ke /berita) ── */}
+          <Link
+            href="/berita"
+            className="group rounded-2xl bg-[#161817] border border-white/[0.08] p-7 flex flex-col justify-between relative overflow-hidden min-h-[340px] hover:border-white/[0.14] transition-colors"
+          >
             <div>
               <div className="flex items-center gap-2.5 mb-3">
-                {/* Lightning / function icon */}
+                {/* Radar / broadcast icon */}
                 <svg className="size-5 text-white opacity-70" fill="none" viewBox="0 0 24 24" stroke="currentColor" strokeWidth="1.5">
-                  <path strokeLinecap="round" strokeLinejoin="round" d="m3.75 13.5 10.5-11.25L12 10.5h8.25L9.75 21.75 12 13.5H3.75z" />
+                  <path strokeLinecap="round" strokeLinejoin="round" d="M12 7.5h1.5m-1.5 3h1.5m-7.5 3h7.5m-7.5 3h7.5m3-9h3.375c.621 0 1.125.504 1.125 1.125V18a2.25 2.25 0 0 1-2.25 2.25M16.5 7.5V18a2.25 2.25 0 0 0 2.25 2.25M16.5 7.5V4.875c0-.621-.504-1.125-1.125-1.125H4.125C3.504 3.75 3 4.254 3 4.875V18a2.25 2.25 0 0 0 2.25 2.25h13.5M6 7.5h3v3H6v-3Z" />
                 </svg>
-                <h3 className="text-[13px] font-semibold text-white" style={{ fontFamily: "var(--font-supa-heading)", letterSpacing: "-0.01em" }}>Edge Functions</h3>
+                <h3 className="text-[13px] font-semibold text-white" style={{ fontFamily: "var(--font-jetbrains-mono)", letterSpacing: "-0.01em" }}>Radar Berita</h3>
+                <span className="ml-auto flex items-center gap-1.5 text-[10px] tracking-wider text-[#3ECF8E] uppercase">
+                  <span className="relative flex size-1.5">
+                    <span className="animate-ping absolute inline-flex h-full w-full rounded-full bg-[#3ECF8E] opacity-75" />
+                    <span className="relative inline-flex rounded-full size-1.5 bg-[#3ECF8E]" />
+                  </span>
+                  live
+                </span>
               </div>
 
               <p className="text-[13px] text-[#A0A0A0] leading-relaxed">
-                Easily write custom code <span className="text-white font-bold">without deploying or scaling servers</span>.
+                Situs ini punya <span className="text-white font-bold">feed berita terverifikasi</span>. Modus penipuan digital terbaru dari media nasional, dikurasi otomatis tiap hari.
               </p>
             </div>
 
-            {/* Terminal pill */}
-            <div className="mt-6 space-y-4">
-              <div className="inline-flex items-center gap-2 px-3.5 py-2 rounded-full bg-[#0d0e0d] border border-[#3ECF8E]/30 text-[12px]" style={{ fontFamily: "var(--font-supa-mono)" }}>
+            <div className="mt-auto pt-6">
+              <div className="inline-flex items-center gap-2 px-3.5 py-2 rounded-full bg-[#0d0e0d] border border-[#3ECF8E]/30 text-[12px]" style={{ fontFamily: "var(--font-jetbrains-mono)" }}>
                 <span className="text-[#3ECF8E]">$</span>
-                <span className="text-white">supabase</span>
-                <span className="text-[#3ECF8E]">functions serve</span>
-              </div>
-
-              {/* Globe wireframe SVG */}
-              <div className="h-32 w-full relative overflow-hidden">
-                <svg viewBox="0 0 280 160" className="w-full h-full" fill="none">
-                  {/* Outer globe arc */}
-                  <ellipse cx="200" cy="130" rx="100" ry="80" className="stroke-zinc-700" strokeWidth="1" />
-                  {/* Middle arc */}
-                  <ellipse cx="200" cy="130" rx="70" ry="55" className="stroke-zinc-700" strokeWidth="0.8" />
-                  {/* Latitude lines */}
-                  <path d="M105 100 Q200 60 295 100" className="stroke-zinc-700" strokeWidth="0.8" fill="none" />
-                  <path d="M110 120 Q200 90 290 120" className="stroke-zinc-700" strokeWidth="0.8" fill="none" />
-                  {/* Vertical meridian */}
-                  <line x1="200" y1="50" x2="200" y2="160" className="stroke-zinc-700" strokeWidth="0.8" />
-                  {/* Dots on globe */}
-                  <circle cx="200" cy="62" r="3" fill="white" />
-                  <circle cx="155" cy="105" r="3" fill="white" />
-                  <circle cx="248" cy="118" r="3" fill="white" />
-                  {/* Connection lines */}
-                  <line x1="200" y1="62" x2="155" y2="105" className="stroke-white/30" strokeWidth="0.8" />
-                  <line x1="155" y1="105" x2="248" y2="118" className="stroke-white/30" strokeWidth="0.8" />
-                </svg>
+                <span className="text-white">redjohn</span>
+                <span className="text-[#3ECF8E]">news</span>
+                <span className="text-white group-hover:translate-x-0.5 transition-transform" aria-hidden>↵</span>
               </div>
             </div>
-          </div>
+          </Link>
 
         </div>
 
@@ -188,7 +178,7 @@ export default function BentoFeatures() {
                 <svg className="size-4.5 text-white opacity-70" fill="none" viewBox="0 0 24 24" stroke="currentColor" strokeWidth="1.5">
                   <path strokeLinecap="round" strokeLinejoin="round" d="m20.25 7.5-.625 10.632a2.25 2.25 0 0 1-2.247 2.118H6.622a2.25 2.25 0 0 1-2.247-2.118L3.75 7.5M10 11.25h4M3.375 7.5h17.25c.621 0 1.125-.504 1.125-1.125v-1.5c0-.621-.504-1.125-1.125-1.125H3.375c-.621 0-1.125.504-1.125 1.125v1.5c0 .621.504 1.125 1.125 1.125z" />
                 </svg>
-                <h3 className="text-[13px] font-semibold text-white" style={{ fontFamily: "var(--font-supa-heading)", letterSpacing: "-0.01em" }}>Storage</h3>
+                <h3 className="text-[13px] font-semibold text-white" style={{ fontFamily: "var(--font-jetbrains-mono)", letterSpacing: "-0.01em" }}>Storage</h3>
               </div>
               <p className="text-[13px] text-[#A0A0A0] leading-relaxed">
                 Store, organize, and serve large files, from <span className="text-[#3ECF8E]">videos</span> to <span className="text-[#3ECF8E]">images</span>.
@@ -232,7 +222,7 @@ export default function BentoFeatures() {
                 <svg className="size-4.5 text-white opacity-70" fill="none" viewBox="0 0 24 24" stroke="currentColor" strokeWidth="1.5">
                   <path strokeLinecap="round" strokeLinejoin="round" d="M15.042 21.672 13.684 16.6m0 0-2.51 2.225.569-9.47 5.227 7.917-3.286-.672ZM12 2.25V4.5m5.834.166-1.591 1.591M20.25 10.5H18M7.757 14.743l-1.59 1.59M6 10.5H3.75m4.007-4.243-1.59-1.59" />
                 </svg>
-                <h3 className="text-[13px] font-semibold text-white" style={{ fontFamily: "var(--font-supa-heading)", letterSpacing: "-0.01em" }}>Realtime</h3>
+                <h3 className="text-[13px] font-semibold text-white" style={{ fontFamily: "var(--font-jetbrains-mono)", letterSpacing: "-0.01em" }}>Realtime</h3>
               </div>
               <p className="text-[13px] text-[#A0A0A0] leading-relaxed">
                 Build multiplayer experiences with <span className="text-white font-bold">real-time data synchronization</span>.
@@ -279,7 +269,7 @@ export default function BentoFeatures() {
                 <svg className="size-4.5 text-white opacity-70" fill="none" viewBox="0 0 24 24" stroke="currentColor" strokeWidth="1.5">
                   <path strokeLinecap="round" strokeLinejoin="round" d="m21 7.5-9-5.25L3 7.5m18 0-9 5.25m9-5.25v9l-9 5.25M3 7.5l9 5.25M3 7.5v9l9 5.25m0-9v9" />
                 </svg>
-                <h3 className="text-[13px] font-semibold text-white" style={{ fontFamily: "var(--font-supa-heading)", letterSpacing: "-0.01em" }}>Vector</h3>
+                <h3 className="text-[13px] font-semibold text-white" style={{ fontFamily: "var(--font-jetbrains-mono)", letterSpacing: "-0.01em" }}>Vector</h3>
               </div>
               <p className="text-[13px] text-[#A0A0A0] leading-relaxed">
                 Integrate your favorite ML-models to <span className="text-white font-bold">store, index</span> and <span className="text-white font-bold">search vector embeddings</span>.
@@ -330,7 +320,7 @@ export default function BentoFeatures() {
                 <svg className="size-4.5 text-white opacity-70" fill="none" viewBox="0 0 24 24" stroke="currentColor" strokeWidth="1.5">
                   <path strokeLinecap="round" strokeLinejoin="round" d="M17.25 6.75 22.5 12l-5.25 5.25m-10.5 0L1.5 12l5.25-5.25m7.5-3-4.5 16.5" />
                 </svg>
-                <h3 className="text-[13px] font-semibold text-white" style={{ fontFamily: "var(--font-supa-heading)", letterSpacing: "-0.01em" }}>Data APIs</h3>
+                <h3 className="text-[13px] font-semibold text-white" style={{ fontFamily: "var(--font-jetbrains-mono)", letterSpacing: "-0.01em" }}>Data APIs</h3>
               </div>
               <p className="text-[13px] text-[#A0A0A0] leading-relaxed">
                 Instant ready-to-use <span className="text-white font-bold">REST APIs</span>.
@@ -338,7 +328,7 @@ export default function BentoFeatures() {
             </div>
 
             {/* Endpoint table */}
-            <div className="mt-6 space-y-1 text-[11px]" style={{ fontFamily: "var(--font-supa-mono)" }}>
+            <div className="mt-6 space-y-1 text-[11px]" style={{ fontFamily: "var(--font-jetbrains-mono)" }}>
               {[
                 { table: "countries", route: "/v1/countries" },
                 { table: "continents", route: "/v1/continents" },
