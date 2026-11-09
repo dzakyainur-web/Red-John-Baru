@@ -1,314 +1,378 @@
-"use client";
+﻿"use client";
 
-import Link from "next/link";
+// Supabase exact bento features grid clone
+// Row 1: 3 cards — Postgres Database | Authentication | Edge Functions
+// Row 2: 4 cards — Storage | Realtime | Vector | Data APIs
 
 export default function BentoFeatures() {
   return (
-    <section id="modul" className="pb-24 px-4 sm:px-8 bg-[#000000]">
-      <div className="max-w-[1340px] mx-auto">
-        {/* Section Title ala Unkey */}
-        <div className="text-center max-w-2xl mx-auto mb-12 sm:mb-16">
-          <span className="inline-flex items-center gap-2 px-3.5 py-1 rounded-full bg-white/[0.04] border border-white/10 text-xs text-zinc-300 font-mono uppercase tracking-wider mb-3">
-            <span className="size-1.5 rounded-full bg-[#38BDF8]" />
-            Infrastruktur Intelijen Terpadu
-          </span>
-          <h2 className="text-3xl sm:text-5xl font-bold tracking-tight text-white font-sans">
-            Modular. Presisi. Tanpa Telemetri.
-          </h2>
-          <p className="mt-3 text-sm sm:text-base text-zinc-400 font-sans">
-            Setiap instrumen dirancang independen dengan inferensi mandiri untuk memverifikasi ancaman siber secara instan.
-          </p>
-        </div>
+    <section id="modul" className="pb-20 px-6 bg-[#0c0d0d]" style={{ fontFamily: "var(--font-supa-body)" }}>
+      <div className="max-w-[1200px] mx-auto">
 
-        {/* =========================================================================
-            ROW 1: 3 LARGE CARDS (Unkey Style with purposeful color accents)
-            ========================================================================= */}
-        <div className="grid grid-cols-1 lg:grid-cols-3 gap-5 mb-5">
-          {/* Card 1: Radar Berita (Emerald Accent) */}
-          <div className="rounded-3xl bg-[#0C0C0E] border border-white/[0.08] hover:border-[#10B981]/40 p-7 sm:p-9 flex flex-col justify-between relative overflow-hidden min-h-[360px] group transition-all duration-300 shadow-[0_8px_30px_rgba(0,0,0,0.7)]">
-            {/* Subtle Top Ambient Glow */}
-            <div className="absolute -top-16 -right-16 size-48 rounded-full bg-[#10B981]/10 blur-2xl pointer-events-none group-hover:bg-[#10B981]/15 transition-all" />
+        {/* =====================================================================
+            ROW 1 — 3 Cards: Postgres (large) | Auth | Edge Functions
+            ===================================================================== */}
+        <div className="grid grid-cols-1 lg:grid-cols-3 gap-4 mb-4">
 
-            <div className="relative z-10">
-              <div className="flex items-center gap-3 mb-4 text-white">
-                <div className="size-10 rounded-2xl bg-[#10B981]/10 border border-[#10B981]/25 flex items-center justify-center text-[#10B981] group-hover:scale-105 transition-transform">
-                  <svg className="size-5" fill="none" viewBox="0 0 24 24" stroke="currentColor" strokeWidth="1.8">
-                    <path strokeLinecap="round" strokeLinejoin="round" d="M4 7v10c0 2 1.5 3 3.5 3h9c2 0 3.5-1 3.5-3V7c0-2-1.5-3-3.5-3h-9C5.5 4 4 5 4 7zm0 5c0 2 1.5 3 3.5 3h9c2 0 3.5-1 3.5-3M4 7c0 2 1.5 3 3.5 3h9c2 0 3.5-1 3.5-3" />
-                  </svg>
-                </div>
-                <div>
-                  <h3 className="text-lg font-bold text-white font-sans">
-                    Radar Berita &amp; Modus
-                  </h3>
-                  <span className="text-[11px] font-mono text-[#10B981] uppercase tracking-wider">Live Feeds RSS</span>
-                </div>
+          {/* ── CARD 1: Postgres Database ── */}
+          <div className="rounded-2xl bg-[#161817] border border-white/[0.08] p-7 flex flex-col justify-between relative overflow-hidden min-h-[340px] hover:border-white/[0.14] transition-colors">
+            {/* Header */}
+            <div>
+              <div className="flex items-center gap-2.5 mb-3">
+                {/* DB Icon */}
+                <svg className="size-5 text-white opacity-70" fill="none" viewBox="0 0 24 24" stroke="currentColor" strokeWidth="1.5">
+                  <path strokeLinecap="round" strokeLinejoin="round" d="M20.25 6.375c0 2.278-3.694 4.125-8.25 4.125S3.75 8.653 3.75 6.375m16.5 0c0-2.278-3.694-4.125-8.25-4.125S3.75 4.097 3.75 6.375m16.5 0v11.25c0 2.278-3.694 4.125-8.25 4.125s-8.25-1.847-8.25-4.125V6.375m16.5 2.625c0 2.278-3.694 4.125-8.25 4.125s-8.25-1.847-8.25-4.125m16.5 2.625c0 2.278-3.694 4.125-8.25 4.125s-8.25-1.847-8.25-4.125" />
+                </svg>
+                <h3 className="text-[13px] font-semibold text-white" style={{ fontFamily: "var(--font-supa-heading)", letterSpacing: "-0.01em" }}>Postgres Database</h3>
               </div>
 
-              <p className="text-xs sm:text-sm text-zinc-400 font-sans leading-relaxed max-w-[280px]">
-                Kurasi otomatis ratusan berita penipuan perbankan, malware APK, dan kebocoran data di Indonesia yang disinkronisasi setiap 6 jam.
+              <p className="text-[13px] text-[#A0A0A0] leading-relaxed max-w-[260px]">
+                Every project is a <strong className="text-white font-semibold">full Postgres database</strong>, the world&apos;s most trusted relational database.
               </p>
             </div>
 
-            {/* Bottom-left checkmarks + Right-side wireframe */}
-            <div className="mt-8 flex items-end justify-between relative z-10">
-              <ul className="space-y-2 text-xs text-zinc-300 font-sans">
+            {/* Checklist */}
+            <div className="mt-auto">
+              <ul className="space-y-1.5 text-[13px] text-[#A0A0A0]">
                 <li className="flex items-center gap-2">
-                  <span className="text-[#10B981] font-bold">✓</span>
-                  <span>Sinkronisasi Tiap 6 Jam</span>
+                  <span className="text-[#3ECF8E] text-xs">✓</span>
+                  <span>100% portable</span>
                 </li>
                 <li className="flex items-center gap-2">
-                  <span className="text-[#10B981] font-bold">✓</span>
-                  <span>Kurasi Media Kredibel</span>
+                  <span className="text-[#3ECF8E] text-xs">✓</span>
+                  <span>Built-in <span className="text-[#3ECF8E] underline underline-offset-2">Auth with RLS</span></span>
                 </li>
                 <li className="flex items-center gap-2">
-                  <span className="text-[#10B981] font-bold">✓</span>
-                  <span>Deteksi Tren Anomali</span>
+                  <span className="text-[#3ECF8E] text-xs">✓</span>
+                  <span>Easy to extend</span>
                 </li>
               </ul>
             </div>
 
-            {/* Blueprint Wireframe Graphic with emerald ping */}
-            <div className="absolute right-1 -bottom-2 w-48 h-48 pointer-events-none opacity-30 group-hover:opacity-50 transition-opacity">
-              <svg viewBox="0 0 200 200" fill="none" className="w-full h-full stroke-zinc-500">
-                <circle cx="100" cy="100" r="80" strokeWidth="1" strokeDasharray="4 4" />
-                <circle cx="100" cy="100" r="55" strokeWidth="1" />
-                <circle cx="100" cy="100" r="30" strokeWidth="1" strokeDasharray="2 2" />
-                <path d="M100 20 V180 M20 100 H180" strokeWidth="0.8" />
-                <circle cx="100" cy="100" r="4" fill="#10B981" className="animate-pulse" />
+            {/* PostgreSQL Elephant Wireframe — bottom right */}
+            <div className="absolute right-2 bottom-0 w-44 h-44 opacity-20 pointer-events-none select-none">
+              <svg viewBox="0 0 200 220" fill="none" className="w-full h-full stroke-zinc-400">
+                {/* Elephant body */}
+                <ellipse cx="105" cy="130" rx="62" ry="58" strokeWidth="1.5" />
+                {/* Head */}
+                <ellipse cx="105" cy="78" rx="40" ry="36" strokeWidth="1.5" />
+                {/* Trunk */}
+                <path d="M80 100 Q55 120 60 150 Q62 165 72 162" strokeWidth="1.5" strokeLinecap="round" />
+                {/* Ear */}
+                <ellipse cx="143" cy="72" rx="22" ry="28" strokeWidth="1.5" />
+                {/* Eye */}
+                <circle cx="118" cy="68" r="3.5" strokeWidth="1.5" />
+                {/* Legs */}
+                <path d="M78 185 L73 210" strokeWidth="2" strokeLinecap="round" />
+                <path d="M96 188 L94 213" strokeWidth="2" strokeLinecap="round" />
+                <path d="M118 188 L120 213" strokeWidth="2" strokeLinecap="round" />
+                <path d="M136 183 L141 208" strokeWidth="2" strokeLinecap="round" />
+                {/* Tail */}
+                <path d="M165 125 Q185 120 180 108 Q176 98 165 100" strokeWidth="1.5" strokeLinecap="round" />
               </svg>
             </div>
           </div>
 
-          {/* Card 2: Pemindai Pesan & SMS (Amber / Flame Accent) */}
-          <div className="rounded-3xl bg-[#0C0C0E] border border-white/[0.08] hover:border-[#F59E0B]/40 p-7 sm:p-9 flex flex-col justify-between relative overflow-hidden min-h-[360px] group transition-all duration-300 shadow-[0_8px_30px_rgba(0,0,0,0.7)]">
-            {/* Subtle Top Ambient Glow */}
-            <div className="absolute -top-16 -right-16 size-48 rounded-full bg-[#F59E0B]/10 blur-2xl pointer-events-none group-hover:bg-[#F59E0B]/15 transition-all" />
-
-            <div className="relative z-10">
-              <div className="flex items-center gap-3 mb-4 text-white">
-                <div className="size-10 rounded-2xl bg-[#F59E0B]/10 border border-[#F59E0B]/25 flex items-center justify-center text-[#F59E0B] group-hover:scale-105 transition-transform">
-                  <svg className="size-5" fill="none" viewBox="0 0 24 24" stroke="currentColor" strokeWidth="1.8">
-                    <path strokeLinecap="round" strokeLinejoin="round" d="M16.5 10.5V6.75a4.5 4.5 0 10-9 0v3.75m-.75 11.25h10.5a2.25 2.25 0 002.25-2.25v-6.75a2.25 2.25 0 00-2.25-2.25H6.75a2.25 2.25 0 00-2.25 2.25v6.75a2.25 2.25 0 002.25 2.25z" />
-                  </svg>
-                </div>
-                <div>
-                  <h3 className="text-lg font-bold text-white font-sans">
-                    Pemindai Pesan &amp; SMS
-                  </h3>
-                  <span className="text-[11px] font-mono text-[#F59E0B] uppercase tracking-wider">Heuristik NLP</span>
-                </div>
+          {/* ── CARD 2: Authentication ── */}
+          <div className="rounded-2xl bg-[#161817] border border-white/[0.08] p-7 flex flex-col justify-between relative overflow-hidden min-h-[340px] hover:border-white/[0.14] transition-colors">
+            <div>
+              <div className="flex items-center gap-2.5 mb-3">
+                {/* Lock Icon */}
+                <svg className="size-5 text-white opacity-70" fill="none" viewBox="0 0 24 24" stroke="currentColor" strokeWidth="1.5">
+                  <path strokeLinecap="round" strokeLinejoin="round" d="M16.5 10.5V6.75a4.5 4.5 0 1 0-9 0v3.75m-.75 11.25h10.5a2.25 2.25 0 0 0 2.25-2.25v-6.75a2.25 2.25 0 0 0-2.25-2.25H6.75a2.25 2.25 0 0 0-2.25 2.25v6.75a2.25 2.25 0 0 0 2.25 2.25z" />
+                </svg>
+                <h3 className="text-[13px] font-semibold text-white" style={{ fontFamily: "var(--font-supa-heading)", letterSpacing: "-0.01em" }}>Authentication</h3>
               </div>
 
-              <p className="text-xs sm:text-sm text-zinc-400 font-sans leading-relaxed">
-                Deteksi rekayasa sosial, tawaran kerja freelance bodong, dan kurir paket palsu lewat analisis aturan lokal tanpa kirim data ke server.
+              <p className="text-[13px] text-[#A0A0A0] leading-relaxed">
+                Add user <span className="text-white font-bold underline underline-offset-2">sign ups</span> and <span className="text-white font-bold underline underline-offset-2">logins</span>, securing your data with Row Level Security.
               </p>
             </div>
 
-            {/* Mock User/Email Pills with Amber Warnings */}
-            <div className="mt-8 space-y-2 relative z-10">
-              <div className="grid grid-cols-2 gap-2 text-xs font-mono">
-                <div className="p-2.5 rounded-xl bg-white/[0.04] border border-white/[0.06] text-zinc-300 truncate">
-                  undangan_nikah.apk
+            {/* Mock email/password input pills — 2×2 grid */}
+            <div className="mt-6 space-y-2">
+              {/* Row 1 */}
+              <div className="grid grid-cols-2 gap-2">
+                <div className="px-3 py-2 rounded-lg bg-[#0d0e0d] border border-white/[0.08] text-[11px] text-[#666] truncate" style={{ fontFamily: "var(--font-supa-mono)" }}>
+                  j1980@gmail.com
                 </div>
-                <div className="p-2.5 rounded-xl bg-white/[0.04] border border-white/[0.06] text-zinc-300 truncate">
-                  otp-bca882@gmail.com
+                <div className="px-3 py-2 rounded-lg bg-[#0d0e0d] border border-white/[0.08] text-[11px] text-[#666] truncate" style={{ fontFamily: "var(--font-supa-mono)" }}>
+                  alex1601
                 </div>
               </div>
-              <div className="grid grid-cols-2 gap-2 text-xs font-mono">
-                <div className="p-2.5 rounded-xl bg-white/[0.04] border border-white/[0.06] text-zinc-300 truncate">
-                  komisi_freelance.link
+              {/* Row 2 — password dots */}
+              <div className="grid grid-cols-2 gap-2">
+                <div className="px-3 py-2 rounded-lg bg-[#0d0e0d] border border-white/[0.08] flex items-center gap-1">
+                  {[...Array(5)].map((_, i) => (
+                    <span key={i} className="size-1.5 rounded-full bg-[#555] inline-block" />
+                  ))}
                 </div>
-                <div className="p-2.5 rounded-xl bg-[#F59E0B]/10 border border-[#F59E0B]/30 text-[#F59E0B] truncate flex items-center justify-between font-semibold">
-                  <span>[APK MALWARE]</span>
-                  <span className="size-2 rounded-full bg-[#F59E0B] animate-pulse" />
+                <div className="px-3 py-2 rounded-lg bg-[#0d0e0d] border border-white/[0.08] flex items-center gap-1">
+                  {[...Array(5)].map((_, i) => (
+                    <span key={i} className="size-1.5 rounded-full bg-[#555] inline-block" />
+                  ))}
+                </div>
+              </div>
+              {/* Row 3 */}
+              <div className="grid grid-cols-2 gap-2">
+                <div className="px-3 py-2 rounded-lg bg-[#0d0e0d] border border-white/[0.08] text-[11px] text-[#666] truncate" style={{ fontFamily: "var(--font-supa-mono)" }}>
+                  j567@gmail.com
+                </div>
+                <div className="px-3 py-2 rounded-lg bg-[#0d0e0d] border border-white/[0.08] text-[11px] text-[#666] truncate" style={{ fontFamily: "var(--font-supa-mono)" }}>
+                  mememaster
                 </div>
               </div>
             </div>
           </div>
 
-          {/* Card 3: Forensik Tautan (Electric Cyan Accent) */}
-          <div className="rounded-3xl bg-[#0C0C0E] border border-white/[0.08] hover:border-[#38BDF8]/40 p-7 sm:p-9 flex flex-col justify-between relative overflow-hidden min-h-[360px] group transition-all duration-300 shadow-[0_8px_30px_rgba(0,0,0,0.7)]">
-            {/* Subtle Top Ambient Glow */}
-            <div className="absolute -top-16 -right-16 size-48 rounded-full bg-[#38BDF8]/10 blur-2xl pointer-events-none group-hover:bg-[#38BDF8]/15 transition-all" />
-
-            <div className="relative z-10">
-              <div className="flex items-center gap-3 mb-4 text-white">
-                <div className="size-10 rounded-2xl bg-[#38BDF8]/10 border border-[#38BDF8]/25 flex items-center justify-center text-[#38BDF8] group-hover:scale-105 transition-transform">
-                  <svg className="size-5" fill="none" viewBox="0 0 24 24" stroke="currentColor" strokeWidth="1.8">
-                    <path strokeLinecap="round" strokeLinejoin="round" d="M17.25 6.75L22.5 12l-5.25 5.25m-10.5 0L1.5 12l5.25-5.25m7.5-3l-4.5 16.5" />
-                  </svg>
-                </div>
-                <div>
-                  <h3 className="text-lg font-bold text-white font-sans">
-                    Forensik Tautan
-                  </h3>
-                  <span className="text-[11px] font-mono text-[#38BDF8] uppercase tracking-wider">Homoglyph &amp; Punycode</span>
-                </div>
+          {/* ── CARD 3: Edge Functions ── */}
+          <div className="rounded-2xl bg-[#161817] border border-white/[0.08] p-7 flex flex-col justify-between relative overflow-hidden min-h-[340px] hover:border-white/[0.14] transition-colors">
+            <div>
+              <div className="flex items-center gap-2.5 mb-3">
+                {/* Lightning / function icon */}
+                <svg className="size-5 text-white opacity-70" fill="none" viewBox="0 0 24 24" stroke="currentColor" strokeWidth="1.5">
+                  <path strokeLinecap="round" strokeLinejoin="round" d="m3.75 13.5 10.5-11.25L12 10.5h8.25L9.75 21.75 12 13.5H3.75z" />
+                </svg>
+                <h3 className="text-[13px] font-semibold text-white" style={{ fontFamily: "var(--font-supa-heading)", letterSpacing: "-0.01em" }}>Edge Functions</h3>
               </div>
 
-              <p className="text-xs sm:text-sm text-zinc-400 font-sans leading-relaxed">
-                Bedah URL mencurigakan tanpa deployment untuk membongkar domain bank tiruan dan aksara Punycode tersembunyi.
+              <p className="text-[13px] text-[#A0A0A0] leading-relaxed">
+                Easily write custom code <span className="text-white font-bold">without deploying or scaling servers</span>.
               </p>
             </div>
 
-            {/* Terminal Pill + 3D Wireframe Globe with Cyan Glow */}
-            <div className="mt-6 space-y-4 relative z-10">
-              <div className="inline-flex items-center gap-2 px-3.5 py-1.5 rounded-full bg-white/[0.05] border border-white/10 text-xs font-mono text-zinc-200">
-                <span className="text-[#38BDF8]">$</span>
-                <span>inspect</span>
-                <span className="text-[#38BDF8]/90">--url bca-id.com</span>
+            {/* Terminal pill */}
+            <div className="mt-6 space-y-4">
+              <div className="inline-flex items-center gap-2 px-3.5 py-2 rounded-full bg-[#0d0e0d] border border-[#3ECF8E]/30 text-[12px]" style={{ fontFamily: "var(--font-supa-mono)" }}>
+                <span className="text-[#3ECF8E]">$</span>
+                <span className="text-white">supabase</span>
+                <span className="text-[#3ECF8E]">functions serve</span>
               </div>
 
-              {/* 3D Wireframe Globe Sphere */}
-              <div className="h-28 w-full flex items-center justify-center relative overflow-hidden">
-                <svg viewBox="0 0 240 120" className="w-full h-full stroke-zinc-600/50">
-                  <ellipse cx="120" cy="110" rx="100" ry="80" strokeWidth="1" fill="none" />
-                  <ellipse cx="120" cy="110" rx="70" ry="55" strokeWidth="0.8" fill="none" />
-                  <ellipse cx="120" cy="110" rx="40" ry="30" strokeWidth="0.8" fill="none" />
-                  <path d="M20 110 Q120 40 220 110" strokeWidth="1" fill="none" />
-                  <path d="M40 110 Q120 70 200 110" strokeWidth="0.8" fill="none" />
-                  <circle cx="120" cy="40" r="3" fill="#38BDF8" className="animate-pulse" />
-                  <circle cx="80" cy="75" r="2.5" fill="#FFFFFF" />
-                  <circle cx="160" cy="80" r="2.5" fill="#38BDF8" />
+              {/* Globe wireframe SVG */}
+              <div className="h-32 w-full relative overflow-hidden">
+                <svg viewBox="0 0 280 160" className="w-full h-full" fill="none">
+                  {/* Outer globe arc */}
+                  <ellipse cx="200" cy="130" rx="100" ry="80" className="stroke-zinc-700" strokeWidth="1" />
+                  {/* Middle arc */}
+                  <ellipse cx="200" cy="130" rx="70" ry="55" className="stroke-zinc-700" strokeWidth="0.8" />
+                  {/* Latitude lines */}
+                  <path d="M105 100 Q200 60 295 100" className="stroke-zinc-700" strokeWidth="0.8" fill="none" />
+                  <path d="M110 120 Q200 90 290 120" className="stroke-zinc-700" strokeWidth="0.8" fill="none" />
+                  {/* Vertical meridian */}
+                  <line x1="200" y1="50" x2="200" y2="160" className="stroke-zinc-700" strokeWidth="0.8" />
+                  {/* Dots on globe */}
+                  <circle cx="200" cy="62" r="3" fill="white" />
+                  <circle cx="155" cy="105" r="3" fill="white" />
+                  <circle cx="248" cy="118" r="3" fill="white" />
+                  {/* Connection lines */}
+                  <line x1="200" y1="62" x2="155" y2="105" className="stroke-white/30" strokeWidth="0.8" />
+                  <line x1="155" y1="105" x2="248" y2="118" className="stroke-white/30" strokeWidth="0.8" />
                 </svg>
               </div>
             </div>
           </div>
+
         </div>
 
-        {/* =========================================================================
-            ROW 2: 4 COMPACT CARDS (Unkey Style with Violet/Emerald/Amber Accents)
-            ========================================================================= */}
-        <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-5">
-          {/* Card 4: Simulasi Red John (Violet Accent) */}
-          <div className="rounded-3xl bg-[#0C0C0E] border border-white/[0.08] hover:border-[#A855F7]/40 p-6 flex flex-col justify-between relative overflow-hidden min-h-[290px] group transition-all duration-300">
+        {/* =====================================================================
+            ROW 2 — 4 Cards: Storage | Realtime | Vector | Data APIs
+            ===================================================================== */}
+        <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-4">
+
+          {/* ── CARD 4: Storage ── */}
+          <div className="rounded-2xl bg-[#161817] border border-white/[0.08] p-6 flex flex-col justify-between relative overflow-hidden min-h-[300px] hover:border-white/[0.14] transition-colors">
             <div>
-              <div className="flex items-center gap-2.5 mb-2.5 text-white">
-                <div className="size-8 rounded-xl bg-[#A855F7]/10 border border-[#A855F7]/25 flex items-center justify-center text-[#A855F7]">
-                  <svg className="size-4" fill="none" viewBox="0 0 24 24" stroke="currentColor" strokeWidth="1.8">
-                    <path strokeLinecap="round" strokeLinejoin="round" d="M2.25 15.75l5.159-5.159a2.25 2.25 0 013.182 0l5.159 5.159m-1.5-1.5l1.409-1.409a2.25 2.25 0 013.182 0l2.909 2.909m-18 3.75h16.5a1.5 1.5 0 001.5-1.5V6a1.5 1.5 0 00-1.5-1.5H3.75A1.5 1.5 0 002.25 6v12a1.5 1.5 0 001.5 1.5zm10.5-11.25h.008v.008h-.008V8.25zm.375 0a.375.375 0 11-.75 0 .375.375 0 01.75 0z" />
-                  </svg>
-                </div>
-                <h4 className="text-sm font-bold text-white font-sans">
-                  Simulasi Kognitif
-                </h4>
+              <div className="flex items-center gap-2.5 mb-3">
+                {/* Archive box icon */}
+                <svg className="size-4.5 text-white opacity-70" fill="none" viewBox="0 0 24 24" stroke="currentColor" strokeWidth="1.5">
+                  <path strokeLinecap="round" strokeLinejoin="round" d="m20.25 7.5-.625 10.632a2.25 2.25 0 0 1-2.247 2.118H6.622a2.25 2.25 0 0 1-2.247-2.118L3.75 7.5M10 11.25h4M3.375 7.5h17.25c.621 0 1.125-.504 1.125-1.125v-1.5c0-.621-.504-1.125-1.125-1.125H3.375c-.621 0-1.125.504-1.125 1.125v1.5c0 .621.504 1.125 1.125 1.125z" />
+                </svg>
+                <h3 className="text-[13px] font-semibold text-white" style={{ fontFamily: "var(--font-supa-heading)", letterSpacing: "-0.01em" }}>Storage</h3>
               </div>
-              <p className="text-xs text-zinc-400 font-sans leading-relaxed">
-                Hadapi 10 skenario manipulasi psikologis Red John didampingi bot Jane.
+              <p className="text-[13px] text-[#A0A0A0] leading-relaxed">
+                Store, organize, and serve large files, from <span className="text-[#3ECF8E]">videos</span> to <span className="text-[#3ECF8E]">images</span>.
               </p>
             </div>
 
-            {/* Matrix Nodes Grid in Purple Glow */}
-            <div className="mt-6 grid grid-cols-4 gap-2 pt-2">
-              {[...Array(8)].map((_, i) => (
-                <div key={i} className="aspect-square rounded-xl bg-white/[0.03] border border-white/[0.06] hover:border-[#A855F7]/40 flex items-center justify-center text-zinc-500 group-hover:text-[#A855F7] transition-colors">
-                  <span className="text-[11px] font-mono">0{i+1}</span>
+            {/* 4×3 file icon grid */}
+            <div className="mt-6 grid grid-cols-4 gap-1.5">
+              {/* Row 1: image icons */}
+              {[...Array(4)].map((_, i) => (
+                <div key={`img-${i}`} className="aspect-square rounded-lg bg-[#0d0e0d] border border-white/[0.07] flex items-center justify-center">
+                  <svg className="size-3.5 text-zinc-500" fill="none" viewBox="0 0 24 24" stroke="currentColor" strokeWidth="1.5">
+                    <path strokeLinecap="round" strokeLinejoin="round" d="m2.25 15.75 5.159-5.159a2.25 2.25 0 0 1 3.182 0l5.159 5.159m-1.5-1.5 1.409-1.409a2.25 2.25 0 0 1 3.182 0l2.909 2.909m-18 3.75h16.5a1.5 1.5 0 0 0 1.5-1.5V6a1.5 1.5 0 0 0-1.5-1.5H3.75A1.5 1.5 0 0 0 2.25 6v12a1.5 1.5 0 0 0 1.5 1.5Zm10.5-11.25h.008v.008h-.008V8.25Zm.375 0a.375.375 0 1 1-.75 0 .375.375 0 0 1 .75 0Z" />
+                  </svg>
+                </div>
+              ))}
+              {/* Row 2: document icons */}
+              {[...Array(4)].map((_, i) => (
+                <div key={`doc-${i}`} className="aspect-square rounded-lg bg-[#0d0e0d] border border-white/[0.07] flex items-center justify-center">
+                  <svg className="size-3.5 text-zinc-500" fill="none" viewBox="0 0 24 24" stroke="currentColor" strokeWidth="1.5">
+                    <path strokeLinecap="round" strokeLinejoin="round" d="M19.5 14.25v-2.625a3.375 3.375 0 0 0-3.375-3.375h-1.5A1.125 1.125 0 0 1 13.5 7.125v-1.5a3.375 3.375 0 0 0-3.375-3.375H8.25m0 12.75h7.5m-7.5 3H12M10.5 2.25H5.625c-.621 0-1.125.504-1.125 1.125v17.25c0 .621.504 1.125 1.125 1.125h12.75c.621 0 1.125-.504 1.125-1.125V11.25a9 9 0 0 0-9-9Z" />
+                  </svg>
+                </div>
+              ))}
+              {/* Row 3: video icons */}
+              {[...Array(4)].map((_, i) => (
+                <div key={`vid-${i}`} className="aspect-square rounded-lg bg-[#0d0e0d] border border-white/[0.07] flex items-center justify-center">
+                  <svg className="size-3.5 text-zinc-500" fill="none" viewBox="0 0 24 24" stroke="currentColor" strokeWidth="1.5">
+                    <path strokeLinecap="round" strokeLinejoin="round" d="m15.75 10.5 4.72-4.72a.75.75 0 0 1 1.28.53v11.38a.75.75 0 0 1-1.28.53l-4.72-4.72M4.5 18.75h9a2.25 2.25 0 0 0 2.25-2.25v-9a2.25 2.25 0 0 0-2.25-2.25h-9A2.25 2.25 0 0 0 2.25 7.5v9a2.25 2.25 0 0 0 2.25 2.25Z" />
+                  </svg>
                 </div>
               ))}
             </div>
           </div>
 
-          {/* Card 5: Realtime Threat Stream (Emerald Accent) */}
-          <div className="rounded-3xl bg-[#0C0C0E] border border-white/[0.08] hover:border-[#10B981]/40 p-6 flex flex-col justify-between relative overflow-hidden min-h-[290px] group transition-all duration-300">
+          {/* ── CARD 5: Realtime ── */}
+          <div className="rounded-2xl bg-[#161817] border border-white/[0.08] p-6 flex flex-col justify-between relative overflow-hidden min-h-[300px] hover:border-white/[0.14] transition-colors">
             <div>
-              <div className="flex items-center gap-2.5 mb-2.5 text-white">
-                <div className="size-8 rounded-xl bg-[#10B981]/10 border border-[#10B981]/25 flex items-center justify-center text-[#10B981]">
-                  <svg className="size-4" fill="none" viewBox="0 0 24 24" stroke="currentColor" strokeWidth="1.8">
-                    <path strokeLinecap="round" strokeLinejoin="round" d="M15.042 21.672L13.684 16.6m0 0l-2.51 2.225.569-9.47 5.227 7.917-3.286-.672zm-7.518-.267A8.25 8.25 0 1120.25 10.5M8.288 14.212A5.25 5.25 0 1117.25 10.5" />
-                  </svg>
-                </div>
-                <h4 className="text-sm font-bold text-white font-sans">
-                  Aliran Realtime
-                </h4>
+              <div className="flex items-center gap-2.5 mb-3">
+                {/* Cursor/realtime icon */}
+                <svg className="size-4.5 text-white opacity-70" fill="none" viewBox="0 0 24 24" stroke="currentColor" strokeWidth="1.5">
+                  <path strokeLinecap="round" strokeLinejoin="round" d="M15.042 21.672 13.684 16.6m0 0-2.51 2.225.569-9.47 5.227 7.917-3.286-.672ZM12 2.25V4.5m5.834.166-1.591 1.591M20.25 10.5H18M7.757 14.743l-1.59 1.59M6 10.5H3.75m4.007-4.243-1.59-1.59" />
+                </svg>
+                <h3 className="text-[13px] font-semibold text-white" style={{ fontFamily: "var(--font-supa-heading)", letterSpacing: "-0.01em" }}>Realtime</h3>
               </div>
-              <p className="text-xs text-zinc-400 font-sans leading-relaxed">
-                Pelacakan gelombang modus kejahatan siber waktu nyata tanpa jeda.
+              <p className="text-[13px] text-[#A0A0A0] leading-relaxed">
+                Build multiplayer experiences with <span className="text-white font-bold">real-time data synchronization</span>.
               </p>
             </div>
 
-            {/* Active Radar Pill */}
-            <div className="mt-6 h-24 rounded-2xl bg-white/[0.02] border border-white/[0.05] relative flex items-center justify-center overflow-hidden">
-              <div className="absolute inset-0 bg-[radial-gradient(#333_1px,transparent_1px)] [background-size:12px_12px] opacity-40" />
-              <div className="relative z-10 px-3.5 py-1.5 rounded-full bg-white/[0.08] border border-[#10B981]/30 text-xs text-white flex items-center gap-2 shadow-lg backdrop-blur-md">
-                <span className="size-2 rounded-full bg-[#10B981] animate-ping" />
-                <span className="font-medium text-[#10B981]">Radar Aktif 24/7</span>
+            {/* Animated cursors + typing bubble */}
+            <div className="mt-6 flex flex-col items-center justify-center gap-5 h-24 relative">
+              {/* Typing bubble */}
+              <div className="flex items-center gap-1.5 px-4 py-2.5 rounded-full bg-[#0d0e0d] border border-white/[0.1] shadow-lg">
+                {[...Array(3)].map((_, i) => (
+                  <span
+                    key={i}
+                    className="size-1.5 rounded-full bg-[#A0A0A0]"
+                    style={{ animation: `bounce 1.4s ease-in-out ${i * 0.2}s infinite` }}
+                  />
+                ))}
+              </div>
+
+              {/* Two cursor SVGs */}
+              <div className="flex items-center gap-8 opacity-60">
+                <svg className="size-5 text-[#3ECF8E]" viewBox="0 0 24 24" fill="currentColor">
+                  <path d="M4.5 2.25a.75.75 0 0 0-1.5 0v19.5a.75.75 0 0 0 1.28.53l3.72-3.72V20.25a.75.75 0 0 0 .75.75h1.5a.75.75 0 0 0 .75-.75v-1.69l3.72 3.72a.75.75 0 0 0 1.28-.53V2.25a.75.75 0 0 0-1.5 0v.69L10.5 6.44V2.25a.75.75 0 0 0-.75-.75H8.25a.75.75 0 0 0-.75.75v4.19L4.5 2.94V2.25z" />
+                </svg>
+                <svg className="size-4 text-[#A0A0A0]" viewBox="0 0 24 24" fill="currentColor">
+                  <path d="M4.5 2.25a.75.75 0 0 0-1.5 0v19.5a.75.75 0 0 0 1.28.53l3.72-3.72V20.25a.75.75 0 0 0 .75.75h1.5a.75.75 0 0 0 .75-.75v-1.69l3.72 3.72a.75.75 0 0 0 1.28-.53V2.25a.75.75 0 0 0-1.5 0v.69L10.5 6.44V2.25a.75.75 0 0 0-.75-.75H8.25a.75.75 0 0 0-.75.75v4.19L4.5 2.94V2.25z" />
+                </svg>
               </div>
             </div>
+
+            <style jsx>{`
+              @keyframes bounce {
+                0%, 60%, 100% { transform: translateY(0); }
+                30% { transform: translateY(-4px); }
+              }
+            `}</style>
           </div>
 
-          {/* Card 6: Heuristik & AI Lokal (Cyan & Violet Accent) */}
-          <div className="rounded-3xl bg-[#0C0C0E] border border-white/[0.08] hover:border-[#38BDF8]/40 p-6 flex flex-col justify-between relative overflow-hidden min-h-[290px] group transition-all duration-300">
+          {/* ── CARD 6: Vector ── */}
+          <div className="rounded-2xl bg-[#161817] border border-white/[0.08] p-6 flex flex-col justify-between relative overflow-hidden min-h-[300px] hover:border-white/[0.14] transition-colors">
             <div>
-              <div className="flex items-center gap-2.5 mb-2.5 text-white">
-                <div className="size-8 rounded-xl bg-[#38BDF8]/10 border border-[#38BDF8]/25 flex items-center justify-center text-[#38BDF8]">
-                  <svg className="size-4" fill="none" viewBox="0 0 24 24" stroke="currentColor" strokeWidth="1.8">
-                    <path strokeLinecap="round" strokeLinejoin="round" d="M21 7.5l-9-5.25L3 7.5m18 0l-9 5.25m9-5.25v9l-9 5.25M3 7.5l9 5.25M3 7.5v9l9 5.25m0-9v9" />
-                  </svg>
-                </div>
-                <h4 className="text-sm font-bold text-white font-sans">
-                  Heuristik Mandiri
-                </h4>
+              <div className="flex items-center gap-2.5 mb-3">
+                {/* Cube icon */}
+                <svg className="size-4.5 text-white opacity-70" fill="none" viewBox="0 0 24 24" stroke="currentColor" strokeWidth="1.5">
+                  <path strokeLinecap="round" strokeLinejoin="round" d="m21 7.5-9-5.25L3 7.5m18 0-9 5.25m9-5.25v9l-9 5.25M3 7.5l9 5.25M3 7.5v9l9 5.25m0-9v9" />
+                </svg>
+                <h3 className="text-[13px] font-semibold text-white" style={{ fontFamily: "var(--font-supa-heading)", letterSpacing: "-0.01em" }}>Vector</h3>
               </div>
-              <p className="text-xs text-zinc-400 font-sans leading-relaxed">
-                Model inferensi lokal langsung di browser tanpa pelacakan data pribadi.
+              <p className="text-[13px] text-[#A0A0A0] leading-relaxed">
+                Integrate your favorite ML-models to <span className="text-white font-bold">store, index</span> and <span className="text-white font-bold">search vector embeddings</span>.
               </p>
             </div>
 
-            {/* 3D Wireframe Cube with Cyan & Purple Nodes */}
-            <div className="mt-4 flex flex-col items-center justify-center h-24 relative">
-              <svg viewBox="0 0 100 80" className="w-20 h-16 stroke-zinc-400 fill-none">
-                <path d="M50 10 L80 25 L80 55 L50 70 L20 55 L20 25 Z" strokeWidth="1" />
-                <path d="M50 10 L50 70 M50 40 L80 25 M50 40 L20 25" strokeWidth="0.8" />
-                <circle cx="35" cy="30" r="2" fill="#38BDF8" />
-                <circle cx="65" cy="35" r="2" fill="#A855F7" />
-                <circle cx="50" cy="55" r="2" fill="#FFFFFF" />
+            {/* 3D wireframe cube + AI provider logos */}
+            <div className="mt-4 flex flex-col items-center gap-4">
+              {/* Cube SVG */}
+              <svg viewBox="0 0 120 100" className="w-28 h-20 stroke-zinc-500 fill-none">
+                {/* Front face */}
+                <path d="M30 35 L60 20 L90 35 L90 65 L60 80 L30 65 Z" strokeWidth="1" />
+                {/* Top face edges */}
+                <path d="M60 20 L60 50" strokeWidth="0.8" />
+                <path d="M30 35 L60 50" strokeWidth="0.8" />
+                <path d="M90 35 L60 50" strokeWidth="0.8" />
+                {/* Hidden back edges (dashed) */}
+                <path d="M60 50 L60 80" strokeWidth="0.6" strokeDasharray="2 2" />
+                {/* Accent dots */}
+                <circle cx="60" cy="20" r="2.5" fill="#3ECF8E" stroke="none" />
+                <circle cx="30" cy="35" r="2" fill="white" stroke="none" opacity="0.7" />
+                <circle cx="90" cy="35" r="2" fill="white" stroke="none" opacity="0.7" />
+                <circle cx="60" cy="80" r="2" fill="#A0A0A0" stroke="none" />
               </svg>
-              <span className="text-[10px] text-[#38BDF8] font-mono mt-1">100% Client-Side Privacy</span>
+
+              {/* AI Provider logos text */}
+              <div className="w-full space-y-1.5">
+                <div className="flex items-center gap-2.5 px-3 py-1.5 rounded-lg bg-[#0d0e0d] border border-white/[0.07]">
+                  {/* OpenAI icon approximation */}
+                  <svg className="size-3.5 text-white opacity-80" viewBox="0 0 24 24" fill="currentColor">
+                    <path d="M22.282 9.821a5.985 5.985 0 0 0-.516-4.91 6.046 6.046 0 0 0-6.51-2.9A6.065 6.065 0 0 0 4.981 4.18a5.985 5.985 0 0 0-3.998 2.9 6.046 6.046 0 0 0 .743 7.097 5.98 5.98 0 0 0 .51 4.911 6.051 6.051 0 0 0 6.515 2.9A5.985 5.985 0 0 0 13.26 24a6.056 6.056 0 0 0 5.772-4.206 5.99 5.99 0 0 0 3.997-2.9 6.056 6.056 0 0 0-.747-7.073zM13.26 22.43a4.476 4.476 0 0 1-2.876-1.04l.141-.081 4.779-2.758a.795.795 0 0 0 .392-.681v-6.737l2.02 1.168a.071.071 0 0 1 .038.052v5.583a4.504 4.504 0 0 1-4.494 4.494zM3.6 18.304a4.47 4.47 0 0 1-.535-3.014l.142.085 4.783 2.759a.771.771 0 0 0 .78 0l5.843-3.369v2.332a.08.08 0 0 1-.032.067L9.73 19.95a4.5 4.5 0 0 1-6.13-1.646zM2.34 7.896a4.485 4.485 0 0 1 2.366-1.973V11.6a.766.766 0 0 0 .388.676l5.815 3.355-2.02 1.168a.076.076 0 0 1-.071 0l-4.83-2.786A4.504 4.504 0 0 1 2.34 7.872zm16.597 3.855-5.833-3.387L15.119 7.2a.076.076 0 0 1 .071 0l4.83 2.791a4.494 4.494 0 0 1-.676 8.105v-5.678a.79.79 0 0 0-.407-.667zm2.01-3.023-.141-.085-4.774-2.782a.776.776 0 0 0-.785 0L9.409 9.23V6.897a.066.066 0 0 1 .028-.061l4.83-2.787a4.5 4.5 0 0 1 6.68 4.66zm-12.64 4.135-2.02-1.164a.08.08 0 0 1-.038-.057V6.075a4.5 4.5 0 0 1 7.375-3.453l-.142.08L8.704 5.46a.795.795 0 0 0-.393.681zm1.097-2.365 2.602-1.5 2.607 1.5v2.999l-2.597 1.5-2.607-1.5z" />
+                  </svg>
+                  <span className="text-[12px] text-[#A0A0A0] font-medium">OpenAI</span>
+                </div>
+                <div className="flex items-center gap-2.5 px-3 py-1.5 rounded-lg bg-[#0d0e0d] border border-white/[0.07]">
+                  <span className="text-[13px]">🤗</span>
+                  <span className="text-[12px] text-[#A0A0A0] font-medium">Hugging Face</span>
+                </div>
+              </div>
             </div>
           </div>
 
-          {/* Card 7: Playbook Mitigasi (Amber & Emerald Accent) */}
-          <div className="rounded-3xl bg-[#0C0C0E] border border-white/[0.08] hover:border-[#F59E0B]/40 p-6 flex flex-col justify-between relative overflow-hidden min-h-[290px] group transition-all duration-300">
+          {/* ── CARD 7: Data APIs ── */}
+          <div className="rounded-2xl bg-[#161817] border border-white/[0.08] p-6 flex flex-col justify-between relative overflow-hidden min-h-[300px] hover:border-white/[0.14] transition-colors">
             <div>
-              <div className="flex items-center gap-2.5 mb-2.5 text-white">
-                <div className="size-8 rounded-xl bg-[#F59E0B]/10 border border-[#F59E0B]/25 flex items-center justify-center text-[#F59E0B]">
-                  <svg className="size-4" fill="none" viewBox="0 0 24 24" stroke="currentColor" strokeWidth="1.8">
-                    <path strokeLinecap="round" strokeLinejoin="round" d="M7.5 14.25v2.25m3-4.5v4.5m3-6.75v6.75m3-9v9M6 20.25h12A2.25 2.25 0 0020.25 18V6A2.25 2.25 0 0018 3.75H6A2.25 2.25 0 003.75 6v12A2.25 2.25 0 006 20.25z" />
-                  </svg>
-                </div>
-                <h4 className="text-sm font-bold text-white font-sans">
-                  Mitigasi Darurat
-                </h4>
+              <div className="flex items-center gap-2.5 mb-3">
+                {/* API / chart icon */}
+                <svg className="size-4.5 text-white opacity-70" fill="none" viewBox="0 0 24 24" stroke="currentColor" strokeWidth="1.5">
+                  <path strokeLinecap="round" strokeLinejoin="round" d="M17.25 6.75 22.5 12l-5.25 5.25m-10.5 0L1.5 12l5.25-5.25m7.5-3-4.5 16.5" />
+                </svg>
+                <h3 className="text-[13px] font-semibold text-white" style={{ fontFamily: "var(--font-supa-heading)", letterSpacing: "-0.01em" }}>Data APIs</h3>
               </div>
-              <p className="text-xs text-zinc-400 font-sans leading-relaxed">
-                Protokol respons instan blokir rekening bank dan kanal resmi kepolisian.
+              <p className="text-[13px] text-[#A0A0A0] leading-relaxed">
+                Instant ready-to-use <span className="text-white font-bold">REST APIs</span>.
               </p>
             </div>
 
-            {/* Endpoints Table Flow with colored status tags */}
-            <div className="mt-4 space-y-1.5 font-mono text-[10px] text-zinc-400">
-              <div className="flex items-center justify-between px-2.5 py-1 rounded-lg bg-white/[0.03] border border-white/[0.05]">
-                <span>Rekening Bank</span>
-                <span className="text-[#F59E0B] font-semibold">→ Blokir</span>
-              </div>
-              <div className="flex items-center justify-between px-2.5 py-1 rounded-lg bg-white/[0.03] border border-white/[0.05]">
-                <span>Kartu SIM</span>
-                <span className="text-zinc-300 font-medium">→ Operator</span>
-              </div>
-              <div className="flex items-center justify-between px-2.5 py-1 rounded-lg bg-white/[0.03] border border-white/[0.05]">
-                <span>Bukti Chat</span>
-                <span className="text-[#10B981] font-medium">→ Lapor</span>
-              </div>
+            {/* Endpoint table */}
+            <div className="mt-6 space-y-1 text-[11px]" style={{ fontFamily: "var(--font-supa-mono)" }}>
+              {[
+                { table: "countries", route: "/v1/countries" },
+                { table: "continents", route: "/v1/continents" },
+                { table: "cities", route: "/v1/cities" },
+                { table: "states", route: "/v1/states" },
+                { table: "country_code", route: "/v1/country_codes" },
+                { table: "oceans", route: "/v1/oceans" },
+              ].map((row) => (
+                <div
+                  key={row.table}
+                  className="flex items-center justify-between gap-2 px-2.5 py-1.5 rounded-md bg-[#0d0e0d] border border-white/[0.05]"
+                >
+                  <span className="text-[#666] flex items-center gap-1.5">
+                    <svg className="size-3 inline-block" fill="none" viewBox="0 0 24 24" stroke="currentColor" strokeWidth="2">
+                      <path strokeLinecap="round" strokeLinejoin="round" d="M3.75 12h16.5m-16.5 3.75h16.5M3.75 19.5h16.5M5.625 4.5h12.75a1.875 1.875 0 0 1 0 3.75H5.625a1.875 1.875 0 0 1 0-3.75Z" />
+                    </svg>
+                    {row.table}
+                  </span>
+                  <span className="text-[#3ECF8E] text-[10px]">{row.route}</span>
+                </div>
+              ))}
             </div>
           </div>
+
         </div>
 
-        {/* Bottom Platform Statement */}
+        {/* Footer platform statement */}
         <div className="mt-14 text-center">
-          <p className="text-sm sm:text-base text-zinc-400 font-sans">
-            <strong className="text-white font-medium">Gunakan satu atau semua.</strong> Setiap modul dirancang mandiri dan terintegrasi sebagai satu platform pertahanan siber.
+          <p className="text-sm text-[#A0A0A0]">
+            <strong className="text-white font-semibold">Use one or all.</strong>{" "}
+            Best of breed products. Integrated as a platform.
           </p>
         </div>
+
       </div>
     </section>
   );

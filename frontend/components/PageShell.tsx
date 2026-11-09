@@ -1,4 +1,4 @@
-"use client";
+﻿"use client";
 
 import { usePathname } from "next/navigation";
 import Link from "next/link";
@@ -13,7 +13,7 @@ export default function PageShell({ children }: { children: React.ReactNode }) {
   }
 
   return (
-    <div className="min-h-screen bg-[#070707] text-white flex flex-col justify-between">
+    <div className="min-h-screen bg-[#1a1a1a] text-white flex flex-col justify-between">
       <div className="shell pt-28 pb-20 flex-1">
         {/* Subtle breadcrumb / back header */}
         <div className="mb-8 flex items-center justify-between border-b border-white/10 pb-4">

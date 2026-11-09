@@ -1,5 +1,5 @@
-import AsciiEmblemCanvas from "@/components/AsciiEmblemCanvas";
-import Link from "next/link";
+﻿import Link from "next/link";
+import SupabaseNavbar from "@/components/SupabaseNavbar";
 import SupabaseHero from "@/components/SupabaseHero";
 import BentoFeatures from "@/components/BentoFeatures";
 import NewsCarousel from "@/components/NewsCarousel";
@@ -12,41 +12,41 @@ export default async function HomePage() {
   const { items, total, updated_at } = await fetchNews();
 
   return (
-    <div id="top" className="min-h-screen bg-[#000000] text-white selection:bg-white selection:text-black">
+    <div id="top" className="min-h-screen bg-[#0c0d0d] text-white selection:bg-white selection:text-black">
+
       {/* =========================================================================
-          HERO SECTION (Unkey Style: Ambient ASCII Canvas + Radiant Gradient Hero)
+          SUPABASE NAVBAR — Fixed top, solid #1a1a1a, exact clone
           ========================================================================= */}
-      <div className="relative overflow-hidden">
-        {/* Subtle Ambient ASCII Art Canvas (Smooth Fadeout Mask) */}
-        <div 
-          className="absolute inset-0 pointer-events-auto opacity-20 [mask-image:linear-gradient(to_bottom,black_65%,transparent_100%)]"
-        >
-          <AsciiEmblemCanvas interactive={true} />
-        </div>
-
-        {/* Hero Section */}
-        <SupabaseHero />
-      </div>
+      <SupabaseNavbar />
 
       {/* =========================================================================
-          BENTO FEATURES GRID (Unkey Style with Emerald, Cyan, Amber, Violet Accents)
+          SUPABASE HERO — 2-column layout (headline left | description right)
+          ========================================================================= */}
+      <SupabaseHero />
+
+      {/* =========================================================================
+          SUPABASE BENTO FEATURES GRID — 7 cards exact clone
+          Row 1: Postgres | Auth | Edge Functions
+          Row 2: Storage | Realtime | Vector | Data APIs
           ========================================================================= */}
       <BentoFeatures />
 
       {/* =========================================================================
           FEEDS BERITA RADAR INTELIJEN TERKINI
           ========================================================================= */}
-      <NewsCarousel
-        items={items}
-        total={total}
-        updatedAt={updated_at}
-      />
+      <div className="bg-[#0c0d0d]">
+        <NewsCarousel
+          items={items}
+          total={total}
+          updatedAt={updated_at}
+        />
+      </div>
 
       {/* =========================================================================
           LABORATORIUM SIMULASI KOGNITIF: RED JOHN vs JANE
           ========================================================================= */}
-      <section id="game" className="relative z-10 py-20 px-4 sm:px-8 border-t border-white/[0.06] bg-[#000000]">
-        <div className="max-w-[1340px] mx-auto space-y-8">
+      <section id="game" className="relative z-10 py-20 px-4 sm:px-8 border-t border-white/[0.06] bg-[#0c0d0d]">
+        <div className="max-w-[1200px] mx-auto space-y-8">
           <div className="flex flex-wrap items-end justify-between gap-4">
             <div>
               <span className="text-xs font-mono tracking-wider text-[#A855F7] uppercase font-semibold">
@@ -61,8 +61,8 @@ export default async function HomePage() {
             </p>
           </div>
 
-          {/* Embedded Full Interactive Game in sleek Unkey glass container */}
-          <div className="rounded-3xl bg-[#0C0C0E] border border-white/[0.08] p-5 sm:p-9 shadow-2xl">
+          {/* Embedded Full Interactive Game in sleek container */}
+          <div className="rounded-3xl bg-[#161817] border border-white/[0.08] p-5 sm:p-9 shadow-2xl">
             <RedJohnGame />
           </div>
         </div>
@@ -76,9 +76,9 @@ export default async function HomePage() {
       {/* =========================================================================
           CLOSING CTA
           ========================================================================= */}
-      <section className="relative z-10 py-20 px-4 sm:px-8 border-t border-white/[0.06] bg-[#000000]">
-        <div className="max-w-[1340px] mx-auto rounded-3xl bg-[#0C0C0E] border border-white/[0.08] px-6 py-14 sm:px-14 text-center relative overflow-hidden">
-          <div className="pointer-events-none absolute -top-32 left-1/2 -translate-x-1/2 size-[420px] rounded-full bg-[#38BDF8]/10 blur-[120px]" />
+      <section className="relative z-10 py-20 px-4 sm:px-8 border-t border-white/[0.06] bg-[#0c0d0d]">
+        <div className="max-w-[1200px] mx-auto rounded-3xl bg-[#161817] border border-white/[0.08] px-6 py-14 sm:px-14 text-center relative overflow-hidden">
+          <div className="pointer-events-none absolute -top-32 left-1/2 -translate-x-1/2 size-[420px] rounded-full bg-[#3ECF8E]/8 blur-[120px]" />
           <div className="relative z-10 max-w-2xl mx-auto">
             <h2 className="text-2xl sm:text-4xl font-bold tracking-tight text-white font-sans">
               Cek satu pesan sekarang. Butuh 10 detik.
@@ -89,7 +89,7 @@ export default async function HomePage() {
             <div className="mt-8 flex flex-wrap items-center justify-center gap-3">
               <Link
                 href="/pemindai"
-                className="inline-flex items-center justify-center px-7 py-3 rounded-full bg-white hover:bg-zinc-100 text-black font-semibold text-sm transition-all hover:scale-[1.02] active:scale-[0.98]"
+                className="inline-flex items-center justify-center px-7 py-3 rounded-full bg-[#3ECF8E] hover:bg-[#4adeaa] text-black font-semibold text-sm transition-all hover:scale-[1.02] active:scale-[0.98]"
               >
                 Periksa Pesan
               </Link>
