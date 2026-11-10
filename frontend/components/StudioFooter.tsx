@@ -65,8 +65,8 @@ export default function StudioFooter() {
                 </Link>
               </li>
               <li>
-                <Link href="/inspect" className="hover:text-white transition-colors">
-                  &bull; Forensik Tautan &amp; Homoglyph
+                <Link href="/lapor-cepat" className="hover:text-white transition-colors">
+                  &bull; Lapor Tautan Mencurigakan
                 </Link>
               </li>
               <li>

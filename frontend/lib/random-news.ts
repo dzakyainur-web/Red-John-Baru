@@ -1,3 +1,4 @@
+import { supabase } from "./supabase";
 import type { NewsItem, NewsListOut } from "./news";
 
 /** Sampel acak berita terverifikasi untuk panel /admin (GET /api/news/random). */
@@ -13,9 +14,14 @@ export async function fetchRandomNews(limit = 5): Promise<NewsListOut> {
  * Backend hanya mengantrikan job; bot mengambilnya saat polling (beberapa detik).
  */
 export async function broadcastNews(guildId: string): Promise<string> {
+  const session = supabase ? (await supabase.auth.getSession()).data.session : null;
+  if (!session) throw new Error("Login admin diperlukan untuk broadcast.");
   const res = await fetch("/api/discord/broadcast", {
     method: "POST",
-    headers: { "Content-Type": "application/json" },
+    headers: {
+      "Content-Type": "application/json",
+      Authorization: `Bearer ${session.access_token}`,
+    },
     body: JSON.stringify({ guild_id: guildId }),
   });
   const body = (await res.json().catch(() => null)) as { detail?: unknown; message?: unknown } | null;

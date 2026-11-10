@@ -1,0 +1,29 @@
+{
+  "verified_at": null,
+  "hotline_policy": "hotline null = UI tidak menampilkan nomor, hanya tautan ke situs resmi. Nomor wajib punya hotline_source_url + reviewed_by (>=2) + hotline_verified_at < 90 hari sebelum ditampilkan.",
+  "note": "Direktori ini belum diverifikasi manusia. Semua hotline sengaja null. Nomor tidak terverifikasi lebih berbahaya daripada tidak ada nomor.",
+  "banks": [
+    { "code": "bca", "name": "BCA", "kind": "bank", "hotline": null, "hotline_source_url": "https://www.bca.co.id/", "reversal_process": "call_center_then_branch", "reviewed_by": null, "hotline_verified_at": null },
+    { "code": "mandiri", "name": "Bank Mandiri", "kind": "bank", "hotline": null, "hotline_source_url": "https://www.bankmandiri.co.id/", "reversal_process": "call_center_then_branch", "reviewed_by": null, "hotline_verified_at": null },
+    { "code": "bri", "name": "BRI", "kind": "bank", "hotline": null, "hotline_source_url": "https://bri.co.id/", "reversal_process": "call_center_then_branch", "reviewed_by": null, "hotline_verified_at": null },
+    { "code": "bni", "name": "BNI", "kind": "bank", "hotline": null, "hotline_source_url": "https://www.bni.co.id/", "reversal_process": "call_center_then_branch", "reviewed_by": null, "hotline_verified_at": null },
+    { "code": "bsi", "name": "Bank Syariah Indonesia", "kind": "bank", "hotline": null, "hotline_source_url": "https://bsi.co.id/", "reversal_process": "call_center_then_branch", "reviewed_by": null, "hotline_verified_at": null },
+    { "code": "cimb", "name": "CIMB Niaga", "kind": "bank", "hotline": null, "hotline_source_url": "https://www.cimbniaga.co.id/", "reversal_process": "call_center_then_branch", "reviewed_by": null, "hotline_verified_at": null },
+    { "code": "permata", "name": "Permata Bank", "kind": "bank", "hotline": null, "hotline_source_url": "https://www.permatabank.com/", "reversal_process": "call_center_then_branch", "reviewed_by": null, "hotline_verified_at": null },
+    { "code": "btn", "name": "Bank BTN", "kind": "bank", "hotline": null, "hotline_source_url": "https://www.btn.co.id/", "reversal_process": "call_center_then_branch", "reviewed_by": null, "hotline_verified_at": null },
+    { "code": "jago", "name": "Bank Jago", "kind": "bank_digital", "hotline": null, "hotline_source_url": "https://www.jago.com/", "reversal_process": "call_center", "reviewed_by": null, "hotline_verified_at": null },
+    { "code": "seabank", "name": "SeaBank", "kind": "bank_digital", "hotline": null, "hotline_source_url": "https://www.seabank.co.id/", "reversal_process": "call_center", "reviewed_by": null, "hotline_verified_at": null },
+    { "code": "dana", "name": "DANA", "kind": "ewallet", "hotline": null, "hotline_source_url": "https://www.dana.id/", "reversal_process": "in_app_help", "reviewed_by": null, "hotline_verified_at": null },
+    { "code": "ovo", "name": "OVO", "kind": "ewallet", "hotline": null, "hotline_source_url": "https://www.ovo.id/", "reversal_process": "in_app_help", "reviewed_by": null, "hotline_verified_at": null },
+    { "code": "gopay", "name": "GoPay", "kind": "ewallet", "hotline": null, "hotline_source_url": "https://www.gojek.com/", "reversal_process": "in_app_help", "reviewed_by": null, "hotline_verified_at": null },
+    { "code": "shopeepay", "name": "ShopeePay", "kind": "ewallet", "hotline": null, "hotline_source_url": "https://shopee.co.id/", "reversal_process": "in_app_help", "reviewed_by": null, "hotline_verified_at": null },
+    { "code": "linkaja", "name": "LinkAja", "kind": "ewallet", "hotline": null, "hotline_source_url": "https://www.linkaja.id/", "reversal_process": "in_app_help", "reviewed_by": null, "hotline_verified_at": null }
+  ],
+  "institutions": [
+    { "key": "iasc", "name": "Indonesia Anti-Scam Centre", "channel": "Kanal resmi IASC", "source_url": "https://iasc.mpolri.go.id/", "deadline_hours": 24, "verified_at": null },
+    { "key": "ojk", "name": "OJK", "channel": "Kanal resmi OJK", "source_url": "https://www.ojk.go.id/", "deadline_hours": null, "verified_at": null },
+    { "key": "cekrekening", "name": "CekRekening.id", "channel": "Web resmi", "source_url": "https://cekrekening.id/", "deadline_hours": null, "verified_at": null },
+    { "key": "aduan_konten", "name": "Aduan Konten", "channel": "Web resmi", "source_url": "https://aduankonten.id/", "deadline_hours": null, "verified_at": null },
+    { "key": "polisi", "name": "SPKT Polres setempat", "channel": "datang langsung", "source_url": "https://www.polri.go.id/", "deadline_hours": null, "verified_at": null }
+  ]
+}

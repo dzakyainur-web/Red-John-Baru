@@ -83,7 +83,7 @@ uv run scraper.py --once                            # harvest sekali lalu keluar
 | `/` | Periksa pesan mencurigakan |
 | `/berita` | Radar berita penipuan terverifikasi |
 | `/pemindai` | Pemindai pesan |
-| `/inspect` | Inspeksi tautan |
+| `/lapor-cepat` | Lapor tautan mencurigakan |
 | `/quiz` | Kuis kriminal otomatis |
 | `/quiz/leaderboard` | Klasemen harian (reset 21:00 WIB) |
 | `/quiz/admin` | Admin bank soal (login + `profiles.role = admin`) |

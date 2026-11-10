@@ -221,3 +221,25 @@ code, pre, kbd, samp {
     color: #000000;
   }
 }
+
+/* ============================================================
+   PRINT — dokumen paket golden-hour (/darurat)
+   ============================================================ */
+@media print {
+  body { background: #fff; color: #000; }
+  /* Sembunyikan semua, lalu tampilkan hanya wadah dokumen. */
+  body * { visibility: hidden; }
+  #ghp-docs, #ghp-docs * { visibility: visible; }
+  #ghp-docs { position: absolute; inset: 0; color: #000; }
+  #ghp-docs details { border: 0; }
+  #ghp-docs summary { display: none; }
+  #ghp-docs pre {
+    max-height: none;
+    overflow: visible;
+    color: #000;
+    font-size: 10pt;
+    line-height: 1.35;
+    white-space: pre-wrap;
+    break-inside: avoid;
+  }
+}

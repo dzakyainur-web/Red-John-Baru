@@ -6,7 +6,14 @@ import StudioFooter from "./StudioFooter";
 
 export default function PageShell({ children }: { children: React.ReactNode }) {
   const pathname = usePathname();
-  const isHome = pathname === "/" || pathname === "/login" || pathname === "/register" || pathname.startsWith("/admin");
+  const isHome =
+    pathname === "/" ||
+    pathname === "/pemindai" ||
+    pathname === "/lapor-cepat" ||
+    pathname === "/login" ||
+    pathname === "/register" ||
+    pathname === "/darurat" ||
+    pathname.startsWith("/admin");
 
   if (isHome) {
     return <>{children}</>;

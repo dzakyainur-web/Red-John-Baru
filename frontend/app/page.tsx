@@ -61,10 +61,10 @@ export default async function HomePage() {
                 Periksa Pesan
               </Link>
               <Link
-                href="/inspect"
+                href="/lapor-cepat"
                 className="inline-flex items-center justify-center px-7 py-3 rounded-full bg-white/[0.05] hover:bg-white/[0.1] text-white border border-white/[0.12] font-medium text-sm transition-all hover:scale-[1.02] active:scale-[0.98]"
               >
-                Periksa Tautan
+                Lapor Tautan
               </Link>
             </div>
           </div>

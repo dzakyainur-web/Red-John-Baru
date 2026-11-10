@@ -15,7 +15,16 @@ export default function SiteHeader() {
   const isHome = pathname === "/";
 
   // These pages render SupabaseNavbar themselves
-  if (pathname === "/" || pathname === "/login" || pathname === "/register" || pathname.startsWith("/quiz") || pathname.startsWith("/admin")) {
+  if (
+    pathname === "/" ||
+    pathname === "/pemindai" ||
+    pathname === "/lapor-cepat" ||
+    pathname === "/login" ||
+    pathname === "/register" ||
+    pathname === "/darurat" ||
+    pathname.startsWith("/quiz") ||
+    pathname.startsWith("/admin")
+  ) {
     return null;
   }
 
@@ -59,7 +68,7 @@ export default function SiteHeader() {
               priority
               className="h-7 w-auto drop-shadow-[0_0_12px_rgba(255,0,0,0.45)]"
             />
-            <span className="font-[family-name:var(--font-display)] text-lg font-bold tracking-tight text-white group-hover:text-zinc-200 transition-colors">
+            <span className="font-[family-name:var(--font-display)] text-lg font-bold tracking-tight text-red-500 group-hover:text-red-400 transition-colors">
               Red John
             </span>
           </Link>
@@ -83,11 +92,11 @@ export default function SiteHeader() {
             </Link>
 
             <Link
-              href="/inspect"
+              href="/lapor-cepat"
               onClick={playClick}
               className="px-3.5 py-2 rounded hover:text-white hover:bg-white/[0.06] transition-colors"
             >
-              Inspeksi Tautan
+              Lapor cepat
             </Link>
 
             <Link
@@ -183,7 +192,7 @@ export default function SiteHeader() {
             {[
               { href: "/berita", label: "Radar Berita" },
               { href: "/pemindai", label: "Pemindai Pesan" },
-              { href: "/inspect", label: "Inspeksi Tautan" },
+              { href: "/lapor-cepat", label: "Lapor cepat" },
               { href: "/quiz", label: "Simulasi Kognitif" },
               { href: "/act", label: "Playbook" },
               { href: "/learn", label: "Intelijen" },

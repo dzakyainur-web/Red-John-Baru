@@ -1,16 +1,25 @@
-﻿"use client";
+"use client";
 
 import Link from "next/link";
+import Image from "next/image";
 import { useState } from "react";
 import UserDropdown from "./UserDropdown";
 
 // Supabase exact navbar clone
 // Ref: supabase.com landing page
 
+export const NAV_LINKS = [
+  { href: "/pemindai", label: "Pemindai Pesan" },
+  { href: "/lapor-cepat", label: "Lapor Cepat" },
+  { href: "/quiz", label: "Simulasi Kognitif" },
+  { href: "/berita", label: "Radar Berita" },
+  { href: "/act", label: "Playbook" },
+  { href: "/learn", label: "Intelijen" },
+  { href: "/tentang-keamanan", label: "Transparansi" },
+];
+
 export default function SupabaseNavbar() {
-  const [productOpen, setProductOpen] = useState(false);
-  const [devOpen, setDevOpen] = useState(false);
-  const [solOpen, setSolOpen] = useState(false);
+  const [mobileMenuOpen, setMobileMenuOpen] = useState(false);
 
   return (
     <header className="fixed top-0 left-0 right-0 z-50 bg-[#0c0d0d]/95 backdrop-blur-md border-b border-white/[0.06]">
@@ -19,148 +28,31 @@ export default function SupabaseNavbar() {
         {/* LEFT: Logo */}
         <div className="flex items-center gap-8 shrink-0">
           <Link href="/" className="flex items-center gap-2 group" aria-label="Red John Home">
-            {/* Supabase-style lightning bolt icon */}
-            <svg
-              width="20"
-              height="20"
-              viewBox="0 0 109 113"
-              fill="none"
-              xmlns="http://www.w3.org/2000/svg"
-              aria-hidden="true"
-            >
-              <path
-                d="M63.7076 110.284C60.8481 113.885 55.0502 111.912 54.9813 107.314L53.9738 40.0627L99.1935 40.0627C107.384 40.0627 111.952 49.5228 106.859 55.9372L63.7076 110.284Z"
-                fill="#3ECF8E"
-              />
-              <path
-                d="M63.7076 110.284C60.8481 113.885 55.0502 111.912 54.9813 107.314L53.9738 40.0627L99.1935 40.0627C107.384 40.0627 111.952 49.5228 106.859 55.9372L63.7076 110.284Z"
-                fill="url(#paint0_linear)"
-                fillOpacity="0.2"
-              />
-              <path
-                d="M45.317 2.07103C48.1765 -1.53037 53.9745 0.442937 54.0434 5.041L54.4849 72.2922H9.83113C1.64038 72.2922 -2.92775 62.8321 2.1655 56.4177L45.317 2.07103Z"
-                fill="#3ECF8E"
-              />
-              <defs>
-                <linearGradient id="paint0_linear" x1="53.9738" y1="40.0627" x2="94.1635" y2="66.2458" gradientUnits="userSpaceOnUse">
-                  <stop stopColor="white" />
-                  <stop offset="1" stopColor="white" stopOpacity="0" />
-                </linearGradient>
-              </defs>
-            </svg>
-            <span className="text-[15px] font-semibold text-white tracking-[-0.02em]" style={{ fontFamily: "var(--font-supa-heading)" }}>
+            {/* Red John logo */}
+            <Image
+              src="/red-john-logo.png"
+              alt=""
+              width={215}
+              height={301}
+              priority
+              className="h-6 w-auto drop-shadow-[0_0_10px_rgba(255,0,0,0.45)]"
+            />
+            <span className="text-[15px] font-semibold text-red-500 tracking-[-0.02em]" style={{ fontFamily: "var(--font-supa-heading)" }}>
               Red John
             </span>
           </Link>
 
           {/* CENTER NAV LINKS */}
           <nav className="hidden lg:flex items-center gap-1 text-[13px] text-[#A0A0A0]" style={{ fontFamily: "var(--font-supa-body)", fontWeight: 400 }}>
-            {/* Product dropdown */}
-            <div className="relative">
-              <button
-                onClick={() => { setProductOpen(!productOpen); setDevOpen(false); setSolOpen(false); }}
-                className="flex items-center gap-1 px-3 py-1.5 rounded hover:text-white hover:bg-white/[0.06] transition-colors font-[450]"
+            {NAV_LINKS.map((item) => (
+              <Link
+                key={item.href}
+                href={item.href}
+                className="px-3 py-1.5 rounded hover:text-white hover:bg-white/[0.06] transition-colors whitespace-nowrap"
               >
-                Product
-                <svg className="size-3 mt-0.5" fill="none" viewBox="0 0 24 24" stroke="currentColor" strokeWidth="2.5">
-                  <path strokeLinecap="round" strokeLinejoin="round" d="m19 9-7 7-7-7" />
-                </svg>
-              </button>
-              {productOpen && (
-                <div className="absolute top-full left-0 mt-1 w-48 rounded-lg bg-[#161817] border border-white/[0.1] shadow-2xl py-1 z-50">
-                  {[
-                    { label: "Database", href: "/pemindai" },
-                    { label: "Authentication", href: "/pemindai" },
-                    { label: "Edge Functions", href: "/inspect" },
-                    { label: "Realtime", href: "/berita" },
-                    { label: "Storage", href: "/" },
-                    { label: "Vector", href: "/" },
-                  ].map((item) => (
-                    <Link
-                      key={item.label}
-                      href={item.href}
-                      onClick={() => setProductOpen(false)}
-                      className="block px-4 py-2 text-[13px] text-[#A0A0A0] hover:text-white hover:bg-white/[0.05] transition-colors"
-                    >
-                      {item.label}
-                    </Link>
-                  ))}
-                </div>
-              )}
-            </div>
-
-            {/* Developers dropdown */}
-            <div className="relative">
-              <button
-                onClick={() => { setDevOpen(!devOpen); setProductOpen(false); setSolOpen(false); }}
-                className="flex items-center gap-1 px-3 py-1.5 rounded hover:text-white hover:bg-white/[0.06] transition-colors"
-              >
-                Developers
-                <svg className="size-3 mt-0.5" fill="none" viewBox="0 0 24 24" stroke="currentColor" strokeWidth="2.5">
-                  <path strokeLinecap="round" strokeLinejoin="round" d="m19 9-7 7-7-7" />
-                </svg>
-              </button>
-              {devOpen && (
-                <div className="absolute top-full left-0 mt-1 w-48 rounded-lg bg-[#161817] border border-white/[0.1] shadow-2xl py-1 z-50">
-                  {[
-                    { label: "Docs", href: "/learn" },
-                    { label: "API Reference", href: "/dev" },
-                    { label: "Status", href: "/" },
-                    { label: "GitHub", href: "/" },
-                  ].map((item) => (
-                    <Link
-                      key={item.label}
-                      href={item.href}
-                      onClick={() => setDevOpen(false)}
-                      className="block px-4 py-2 text-[13px] text-[#A0A0A0] hover:text-white hover:bg-white/[0.05] transition-colors"
-                    >
-                      {item.label}
-                    </Link>
-                  ))}
-                </div>
-              )}
-            </div>
-
-            {/* Solutions dropdown */}
-            <div className="relative">
-              <button
-                onClick={() => { setSolOpen(!solOpen); setProductOpen(false); setDevOpen(false); }}
-                className="flex items-center gap-1 px-3 py-1.5 rounded hover:text-white hover:bg-white/[0.06] transition-colors"
-              >
-                Solutions
-                <svg className="size-3 mt-0.5" fill="none" viewBox="0 0 24 24" stroke="currentColor" strokeWidth="2.5">
-                  <path strokeLinecap="round" strokeLinejoin="round" d="m19 9-7 7-7-7" />
-                </svg>
-              </button>
-              {solOpen && (
-                <div className="absolute top-full left-0 mt-1 w-48 rounded-lg bg-[#161817] border border-white/[0.1] shadow-2xl py-1 z-50">
-                  {[
-                    { label: "Startups", href: "/" },
-                    { label: "Enterprise", href: "/" },
-                    { label: "Healthcare", href: "/" },
-                  ].map((item) => (
-                    <Link
-                      key={item.label}
-                      href={item.href}
-                      onClick={() => setSolOpen(false)}
-                      className="block px-4 py-2 text-[13px] text-[#A0A0A0] hover:text-white hover:bg-white/[0.05] transition-colors"
-                    >
-                      {item.label}
-                    </Link>
-                  ))}
-                </div>
-              )}
-            </div>
-
-            <Link href="/tentang-keamanan" className="px-3 py-1.5 rounded hover:text-white hover:bg-white/[0.06] transition-colors">
-              Pricing
-            </Link>
-            <Link href="/learn" className="px-3 py-1.5 rounded hover:text-white hover:bg-white/[0.06] transition-colors">
-              Docs
-            </Link>
-            <Link href="/berita" className="px-3 py-1.5 rounded hover:text-white hover:bg-white/[0.06] transition-colors">
-              Blog
-            </Link>
+                {item.label}
+              </Link>
+            ))}
           </nav>
         </div>
 
@@ -199,20 +91,44 @@ export default function SupabaseNavbar() {
           <button
             type="button"
             aria-label="Menu"
-            className="lg:hidden flex size-8 items-center justify-center rounded-full bg-white/[0.06] border border-white/[0.1] text-white hover:border-white/20"
+            onClick={() => setMobileMenuOpen(!mobileMenuOpen)}
+            className="lg:hidden flex size-8 items-center justify-center rounded-full bg-white/[0.06] border border-white/[0.1] text-white hover:border-white/20 transition-colors"
           >
             <svg className="size-4" fill="none" viewBox="0 0 24 24" stroke="currentColor" strokeWidth="2">
-              <path strokeLinecap="round" strokeLinejoin="round" d="M3.75 6.75h16.5M3.75 12h16.5m-16.5 5.25h16.5" />
+              {mobileMenuOpen ? (
+                <path strokeLinecap="round" strokeLinejoin="round" d="M6 18L18 6M6 6l12 12" />
+              ) : (
+                <path strokeLinecap="round" strokeLinejoin="round" d="M3.75 6.75h16.5M3.75 12h16.5m-16.5 5.25h16.5" />
+              )}
             </svg>
           </button>
         </div>
       </div>
 
+      {/* Mobile Drawer */}
+      {mobileMenuOpen && (
+        <div className="lg:hidden mx-4 mt-2 mb-4 rounded-2xl bg-[#161817] border border-white/10 p-5 backdrop-blur-2xl shadow-2xl animate-in fade-in slide-in-from-top-2">
+          <div className="flex flex-col gap-2">
+            {NAV_LINKS.map((item) => (
+              <Link
+                key={item.href}
+                href={item.href}
+                onClick={() => setMobileMenuOpen(false)}
+                className="flex items-center justify-between py-2.5 px-3 rounded-lg text-sm text-[#A0A0A0] hover:bg-white/[0.06] hover:text-white transition-colors"
+              >
+                <span>{item.label}</span>
+                <span className="text-red-500">&rarr;</span>
+              </Link>
+            ))}
+          </div>
+        </div>
+      )}
+
       {/* Click-outside overlay */}
-      {(productOpen || devOpen || solOpen) && (
+      {mobileMenuOpen && (
         <div
-          className="fixed inset-0 z-40"
-          onClick={() => { setProductOpen(false); setDevOpen(false); setSolOpen(false); }}
+          className="fixed inset-0 z-40 bg-black/40 backdrop-blur-[2px]"
+          onClick={() => setMobileMenuOpen(false)}
         />
       )}
     </header>

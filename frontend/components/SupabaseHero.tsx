@@ -17,11 +17,11 @@ export default function SupabaseHero() {
           <div className="lg:max-w-[560px]">
             {/* Headline — Manrope, tight tracking, exact Supabase scale */}
             <h1
-              className="text-[44px] sm:text-[56px] lg:text-[64px] font-black text-white leading-[1.08] tracking-[-0.03em] font-heading"
+              className="text-[30px] sm:text-[36px] lg:text-[42px] font-black text-white leading-[1.12] tracking-[-0.03em] font-heading"
             >
-              Build in a weekend
+              Kenali Modus Penipuan
               <br />
-              <span className="text-[#3ECF8E]">Scale to millions</span>
+              <span className="text-red-500">Sebelum Jadi Korban</span>
             </h1>
 
             {/* CTA Buttons — matching exact Supabase screenshot buttons */}
@@ -31,14 +31,14 @@ export default function SupabaseHero() {
                 className="inline-flex items-center justify-center px-4 py-2 rounded-md bg-[#006239] hover:bg-[#007544] text-white font-medium text-[14px] transition-all hover:scale-[1.01] active:scale-[0.99] border border-[#007544]/40 shadow-sm"
                 style={{ letterSpacing: "-0.01em" }}
               >
-                Start your project
+                Mulai Pemindaian
               </Link>
               <Link
                 href="/tentang-keamanan"
                 className="inline-flex items-center justify-center px-4 py-2 rounded-md bg-[#161817] border border-white/10 text-zinc-300 font-medium text-[14px] hover:border-white/20 hover:text-white hover:bg-white/[0.04] transition-all"
                 style={{ letterSpacing: "-0.01em" }}
               >
-                Request a demo
+                Pelajari Keamanan
               </Link>
             </div>
           </div>
@@ -49,7 +49,7 @@ export default function SupabaseHero() {
               className="text-[15px] sm:text-[16px] text-[#A0A0A0] leading-[1.65]"
               style={{ fontWeight: 400 }}
             >
-              Start your project with a Postgres database. Add Authentication, Data APIs, Edge Functions, Realtime Data, Storage, and Vector embeddings.
+              Mulai dari pemindaian pesan mencurigakan. Pelajari modus penipuan digital, ikuti simulasi kognitif, dan akses playbook mitigasi untuk melindungi diri sebelum uang atau data pribadimu hilang.
             </p>
           </div>
 

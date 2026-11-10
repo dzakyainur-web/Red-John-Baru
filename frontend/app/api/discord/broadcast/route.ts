@@ -27,7 +27,10 @@ export async function POST(request: Request) {
   const key = process.env.DISCORD_BOT_API_KEY?.trim() ?? "";
 
   try {
-    const headers: Record<string, string> = { "Content-Type": "application/json" };
+    const headers: Record<string, string> = {
+      "Content-Type": "application/json",
+      Authorization: request.headers.get("Authorization") ?? "",
+    };
     if (key) headers["X-API-Key"] = key;
     const res = await fetch(`${API_BASE}/api/discord/broadcast`, {
       method: "POST",
