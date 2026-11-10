@@ -1,5 +1,6 @@
 import type { Metadata } from "next";
 import Login06 from "@/components/Login06";
+import SignOutOnMount from "@/components/SignOutOnMount";
 
 export const metadata: Metadata = {
   title: "Masuk — Red John",
@@ -7,5 +8,10 @@ export const metadata: Metadata = {
 };
 
 export default function LoginPage() {
-  return <Login06 initialMode="login" brandName="Red John" />;
+  return (
+    <>
+      <SignOutOnMount />
+      <Login06 initialMode="login" brandName="Red John" />
+    </>
+  );
 }

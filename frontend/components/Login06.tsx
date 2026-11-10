@@ -3,7 +3,9 @@
 import React, { useState } from "react";
 import Link from "next/link";
 import Image from "next/image";
+import { useRouter } from "next/navigation";
 import RainbowRing from "./RainbowRing";
+import { supabase } from "@/lib/supabase";
 
 interface Login06Props {
   initialMode?: "login" | "register";
@@ -11,10 +13,21 @@ interface Login06Props {
   onSuccess?: (data: Record<string, string>) => void;
 }
 
+const AUTH_ERROR_MESSAGE: Record<string, string> = {
+  invalid_credentials: "Email atau password salah.",
+  email_not_confirmed: "Email belum dikonfirmasi. Cek kotak masuk untuk tautan verifikasi.",
+  user_already_exists: "Email ini sudah terdaftar. Silakan masuk.",
+  email_exists: "Email ini sudah terdaftar. Silakan masuk.",
+  weak_password: "Password terlalu lemah. Gunakan minimal 6 karakter.",
+  over_email_send_rate_limit: "Terlalu banyak percobaan. Coba lagi beberapa saat lagi.",
+};
+
 export default function Login06({
   initialMode = "login",
   brandName = "Red John",
+  onSuccess,
 }: Login06Props) {
+  const router = useRouter();
   const [mode, setMode] = useState<"login" | "register">(initialMode);
   const [showPassword, setShowPassword] = useState(false);
   const [showConfirmPassword, setShowConfirmPassword] = useState(false);
@@ -28,20 +41,77 @@ export default function Login06({
   const [confirmPassword, setConfirmPassword] = useState("");
   const [loading, setLoading] = useState(false);
   const [demoNotice, setDemoNotice] = useState<string | null>(null);
+  const [errorMessage, setErrorMessage] = useState<string | null>(null);
 
-  const handleSubmit = (e: React.FormEvent) => {
+  const finishAuth = () => {
+    onSuccess?.({ identifier });
+    router.push("/");
+    router.refresh();
+  };
+
+  const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
-    setLoading(true);
+    setErrorMessage(null);
     setDemoNotice(null);
 
-    setTimeout(() => {
-      setLoading(false);
-      setDemoNotice(
-        mode === "login"
-          ? "Demo UI: Berhasil mensimulasikan proses masuk!"
-          : "Demo UI: Berhasil mensimulasikan pendaftaran akun baru!"
+    if (!supabase) {
+      setErrorMessage(
+        "Konfigurasi NEXT_PUBLIC_SUPABASE_URL dan NEXT_PUBLIC_SUPABASE_ANON_KEY belum diisi."
       );
-    }, 700);
+      return;
+    }
+
+    if (mode === "register") {
+      if (!agreedTerms) {
+        setErrorMessage("Setujui syarat dan ketentuan terlebih dahulu.");
+        return;
+      }
+      if (password !== confirmPassword) {
+        setErrorMessage("Konfirmasi password tidak cocok.");
+        return;
+      }
+    }
+
+    setLoading(true);
+    try {
+      if (mode === "login") {
+        const { error } = await supabase.auth.signInWithPassword({
+          email: identifier.trim(),
+          password,
+        });
+        if (error) {
+          setErrorMessage(
+            AUTH_ERROR_MESSAGE[error.code ?? ""] ?? "Gagal masuk. Periksa email dan password."
+          );
+          return;
+        }
+        finishAuth();
+      } else {
+        const { data, error } = await supabase.auth.signUp({
+          email: identifier.trim(),
+          password,
+          options: { data: { full_name: fullName.trim() } },
+        });
+        if (error) {
+          setErrorMessage(
+            AUTH_ERROR_MESSAGE[error.code ?? ""] ?? "Gagal mendaftar. Coba lagi."
+          );
+          return;
+        }
+        if (data.session) {
+          finishAuth();
+          return;
+        }
+        setMode("login");
+        setPassword("");
+        setConfirmPassword("");
+        setDemoNotice("Pendaftaran berhasil. Cek email untuk konfirmasi, lalu masuk kembali.");
+      }
+    } catch {
+      setErrorMessage("Supabase tidak dapat dihubungi. Periksa konfigurasi dan koneksi.");
+    } finally {
+      setLoading(false);
+    }
   };
 
   const handleSocialClick = (provider: string) => {
@@ -116,6 +186,22 @@ export default function Login06({
       {/* Main Authentication Centerpiece */}
       <main className="w-full max-w-4xl mx-auto px-6 py-10 sm:py-14 z-10 flex-1 flex flex-col justify-center">
         {/* Interactive Demo Toast Notice */}
+        {errorMessage && (
+          <div
+            role="alert"
+            className="mb-6 mx-auto w-full max-w-md bg-red-950/80 border border-red-500/40 text-red-300 px-4 py-2.5 rounded-lg text-xs flex items-center justify-between backdrop-blur-md animate-fade-in"
+          >
+            <span>{errorMessage}</span>
+            <button
+              type="button"
+              onClick={() => setErrorMessage(null)}
+              className="text-red-400 hover:text-white text-base leading-none font-bold ml-2 cursor-pointer"
+            >
+              &times;
+            </button>
+          </div>
+        )}
+
         {demoNotice && (
           <div className="mb-6 mx-auto w-full max-w-md bg-emerald-950/80 border border-emerald-500/40 text-emerald-300 px-4 py-2.5 rounded-lg text-xs flex items-center justify-between backdrop-blur-md animate-fade-in">
             <span>{demoNotice}</span>
@@ -178,14 +264,15 @@ export default function Login06({
                 </div>
               )}
 
-              {/* Username or email */}
+              {/* Email */}
               <div>
                 <input
-                  type="text"
+                  type="email"
                   required
+                  autoComplete="email"
                   value={identifier}
                   onChange={(e) => setIdentifier(e.target.value)}
-                  placeholder="Nama pengguna atau email*"
+                  placeholder="Email*"
                   className="w-full h-11 px-3.5 rounded-lg bg-[#0E1015]/90 border border-zinc-800 text-sm text-white placeholder:text-zinc-500 focus:outline-none focus:border-zinc-500 focus:ring-1 focus:ring-zinc-500 transition-all"
                 />
               </div>
