@@ -1,13 +1,14 @@
 """API bank soal kuis. Auth admin diverifikasi ke Supabase pada setiap request."""
 from typing import Annotated
 
-from fastapi import APIRouter, Depends, Header, HTTPException
+from fastapi import APIRouter, Depends, Header, HTTPException, Query
 from postgrest.exceptions import APIError
 
-from app import quiz_store
+from app import quiz_daily, quiz_store
 from app.news_harvester import store
-from app.quiz import (QuizAnswerIn, QuizAnswerOut, QuizQuestionAdmin,
-                      QuizQuestionCreate, QuizQuestionPublic, QuizQuestionUpdate)
+from app.quiz import (LeaderboardEntry, QuizAnswerIn, QuizAnswerOut, QuizLeaderboardOut,
+                      QuizQuestionAdmin, QuizQuestionCreate, QuizQuestionPublic,
+                      QuizQuestionUpdate)
 
 router = APIRouter(prefix="/quiz", tags=["quiz"])
 
@@ -15,6 +16,25 @@ router = APIRouter(prefix="/quiz", tags=["quiz"])
 def require_client() -> None:
     if store.get_store() is None:
         raise HTTPException(503, "Supabase tidak dikonfigurasi.")
+
+
+def _bearer_token(authorization: str | None) -> str | None:
+    if not authorization or authorization[:7].lower() != "bearer ":
+        return None
+    return authorization[7:].strip() or None
+
+
+async def optional_user_id(authorization: str | None) -> str | None:
+    """User id dari token Supabase bila valid. Endpoint jawaban tetap publik:
+    setiap kegagalan di sini hanya berarti skor tidak masuk leaderboard."""
+    token = _bearer_token(authorization)
+    if token is None or store.get_store() is None:
+        return None
+    try:
+        response = await store.get_store().auth.get_user(token)
+    except Exception:  # noqa: BLE001 - sesi tidak valid bukan error pemain
+        return None
+    return getattr(getattr(response, "user", None), "id", None)
 
 
 async def require_quiz_admin(authorization: Annotated[str | None, Header()] = None) -> str:
@@ -103,7 +123,11 @@ async def archive_question(question_id: str,
 
 
 @router.post("/questions/{question_id}/answer", response_model=QuizAnswerOut)
-async def answer_question(question_id: str, answer: QuizAnswerIn) -> QuizAnswerOut:
+async def answer_question(
+    question_id: str,
+    answer: QuizAnswerIn,
+    authorization: Annotated[str | None, Header()] = None,
+) -> QuizAnswerOut:
     require_client()
     try:
         row = await quiz_store.get_question(question_id)
@@ -112,6 +136,36 @@ async def answer_question(question_id: str, answer: QuizAnswerIn) -> QuizAnswerO
     if row is None:
         raise HTTPException(404, "Soal tidak ditemukan atau tidak aktif.")
     try:
-        return QuizAnswerOut.model_validate(quiz_store.evaluate_answer(row, answer))
+        result = quiz_store.evaluate_answer(row, answer)
     except ValueError as exc:
         raise HTTPException(422, str(exc)) from exc
+    points = quiz_daily.points_for(result["points_base"], answer.difficulty, answer.clue_penalty)
+    counted = False
+    if points > 0:
+        user_id = await optional_user_id(authorization)
+        if user_id:
+            counted = await quiz_daily.record_score(
+                user_id, question_id, quiz_daily.quiz_day(), points
+            )
+    return QuizAnswerOut.model_validate({**result, "points_awarded": points, "counted": counted})
+
+
+@router.get("/leaderboard", response_model=QuizLeaderboardOut)
+async def leaderboard(limit: Annotated[int, Query(ge=1, le=50)] = 20) -> QuizLeaderboardOut:
+    """Papan peringkat periode berjalan. Publik; skor butuh login saat menjawab."""
+    require_client()
+    moment = quiz_daily.now_wib()
+    day = quiz_daily.quiz_day(moment)
+    try:
+        entries = await quiz_daily.top_scores(day, limit)
+    except APIError as exc:
+        if exc.code in {"42P01", "PGRST202"}:
+            raise HTTPException(503, "Jalankan migrasi 008_quiz_leaderboard.sql.") from exc
+        raise translate_db_error(exc) from exc
+    return QuizLeaderboardOut(
+        day=day.isoformat(),
+        label=quiz_daily.window_label(day),
+        resets_at=quiz_daily.resets_at(moment).isoformat(timespec="seconds"),
+        server_now=moment.isoformat(timespec="seconds"),
+        entries=[LeaderboardEntry.model_validate(e) for e in entries],
+    )

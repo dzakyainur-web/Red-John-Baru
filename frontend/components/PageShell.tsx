@@ -13,7 +13,7 @@ export default function PageShell({ children }: { children: React.ReactNode }) {
   }
 
   const isBerita = pathname === "/berita";
-  const isQuiz = pathname === "/quiz";
+  const isQuiz = pathname.startsWith("/quiz");
   const darkBg = isBerita || isQuiz ? "bg-[#0c0d0d]" : "bg-[#1a1a1a]";
 
   return (

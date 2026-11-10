@@ -149,7 +149,12 @@ async def claim_event() -> Response | BotEventOut:
         raise _translate(exc) from exc
     if job is None:
         return Response(status_code=204)
-    return BotEventOut(id=int(job["id"]), guild_id=job["guild_id"], kind=job["kind"])
+    return BotEventOut(
+        id=int(job["id"]),
+        guild_id=job["guild_id"],
+        kind=job["kind"],
+        payload=job.get("payload"),
+    )
 
 
 @router.post("/outbox/{event_id}/finish", status_code=204)

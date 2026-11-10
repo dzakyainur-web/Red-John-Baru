@@ -61,19 +61,27 @@ func (b *Bot) Open() error {
 	return nil
 }
 
-// startBroadcast menjalankan poller job "post berita acak" dari panel admin web.
+// startBroadcast menjalankan poller job outbox dari backend: "post berita acak"
+// dari panel admin web dan pengumuman papan peringkat kuis harian (21:00 WIB).
 // Job diklaim di backend sehingga aman bila bot dijalankan lebih dari satu.
 func (b *Bot) startBroadcast() {
 	client := services.NewClient(b.cfg.RedJohnAPIURL, b.cfg.RedJohnAPIKey, b.cfg.HTTPTimeout)
-	broadcaster := services.NewBroadcaster(client, b.cfg.BroadcastPollInterval,
-		func(ctx context.Context, channelID string, items []models.NewsItem) error {
-			_, err := b.session.ChannelMessageSendComplex(channelID, &discordgo.MessageSend{
-				Embeds: []*discordgo.MessageEmbed{
-					ui.BroadcastNewsEmbed(&models.NewsList{Items: items, Total: len(items), Configured: true}),
-				},
-			})
-			return err
+	postNews := func(ctx context.Context, channelID string, items []models.NewsItem) error {
+		_, err := b.session.ChannelMessageSendComplex(channelID, &discordgo.MessageSend{
+			Embeds: []*discordgo.MessageEmbed{
+				ui.BroadcastNewsEmbed(&models.NewsList{Items: items, Total: len(items), Configured: true}),
+			},
 		})
+		return err
+	}
+	postLeaderboard := func(ctx context.Context, channelID string, lb *models.QuizLeaderboard) error {
+		_, err := b.session.ChannelMessageSendComplex(channelID, &discordgo.MessageSend{
+			Embeds: []*discordgo.MessageEmbed{ui.LeaderboardEmbed(*lb)},
+		})
+		return err
+	}
+	broadcaster := services.NewBroadcaster(
+		client, b.cfg.BroadcastPollInterval, postNews, postLeaderboard)
 	go broadcaster.Run(b.alertsCtx)
 }
 

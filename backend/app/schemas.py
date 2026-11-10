@@ -1,6 +1,6 @@
 from __future__ import annotations
 
-from typing import Literal
+from typing import Any, Literal
 
 from pydantic import BaseModel, Field, field_validator
 
@@ -380,7 +380,8 @@ class BotEventOut(BaseModel):
 
     id: int
     guild_id: str
-    kind: Literal["news_broadcast"]
+    kind: Literal["news_broadcast", "leaderboard"]
+    payload: dict[str, Any] | None = None
 
 
 class BotEventFinishIn(BaseModel):

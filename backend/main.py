@@ -10,6 +10,7 @@ from fastapi.middleware.cors import CORSMiddleware
 
 from app import __version__
 from app.config import settings
+from app import quiz_daily
 from app.ml.model import get_model
 from app.news_harvester import store as news_store
 from app.news_harvester.scheduler import start_scheduler, stop_scheduler
@@ -36,9 +37,15 @@ async def lifespan(_: FastAPI):
             "Scraper terjadwal nonaktif di proses API. Jalankan `uv run scraper.py` bila perlu."
         )
 
+    if settings.leaderboard_scheduler and news_store.get_store() is not None:
+        quiz_daily.start_scheduler()
+    elif settings.leaderboard_scheduler:
+        logger.warning("LEADERBOARD_SCHEDULER=true tapi Supabase belum dikonfigurasi.")
+
     try:
         yield
     finally:
+        quiz_daily.stop_scheduler()
         stop_scheduler()
         await news_store.close_store()
 

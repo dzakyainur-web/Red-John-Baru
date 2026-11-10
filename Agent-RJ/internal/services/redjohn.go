@@ -311,11 +311,21 @@ func (c *Client) AlertChannels(ctx context.Context) ([]models.GuildConfig, error
 
 // ---- Antrian pekerjaan dari panel admin (/api/discord/outbox) --------------------
 
-// PendingBroadcast satu permintaan "kirim 5 berita acak" dari panel admin.
+// PendingBroadcast satu job dari antrian outbox backend. `Kind` menentukan
+// penanganan: "news_broadcast" (post berita acak) atau "leaderboard" (papan
+// peringkat kuis harian, datanya sudah dirakit backend di `Payload`).
 type PendingBroadcast struct {
-	ID      int64  `json:"id"`
-	GuildID string `json:"guild_id"`
+	ID      int64           `json:"id"`
+	GuildID string          `json:"guild_id"`
+	Kind    string          `json:"kind"`
+	Payload json.RawMessage `json:"payload"`
 }
+
+// Jenis job outbox.
+const (
+	KindNewsBroadcast = "news_broadcast"
+	KindLeaderboard   = "leaderboard"
+)
 
 // NewsChannels GET /api/discord/news-channels — guild beserta channel beritanya.
 // Dipakai polling agar posting ke channel tujuan tanpa query per guild.

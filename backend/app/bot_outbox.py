@@ -44,17 +44,35 @@ def _iso(value: datetime) -> str:
     return value.isoformat(timespec="seconds")
 
 
-async def enqueue(guild_id: str) -> dict[str, Any]:
-    """Tambahkan job `news_broadcast`. Pemanggil sudah memastikan tidak ada
-    job pending untuk guild yang sama."""
+async def enqueue(
+    guild_id: str,
+    kind: str = "news_broadcast",
+    payload: dict[str, Any] | None = None,
+    dedupe_key: str | None = None,
+) -> dict[str, Any]:
+    """Tambahkan job untuk bot. Pemanggil `news_broadcast` sudah memastikan tidak ada
+    job pending untuk guild yang sama.
+
+    `dedupe_key` membuat pengiriman idempoten (mis. `leaderboard:<day>:<guild>`):
+    nilai yang sudah ada diabaikan, jadi restart/catch-up scheduler tidak
+    memposting pengumuman dua kali. Pemanggil menangani APIError 23505 bila upsert
+    tetap melaporkan bentrok.
+    """
     sb = store.get_store()
     if sb is None:
         raise RuntimeError("Supabase tidak dikonfigurasi.")
-    response = await (
-        sb.table(TABLE)
-        .insert({"guild_id": guild_id, "kind": "news_broadcast"})
-        .execute()
-    )
+    row: dict[str, Any] = {"guild_id": guild_id, "kind": kind}
+    if payload is not None:
+        row["payload"] = payload
+    if dedupe_key is not None:
+        row["dedupe_key"] = dedupe_key
+        response = await (
+            sb.table(TABLE)
+            .upsert(row, on_conflict="dedupe_key", ignore_duplicates=True)
+            .execute()
+        )
+    else:
+        response = await sb.table(TABLE).insert(row).execute()
     data = response.data or []
     return data[0] if data else {"guild_id": guild_id, "status": PENDING}
 

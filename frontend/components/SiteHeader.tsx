@@ -15,7 +15,7 @@ export default function SiteHeader() {
   const isHome = pathname === "/";
 
   // These pages render SupabaseNavbar themselves
-  if (pathname === "/" || pathname === "/login" || pathname === "/register" || pathname === "/quiz" || pathname.startsWith("/admin")) {
+  if (pathname === "/" || pathname === "/login" || pathname === "/register" || pathname.startsWith("/quiz") || pathname.startsWith("/admin")) {
     return null;
   }
 
