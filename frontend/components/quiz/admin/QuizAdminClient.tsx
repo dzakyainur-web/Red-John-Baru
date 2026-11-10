@@ -3,6 +3,7 @@
 import Link from "next/link";
 import { useCallback, useEffect, useState } from "react";
 import QuestionForm, { emptyQuestion } from "@/components/quiz/admin/QuestionForm";
+import QuizLeaderboardBroadcast from "@/components/quiz/admin/QuizLeaderboardBroadcast";
 import { archiveQuizQuestion, createQuizQuestion, listAdminQuestions, updateQuizQuestion, type GameRound } from "@/lib/quiz";
 import { supabase } from "@/lib/supabase";
 
@@ -54,6 +55,7 @@ export default function QuizAdminClient({ embedded = false }: { embedded?: boole
     catch (err) { setError(err instanceof Error ? err.message : "Gagal mengarsipkan."); }
   }
   const body = <>
+    {token && <QuizLeaderboardBroadcast token={token} />}
     {!token ? <form onSubmit={login} className="mx-auto mt-12 max-w-md space-y-4 rounded-2xl border border-white/15 bg-white/[0.03] p-6"><h2 className="text-lg font-semibold">Login admin Supabase</h2>{error && <p role="alert" className="text-sm text-red-300">{error}</p>}<input type="email" required placeholder="Email admin" autoComplete="email" value={email} onChange={(e) => setEmail(e.target.value)} className="w-full rounded-lg border border-white/15 bg-black/30 p-3 text-sm" /><input type="password" required placeholder="Password" autoComplete="current-password" value={password} onChange={(e) => setPassword(e.target.value)} className="w-full rounded-lg border border-white/15 bg-black/30 p-3 text-sm" /><button disabled={loading || !supabase} className="w-full rounded-lg bg-white p-3 text-sm font-semibold text-black disabled:opacity-50">{loading ? "Memproses…" : "Masuk"}</button></form> : <>
       {error && <div role="alert" className="mt-5 rounded-lg border border-red-500/30 bg-red-500/10 p-3 text-sm text-red-300">{error}</div>}
       <div className="mt-6 flex flex-wrap justify-end gap-2">

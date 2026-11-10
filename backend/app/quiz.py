@@ -147,3 +147,11 @@ class QuizLeaderboardOut(BaseModel):
     resets_at: str
     server_now: str
     entries: list[LeaderboardEntry]
+
+
+class QuizLeaderboardQueuedOut(BaseModel):
+    status: Literal["queued"] = "queued"
+    message: str = (
+        "Top 5 poin kuis diantrikan. Bot akan memposting ke channel Discord "
+        "dalam beberapa detik."
+    )

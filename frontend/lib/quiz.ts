@@ -72,6 +72,12 @@ export const updateQuizQuestion = (id: string, input: Partial<GameRound>, token:
   request<GameRound>(`/api/quiz/admin/questions/${id}`, { method: "PATCH", body: JSON.stringify(input) }, token);
 export const archiveQuizQuestion = (id: string, token: string) =>
   request<GameRound>(`/api/quiz/admin/questions/${id}`, { method: "DELETE" }, token);
+export const broadcastQuizLeaderboard = (guildId: string, token: string) =>
+  request<{ message: string }>(
+    "/api/quiz/admin/leaderboard/broadcast",
+    { method: "POST", body: JSON.stringify({ guild_id: guildId }) },
+    token,
+  );
 export const submitQuizAnswer = (
   id: string,
   answer: { choice_id?: string; text?: string; difficulty?: number; clue_penalty?: boolean },

@@ -4,11 +4,12 @@ from typing import Annotated
 from fastapi import APIRouter, Depends, Header, HTTPException, Query
 from postgrest.exceptions import APIError
 
-from app import quiz_daily, quiz_store
+from app import bot_outbox, quiz_daily, quiz_store
 from app.news_harvester import store
 from app.quiz import (LeaderboardEntry, QuizAnswerIn, QuizAnswerOut, QuizLeaderboardOut,
-                      QuizQuestionAdmin, QuizQuestionCreate, QuizQuestionPublic,
-                      QuizQuestionUpdate)
+                      QuizLeaderboardQueuedOut, QuizQuestionAdmin, QuizQuestionCreate,
+                      QuizQuestionPublic, QuizQuestionUpdate)
+from app.schemas import BroadcastRequest
 
 router = APIRouter(prefix="/quiz", tags=["quiz"])
 
@@ -148,6 +149,42 @@ async def answer_question(
                 user_id, question_id, quiz_daily.quiz_day(), points
             )
     return QuizAnswerOut.model_validate({**result, "points_awarded": points, "counted": counted})
+
+
+@router.post("/admin/leaderboard/broadcast", status_code=202,
+             response_model=QuizLeaderboardQueuedOut)
+async def broadcast_leaderboard(
+    payload: BroadcastRequest,
+    _admin: Annotated[str, Depends(require_quiz_admin)],
+) -> QuizLeaderboardQueuedOut:
+    """Antrikan Top 5 periode berjalan untuk diposting bot ke channel guild.
+
+    Snapshot dibuat saat tombol ditekan, sehingga skor yang masuk setelahnya
+    tidak mengubah pengumuman yang sedang menunggu bot.
+    """
+    day = quiz_daily.quiz_day()
+    try:
+        entries = await quiz_daily.top_scores(day, limit=5)
+        await bot_outbox.enqueue(
+            payload.guild_id,
+            kind="leaderboard",
+            payload={
+                "day": day.isoformat(),
+                "label": quiz_daily.window_label(day),
+                "entries": entries,
+            },
+        )
+    except APIError as exc:
+        if exc.code in {"42P01", "PGRST202", "PGRST205"}:
+            raise HTTPException(
+                503, "Tabel leaderboard atau outbox belum ada. Jalankan migrasi 004–008."
+            ) from exc
+        if exc.code == "23505":
+            raise HTTPException(
+                409, "Pengumuman leaderboard sebelumnya masih menunggu atau diproses bot."
+            ) from exc
+        raise translate_db_error(exc) from exc
+    return QuizLeaderboardQueuedOut()
 
 
 @router.get("/leaderboard", response_model=QuizLeaderboardOut)
