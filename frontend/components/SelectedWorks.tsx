@@ -24,7 +24,7 @@ const WORKS: WorkItem[] = [
     description:
       "Game simulasi interaktif menghadapi tipu daya Red John dengan pendampingan bot Jane yang mengintervensi saat pilihanmu berisiko.",
     tag: "SIMULASI KOGNITIF",
-    href: "/#game",
+    href: "/quiz",
     status: "ARENA AKTIF",
   },
   {

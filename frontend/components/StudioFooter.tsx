@@ -75,7 +75,7 @@ export default function StudioFooter() {
                 </Link>
               </li>
               <li>
-                <Link href="/#game" className="hover:text-white transition-colors">
+                <Link href="/quiz" className="hover:text-white transition-colors">
                   &bull; Simulasi Kognitif: Red John vs Jane
                 </Link>
               </li>
