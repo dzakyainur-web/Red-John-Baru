@@ -3,55 +3,16 @@
 import { useMemo, useState } from "react";
 import Link from "next/link";
 import { NewsItem } from "@/lib/news";
+import { NEWS_CATEGORY_NAMES as CATEGORY_NAMES, formatCardDate } from "@/lib/labels";
 import { useSound } from "./SoundManager";
 import ExplanatoryVisual from "./ExplanatoryVisual";
+import NewsCard from "./NewsCard";
 
 interface BeritaFeedClientProps {
   initialItems: NewsItem[];
   total: number;
   updatedAt: string | null;
 }
-
-// ─── Format Tanggal ala Vercel: "4 November", "28 Oktober" ─────────────────
-function formatVercelDate(value: string | null): string {
-  if (!value) return "Terbaru";
-  const date = new Date(value);
-  if (Number.isNaN(date.getTime())) return "Terbaru";
-
-  const day = date.getDate();
-  const months = [
-    "Januari",
-    "Februari",
-    "Maret",
-    "April",
-    "Mei",
-    "Juni",
-    "Juli",
-    "Agustus",
-    "September",
-    "Oktober",
-    "November",
-    "Desember",
-  ];
-  return `${day} ${months[date.getMonth()]}`;
-}
-
-// ─── Kategori & Label Bersih ────────────────────────────────────────────────
-const CATEGORY_NAMES: Record<string, string> = {
-  all: "All",
-  engineering: "Engineering",
-  security: "Security",
-  malware_apk: "Malware APK",
-  quishing: "Quishing QRIS",
-  social_engineering: "Rekayasa Sosial",
-  phishing_link: "Phishing Web",
-  fake_job: "Kerja Freelance",
-  pinjol_ilegal: "Pinjol Ilegal",
-  crypto_scam: "Kripto Bodong",
-  giveaway_palsu: "Hadiah Palsu",
-  general: "General",
-  press: "Press",
-};
 
 // ─── Tips Pencegahan Instan Tiap Kategori ───────────────────────────────────
 const CATEGORY_TIPS: Record<string, string> = {
@@ -65,7 +26,7 @@ const CATEGORY_TIPS: Record<string, string> = {
   phishing_link: "Periksa kembali URL domain situs sebelum memasukkan username, kata sandi, dan data akun keuangan.",
 };
 
-export default function BeritaFeedClient({ initialItems, total, updatedAt }: BeritaFeedClientProps) {
+export default function BeritaFeedClient({ initialItems }: BeritaFeedClientProps) {
   const { playClick, playHover } = useSound();
   const [selectedCategory, setSelectedCategory] = useState<string>("all");
   const [searchQuery, setSearchQuery] = useState<string>("");
@@ -231,68 +192,9 @@ export default function BeritaFeedClient({ initialItems, total, updatedAt }: Ber
           ========================================================================= */}
       {filteredItems.length > 0 ? (
         <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6 sm:gap-8">
-          {filteredItems.map((item) => {
-            const primaryCat = item.categories[0] || "general";
-            const categoryName = CATEGORY_NAMES[primaryCat] || "General";
-
-            return (
-              <article
-                key={item.id}
-                className="group relative flex flex-col justify-between rounded-2xl p-5 sm:p-6 transition-all duration-150 ease-out hover:bg-[#161616] border border-transparent hover:border-white/[0.08] cursor-pointer min-h-[300px]"
-              >
-                {/* Clickable Overlay Link */}
-                <a
-                  href={item.url || "#"}
-                  target={item.url ? "_blank" : undefined}
-                  rel={item.url ? "noopener noreferrer" : undefined}
-                  onClick={(e) => {
-                    playClick();
-                    if (!item.url) {
-                      e.preventDefault();
-                      setActiveModalItem(item);
-                    }
-                  }}
-                  className="absolute inset-0 z-10 rounded-2xl"
-                >
-                  <span className="sr-only">{item.title}</span>
-                </a>
-
-                {/* Top Section: Explanatory Visual + Date, Category & Source + Title + Excerpt */}
-                <div>
-                  {/* Gambar Penjelasan Alur Modus Operandi / Media Image */}
-                  <div className="relative aspect-[16/9] w-full overflow-hidden rounded-xl mb-4 bg-[#0a0a0b] border border-white/[0.08] group-hover:border-white/20 transition-all">
-                    <ExplanatoryVisual
-                      category={primaryCat}
-                      source={item.source}
-                      title={item.title}
-                      imageUrl={item.image_url}
-                    />
-                  </div>
-
-                  {/* Date, Category & Media Source */}
-                  <div className="flex items-center gap-2 text-sm text-zinc-400 font-normal mb-3">
-                    <span>{formatVercelDate(item.published_at)}</span>
-                    <span className="text-zinc-600">•</span>
-                    <span className="text-zinc-400">{categoryName}</span>
-                    <span className="text-zinc-600">•</span>
-                    <span className="text-zinc-400 font-medium">{item.source}</span>
-                  </div>
-
-                  {/* Headline Title */}
-                  <h2 className="text-xl sm:text-[22px] font-bold text-white tracking-tight leading-snug group-hover:text-zinc-100 transition-colors">
-                    {item.title}
-                  </h2>
-
-                  {/* Body Snippet */}
-                  {item.snippet && (
-                    <p className="mt-3 text-sm text-zinc-400 leading-relaxed line-clamp-3 font-normal">
-                      {item.snippet}
-                    </p>
-                  )}
-                </div>
-              </article>
-            );
-          })}
+          {filteredItems.map((item) => (
+            <NewsCard key={item.id} item={item} onSelect={setActiveModalItem} />
+          ))}
         </div>
       ) : (
         /* Empty State */
@@ -413,7 +315,7 @@ export default function BeritaFeedClient({ initialItems, total, updatedAt }: Ber
           <div className="w-full max-w-lg rounded-2xl bg-[#161616] border border-white/10 p-6 space-y-4">
             <div className="flex items-center justify-between">
               <span className="text-xs text-zinc-400">
-                {formatVercelDate(activeModalItem.published_at)} &bull; {activeModalItem.source}
+                {formatCardDate(activeModalItem.published_at)} &bull; {activeModalItem.source}
               </span>
               <button
                 type="button"
