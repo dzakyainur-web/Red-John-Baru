@@ -1,0 +1,729 @@
+=== DATASET KUIS INVESTIGASI DIGITAL: THE TRUST TRAP ===
+
+
+
+[SOAL_START]
+
+ID: EASY-001
+
+TINGKAT_KESULITAN: Mudah
+
+TIPE_SOAL: Pilihan Ganda
+
+PERTANYAAN: Kamu menerima SMS: "PERINGATAN RESMI BANK BCA: Terdeteksi transaksi Rp8.500.000 keluar. Segera batalkan di tautan darurat: bca-bataltransaksi.xyz". Apa yang kamu lakukan?
+
+OPSI_A: Klik link tersebut karena panik uang akan hilang.
+
+OPSI_B: Abaikan SMS, jangan klik tautannya, lalu blokir nomor tersebut.
+
+OPSI_C: Balas SMS tersebut menanyakan kebenarannya.
+
+JAWABAN_BENAR: B
+
+HINT_TERSEDIA: Ya
+
+HINT_PENALTI: 0
+
+PETUNJUK: Perhatikan domain tautannya ('bca-bataltransaksi.xyz'). Bank resmi tidak pernah menggunakan domain gratisan seperti '.xyz'.
+
+[SOAL_END]
+
+
+
+[SOAL_START]
+
+ID: EASY-002
+
+TINGKAT_KESULITAN: Mudah
+
+TIPE_SOAL: Ya / Tidak
+
+PERTANYAAN: Seorang kurir JNE menghubungi via WhatsApp dan mengirimkan foto resi paket dalam bentuk lampiran file bernama Foto_Resi_Paket.APK. Bolehkah kamu mengunduh dan membuka file tersebut?
+
+JAWABAN_BENAR: Tidak
+
+HINT_TERSEDIA: Ya
+
+HINT_PENALTI: 0
+
+PETUNJUK: File foto asli biasanya berformat .JPG atau .PNG. File .APK adalah aplikasi Android yang sering disalahgunakan untuk menyebar malware dan mencuri data OTP.
+
+[SOAL_END]
+
+
+
+[SOAL_START]
+
+ID: EASY-003
+
+TINGKAT_KESULITAN: Mudah
+
+TIPE_SOAL: Input Isian
+
+PERTANYAAN: Serangkaian 6 digit angka rahasia yang dikirimkan via SMS untuk memverifikasi akun (dan sering dicuri oleh penipu) dikenal dengan singkatan apa?
+
+JAWABAN_BENAR: OTP
+
+HINT_TERSEDIA: Ya
+
+HINT_PENALTI: 0
+
+PETUNJUK: Kepanjangannya adalah One Time Password.
+
+[SOAL_END]
+
+
+
+[SOAL_START]
+
+ID: EASY-004
+
+TINGKAT_KESULITAN: Mudah
+
+TIPE_SOAL: Ya / Tidak
+
+PERTANYAAN: Kamu mendapat pesan di WhatsApp dari nomor tak dikenal yang mengaku dari "Pusat Bantuan WhatsApp", mendesak agar kamu segera mengirimkan kode pendaftaran 6 digit yang baru saja masuk ke SMS kamu agar akunmu tidak dihapus. Haruskah diserahkan?
+
+JAWABAN_BENAR: Tidak
+
+HINT_TERSEDIA: Ya
+
+HINT_PENALTI: 0
+
+PETUNJUK: Pihak resmi tidak akan pernah meminta kode rahasia atau PIN milikmu. Jangan pernah tunduk pada gertakan.
+
+[SOAL_END]
+
+
+
+[SOAL_START]
+
+ID: EASY-005
+
+TINGKAT_KESULITAN: Mudah
+
+TIPE_SOAL: Pilihan Ganda
+
+PERTANYAAN: Kamu mendapat tawaran kerja freelance yang mudah, yaitu cukup "Like & Subscribe Video YouTube". Namun, kamu diminta mentransfer sejumlah uang sebagai "deposit awal". Jenis tawaran apakah ini?
+
+OPSI_A: Lowongan kerja terpercaya.
+
+OPSI_B: Penipuan tugas palsu (Task Scam).
+
+OPSI_C: Peluang bisnis afiliasi.
+
+JAWABAN_BENAR: B
+
+HINT_TERSEDIA: Ya
+
+HINT_PENALTI: 0
+
+PETUNJUK: Pekerjaan seharusnya memberimu uang, bukan memintamu mentransfer uang (deposit) di awal.
+
+[SOAL_END]
+
+
+
+[SOAL_START]
+
+ID: EASY-006
+
+TINGKAT_KESULITAN: Mudah
+
+TIPE_SOAL: Input Isian
+
+PERTANYAAN: Ikon gembok kecil di kolom alamat browser menunjukkan bahwa situs web menggunakan protokol koneksi aman yang diawali dengan huruf apa?
+
+JAWABAN_BENAR: HTTPS
+
+HINT_TERSEDIA: Ya
+
+HINT_PENALTI: 0
+
+PETUNJUK: Ada tambahan huruf "S" (yang berarti Secure) setelah HTTP.
+
+[SOAL_END]
+
+
+
+[SOAL_START]
+
+ID: EASY-007
+
+TINGKAT_KESULITAN: Mudah
+
+TIPE_SOAL: Ya / Tidak
+
+PERTANYAAN: Karena mudah diingat, menggunakan tanggal lahir sendiri atau tanggal lahir anak sebagai kata sandi (PIN) rekening bank sangat direkomendasikan.
+
+JAWABAN_BENAR: Tidak
+
+HINT_TERSEDIA: Ya
+
+HINT_PENALTI: 0
+
+PETUNJUK: Tanggal lahir adalah informasi publik yang sangat mudah dilacak oleh penipu melalui profil media sosialmu.
+
+[SOAL_END]
+
+
+
+[SOAL_START]
+
+ID: EASY-008
+
+TINGKAT_KESULITAN: Mudah
+
+TIPE_SOAL: Pilihan Ganda
+
+PERTANYAAN: Saat menelepon petugas call center bank, kamu diminta menyebutkan 3 angka rahasia di bagian belakang kartu kreditmu. Tiga angka rahasia ini disebut:
+
+OPSI_A: PIN
+
+OPSI_B: NIK
+
+OPSI_C: CVV / CVC
+
+JAWABAN_BENAR: C
+
+HINT_TERSEDIA: Ya
+
+HINT_PENALTI: 0
+
+PETUNJUK: Terletak di belakang kartu dan pantang diberikan kepada siapapun, termasuk petugas bank.
+
+[SOAL_END]
+
+
+
+[SOAL_START]
+
+ID: EASY-009
+
+TINGKAT_KESULITAN: Mudah
+
+TIPE_SOAL: Input Isian
+
+PERTANYAAN: Kejahatan menipu korban untuk mengklik tautan berbahaya dengan cara memalsukan email, SMS, atau pesan seolah-olah dari instansi resmi disebut dengan istilah apa?
+
+JAWABAN_BENAR: Phishing
+
+HINT_TERSEDIA: Ya
+
+HINT_PENALTI: 0
+
+PETUNJUK: Istilahnya menyerupai kata "memancing" (fishing) dalam bahasa Inggris.
+
+[SOAL_END]
+
+
+
+[SOAL_START]
+
+ID: EASY-010
+
+TINGKAT_KESULITAN: Mudah
+
+TIPE_SOAL: Ya / Tidak
+
+PERTANYAAN: Sahabat karibmu tiba-tiba chat dari nomor baru dan meminta pinjaman darurat Rp 1 Juta tanpa basa-basi karena sedang di rumah sakit. Apakah aman untuk langsung mentransfer?
+
+JAWABAN_BENAR: Tidak
+
+HINT_TERSEDIA: Ya
+
+HINT_PENALTI: 0
+
+PETUNJUK: Ini adalah modus impersonasi atau akun dibajak. Kamu wajib menelepon nomor sahabatmu yang asli atau memverifikasi identitasnya terlebih dahulu.
+
+[SOAL_END]
+
+
+
+[SOAL_START]
+
+ID: MEDIUM-001
+
+TINGKAT_KESULITAN: Sedang
+
+TIPE_SOAL: Pilihan Ganda
+
+PERTANYAAN: Kamu menerima email dari admin@instagram-copyright-center.com yang menyatakan akunmu akan dihapus dalam 24 jam karena pelanggaran hak cipta. Tindakan apa yang paling tepat?
+
+OPSI_A: Segera klik link banding agar akun tidak dihapus.
+
+OPSI_B: Teliti alamat email pengirim, sadari domainnya palsu, dan abaikan.
+
+OPSI_C: Balas email tersebut dengan melampirkan KTP untuk verifikasi.
+
+JAWABAN_BENAR: B
+
+HINT_TERSEDIA: Ya
+
+HINT_PENALTI: -15
+
+PETUNJUK: Selalu cek bagian belakang tanda @ pada email. Email resmi Instagram berakhiran @instagram.com atau @mail.instagram.com.
+
+[SOAL_END]
+
+
+
+[SOAL_START]
+
+ID: MEDIUM-002
+
+TINGKAT_KESULITAN: Sedang
+
+TIPE_SOAL: Ya / Tidak
+
+PERTANYAAN: Penjual di sebuah e-commerce memintamu untuk melanjutkan transaksi pembayaran barang melalui chat WhatsApp pribadi dan menransfer langsung ke rekening pribadinya karena "sistem sedang error". Apakah tindakan ini aman?
+
+JAWABAN_BENAR: Tidak
+
+HINT_TERSEDIA: Ya
+
+HINT_PENALTI: -15
+
+PETUNJUK: Bertransaksi di luar sistem resmi (rekber) e-commerce berarti kamu kehilangan fitur perlindungan pembeli (garansi uang kembali).
+
+[SOAL_END]
+
+
+
+[SOAL_START]
+
+ID: MEDIUM-003
+
+TINGKAT_KESULITAN: Sedang
+
+TIPE_SOAL: Input Isian
+
+PERTANYAAN: Metode memancing informasi kredensial perbankan dengan menggunakan kode QR palsu (misalnya yang ditempel menimpa QR asli di kasir atau meja restoran) disebut?
+
+JAWABAN_BENAR: Quishing
+
+HINT_TERSEDIA: Ya
+
+HINT_PENALTI: -15
+
+PETUNJUK: Singkatan perpaduan dari kata QR Code dan Phishing.
+
+[SOAL_END]
+
+
+
+[SOAL_START]
+
+ID: MEDIUM-004
+
+TINGKAT_KESULITAN: Sedang
+
+TIPE_SOAL: Pilihan Ganda
+
+PERTANYAAN: Kamu menemukan flashdisk berlogo perusahaan terkenal tergeletak di parkiran kampus. Apa risiko terbesar jika kamu mencolokkannya ke laptopmu?
+
+OPSI_A: Flashdisk tersebut akan merusak hardware baterai laptop.
+
+OPSI_B: Flashdisk berisi malware yang terinstal otomatis (serangan Baiting).
+
+OPSI_C: Flashdisk akan menghapus otomatis riwayat pencarian Google Chrome-mu.
+
+JAWABAN_BENAR: B
+
+HINT_TERSEDIA: Ya
+
+HINT_PENALTI: -15
+
+PETUNJUK: Serangan "Baiting" memanfaatkan rasa penasaran korban. Begitu terhubung, skrip peretasan bisa berjalan otomatis di latar belakang.
+
+[SOAL_END]
+
+
+
+[SOAL_START]
+
+ID: MEDIUM-005
+
+TINGKAT_KESULITAN: Sedang
+
+TIPE_SOAL: Ya / Tidak
+
+PERTANYAAN: Domain web seperti www.kIikbca.com (menggunakan huruf "I" kapital pengganti "l" kecil) sama pastinya aman untuk bertransaksi selama tampilan web-nya persis dengan aslinya.
+
+JAWABAN_BENAR: Tidak
+
+HINT_TERSEDIA: Ya
+
+HINT_PENALTI: -15
+
+PETUNJUK: Ini adalah serangan Typosquatting (mengecoh visual dengan huruf mirip) untuk mencuri username dan kata sandi saat kamu mencoba login.
+
+[SOAL_END]
+
+
+
+[SOAL_START]
+
+ID: MEDIUM-006
+
+TINGKAT_KESULITAN: Sedang
+
+TIPE_SOAL: Input Isian
+
+PERTANYAAN: Jenis malware yang secara agresif menyandera dan mengunci/mengenkripsi seluruh file penting di komputermu lalu menuntut pembayaran dalam bentuk kripto agar file bisa dibuka kembali disebut?
+
+JAWABAN_BENAR: Ransomware
+
+HINT_TERSEDIA: Ya
+
+HINT_PENALTI: -15
+
+PETUNJUK: Kata depannya berasal dari bahasa Inggris yang berarti "uang tebusan".
+
+[SOAL_END]
+
+
+
+[SOAL_START]
+
+ID: MEDIUM-007
+
+TINGKAT_KESULITAN: Sedang
+
+TIPE_SOAL: Pilihan Ganda
+
+PERTANYAAN: Seseorang meneleponmu sambil marah-marah, mengaku dari kepolisian, mengabarkan keluargamu ditahan dan butuh uang "damai" agar tidak dipenjara malam ini. Langkah terbaik?
+
+OPSI_A: Panik dan segera negosiasi jumlah uang untuk transfer.
+
+OPSI_B: Tanya nama pangkatnya secara rinci untuk memastikan dia polisi asli.
+
+OPSI_C: Matikan telepon, tenangkan diri, lalu hubungi langsung keluargamu yang bersangkutan.
+
+JAWABAN_BENAR: C
+
+HINT_TERSEDIA: Ya
+
+HINT_PENALTI: -15
+
+PETUNJUK: Ini adalah metode Rekayasa Sosial konvensional. Penipu sengaja menciptakan urgensi dan emosi tinggi (kepanikan) agar target kehilangan akal sehat.
+
+[SOAL_END]
+
+
+
+[SOAL_START]
+
+ID: MEDIUM-008
+
+TINGKAT_KESULITAN: Sedang
+
+TIPE_SOAL: Ya / Tidak
+
+PERTANYAAN: Jika akun media sosialmu sudah mengaktifkan perlindungan Autentikasi Dua Langkah (2FA) via SMS, mustahil akunmu bisa diretas dari jarak jauh.
+
+JAWABAN_BENAR: Tidak
+
+HINT_TERSEDIA: Ya
+
+HINT_PENALTI: -15
+
+PETUNJUK: SMS memiliki celah keamanan tingkat tinggi bernama SIM Swap. Lebih disarankan menggunakan Authenticator App (seperti Google Authenticator).
+
+[SOAL_END]
+
+
+
+[SOAL_START]
+
+ID: MEDIUM-009
+
+TINGKAT_KESULITAN: Sedang
+
+TIPE_SOAL: Input Isian
+
+PERTANYAAN: Penipu sering mengumpulkan informasi personal korban dari media sosial (nama anjing, sekolah lama) untuk menebak password. Praktik mengumpulkan intelijen dari informasi terbuka di internet ini dikenal dengan singkatan?
+
+JAWABAN_BENAR: OSINT
+
+HINT_TERSEDIA: Ya
+
+HINT_PENALTI: -15
+
+PETUNJUK: Kepanjangannya adalah Open Source Intelligence.
+
+[SOAL_END]
+
+
+
+[SOAL_START]
+
+ID: MEDIUM-010
+
+TINGKAT_KESULITAN: Sedang
+
+TIPE_SOAL: Pilihan Ganda
+
+PERTANYAAN: Kamu melihat Iklan bersponsor di Facebook: iPhone 15 Pro Max dijual sangat murah Rp 3 Juta karena "Barang Sitaan Bea Cukai". Sikap yang tepat:
+
+OPSI_A: Gunakan metode pembayaran paylater untuk mencoba.
+
+OPSI_B: Sadari ini jebakan harga tak masuk akal (Too good to be true), abaikan dan laporkan iklan.
+
+OPSI_C: Tanya ke penjual bukti foto KTP untuk meyakinkan keaslian toko.
+
+JAWABAN_BENAR: B
+
+HINT_TERSEDIA: Ya
+
+HINT_PENALTI: -15
+
+PETUNJUK: Foto KTP dan testimoni sangat mudah dipalsukan penipu untuk membangun kepercayaan semu.
+
+[SOAL_END]
+
+
+
+[SOAL_START]
+
+ID: HARD-001
+
+TINGKAT_KESULITAN: Susah
+
+TIPE_SOAL: Ya / Tidak
+
+PERTANYAAN: Kamu adalah staf keuangan. Bosmu (Direktur) mengirim pesan suara (Voice Note) via WhatsApp dengan nada suara dan gaya bicaranya yang identik, memerintahkan transfer dana mendadak ke nomor rekening vendor tak dikenal tanpa dokumen tertulis. Karena suaranya tidak mungkin ditiru, kamu aman menuruti instruksi tersebut.
+
+JAWABAN_BENAR: Tidak
+
+PENJELASAN_JAWABAN: Itu bisa jadi serangan manipulasi suara Deepfake Audio / AI Voice Cloning.
+
+HINT_TERSEDIA: Tidak
+
+HINT_PENALTI: N/A
+
+PETUNJUK: Tidak Ada
+
+[SOAL_END]
+
+
+
+[SOAL_START]
+
+ID: HARD-002
+
+TINGKAT_KESULITAN: Susah
+
+TIPE_SOAL: Pilihan Ganda
+
+PERTANYAAN: Kamu mencoba menginstal aplikasi "Senter Flashlight HD" dari luar Play Store. Pada saat instalasi, aplikasi tersebut meminta izin (permissions) ke Kontak dan SMS. Apa motif sebenarnya?
+
+OPSI_A: Membantu membagikan aplikasi senter ke teman via SMS.
+
+OPSI_B: Mengakses SMS untuk memotong pulsa dan menyadap masuknya kode OTP.
+
+OPSI_C: Aplikasi membutuhkan internet untuk menampilkan iklan di senter.
+
+JAWABAN_BENAR: B
+
+HINT_TERSEDIA: Tidak
+
+HINT_PENALTI: N/A
+
+PETUNJUK: Tidak Ada
+
+[SOAL_END]
+
+
+
+[SOAL_START]
+
+ID: HARD-003
+
+TINGKAT_KESULITAN: Susah
+
+TIPE_SOAL: Input Isian
+
+PERTANYAAN: Istilah untuk jenis serangan di mana peretas mengirimkan ribuan permintaan OTP secara beruntun ke HP korban dalam waktu singkat, bertujuan membuat korban merasa jengkel, kebingungan, atau menyembunyikan notifikasi transaksi peretasan yang sebenarnya sedang berjalan disebut?
+
+JAWABAN_BENAR: OTP Bombing / SMS Bombing
+
+HINT_TERSEDIA: Tidak
+
+HINT_PENALTI: N/A
+
+PETUNJUK: Tidak Ada
+
+[SOAL_END]
+
+
+
+[SOAL_START]
+
+ID: HARD-004
+
+TINGKAT_KESULITAN: Susah
+
+TIPE_SOAL: Ya / Tidak
+
+PERTANYAAN: Sebuah situs penipuan tidak akan mungkin menampilkan ikon gembok "HTTPS" di browser, karena otoritas sertifikasi di dunia maya akan selalu memverifikasi legalitas perusahaan secara ketat sebelum memberikan sertifikat keamanan.
+
+JAWABAN_BENAR: Tidak
+
+PENJELASAN_JAWABAN: Sertifikat SSL/HTTPS saat ini bisa didapatkan secara instan, gratis, dan tanpa verifikasi dokumen identitas perusahaan.
+
+HINT_TERSEDIA: Tidak
+
+HINT_PENALTI: N/A
+
+PETUNJUK: Tidak Ada
+
+[SOAL_END]
+
+
+
+[SOAL_START]
+
+ID: HARD-005
+
+TINGKAT_KESULITAN: Susah
+
+TIPE_SOAL: Pilihan Ganda
+
+PERTANYAAN: Kamu menerima surel dari alamat yang mencurigakan. Di badannya terdapat tautan https://login.microsoft.security-update.com/auth. Pada hierarki domain tersebut, bagian manakah yang merupakan Domain Utama (Root Domain) yang menunjukkan siapa pemilik sebenarnya dari situs itu?
+
+OPSI_A: microsoft
+
+OPSI_B: security-update.com
+
+OPSI_C: login.microsoft
+
+JAWABAN_BENAR: B
+
+HINT_TERSEDIA: Tidak
+
+HINT_PENALTI: N/A
+
+PETUNJUK: Tidak Ada
+
+[SOAL_END]
+
+
+
+[SOAL_START]
+
+ID: HARD-006
+
+TINGKAT_KESULITAN: Susah
+
+TIPE_SOAL: Input Isian
+
+PERTANYAAN: Serangan phishing yang ditargetkan secara spesifik kepada petinggi perusahaan berjabatan tinggi (seperti CEO, CFO, atau direktur utama) dengan pesan yang dibuat sangat meyakinkan dan khusus, disebut dengan istilah phishing tipe apa?
+
+JAWABAN_BENAR: Whaling
+
+HINT_TERSEDIA: Tidak
+
+HINT_PENALTI: N/A
+
+PETUNJUK: Tidak Ada
+
+[SOAL_END]
+
+
+
+[SOAL_START]
+
+ID: HARD-007
+
+TINGKAT_KESULITAN: Susah
+
+TIPE_SOAL: Ya / Tidak
+
+PERTANYAAN: Jika kamu terlanjur menekan klik pada sebuah tautan tautan phishing namun cepat-cepat menutup browser sebelum mengisi data diri apapun (form username/password), komputermu dijamin 100% aman dari ancaman peretasan.
+
+JAWABAN_BENAR: Tidak
+
+PENJELASAN_JAWABAN: Tetap ada ancaman injeksi kerentanan yang disebut Drive-by Download, di mana malware bisa terunduh secara rahasia begitu situs dirender oleh browser.
+
+HINT_TERSEDIA: Tidak
+
+HINT_PENALTI: N/A
+
+PETUNJUK: Tidak Ada
+
+[SOAL_END]
+
+
+
+[SOAL_START]
+
+ID: HARD-008
+
+TINGKAT_KESULITAN: Susah
+
+TIPE_SOAL: Pilihan Ganda
+
+PERTANYAAN: Jenis peretasan di mana pelaku berada dan mencegat jaringan komunikasi internet antara komputermu dan router Wi-Fi Kafe, sehingga pelaku bisa membaca semua data yang kamu kirim tanpa kamu sadari, dikenal dengan nama:
+
+OPSI_A: Man-in-the-Middle (MitM) Attack
+
+OPSI_B: SQL Injection
+
+OPSI_C: Cross-Site Scripting (XSS)
+
+JAWABAN_BENAR: A
+
+HINT_TERSEDIA: Tidak
+
+HINT_PENALTI: N/A
+
+PETUNJUK: Tidak Ada
+
+[SOAL_END]
+
+
+
+[SOAL_START]
+
+ID: HARD-009
+
+TINGKAT_KESULITAN: Susah
+
+TIPE_SOAL: Input Isian
+
+PERTANYAAN: Sebuah modus manipulasi di mana seseorang berpura-pura menjadi tim IT kantormu melalui telepon, dan perlahan menanyakan hal-hal yang membuatmu tanpa sadar menyebutkan password dengan dalih "perawatan server", tergolong ke dalam seni peretasan psikologis apa?
+
+JAWABAN_BENAR: Social Engineering / Rekayasa Sosial
+
+HINT_TERSEDIA: Tidak
+
+HINT_PENALTI: N/A
+
+PETUNJUK: Tidak Ada
+
+[SOAL_END]
+
+
+
+[SOAL_START]
+
+ID: HARD-010
+
+TINGKAT_KESULITAN: Susah
+
+TIPE_SOAL: Ya / Tidak
+
+PERTANYAAN: Seorang anonim di forum membagikan link berikut: http://www.google.com@192.168.1.1/login. Saat kamu klik, secara teknis struktur keamanan di browser internet modern akan tetap mengarahkanmu ke situs aman www.google.com.
+
+JAWABAN_BENAR: Tidak
+
+PENJELASAN_JAWABAN: Faktanya, struktur URL dengan tanda `@` akan membuat browser mengabaikan semua teks di sebelah kirinya yang dianggap sebagai 'username'. Browser akan langsung mengarahkanmu ke IP tujuan di kanannya yaitu 192.168.1.1/login.
+
+HINT_TERSEDIA: Tidak
+
+HINT_PENALTI: N/A
+
+PETUNJUK: Tidak Ada
+
+[SOAL_END]
