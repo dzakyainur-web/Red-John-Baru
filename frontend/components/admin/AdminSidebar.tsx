@@ -1,6 +1,7 @@
 "use client";
 
 import React from "react";
+import Image from "next/image";
 import Link from "next/link";
 import {
   LayoutDashboard,
@@ -96,12 +97,17 @@ export default function AdminSidebar({
           {/* Brand */}
           <div className="mb-6 flex items-center justify-between px-2">
             <Link href="/" className="flex items-center gap-2.5">
-              <div className="flex size-9 items-center justify-center rounded-xl bg-[#3ECF8E] font-bold text-black shadow-sm shadow-[#3ECF8E]/20">
-                <span className="text-xl tracking-tighter font-extrabold">R</span>
-              </div>
+              <Image
+                src="/red-john-logo.png"
+                alt=""
+                width={215}
+                height={301}
+                priority
+                className="h-9 w-auto shrink-0 drop-shadow-[0_0_12px_rgba(255,0,0,0.45)]"
+              />
               <div className="flex items-center gap-1.5">
-                <span className="text-xl font-bold tracking-tight text-white">Red John</span>
-                <span className="rounded-md border border-[#3ECF8E]/30 bg-[#3ECF8E]/10 px-1.5 py-0.5 text-[10px] font-bold text-[#3ECF8E]">
+                <span className="text-xl font-bold tracking-tight text-red-500">Red John</span>
+                <span className="rounded-md border border-red-500/30 bg-red-500/10 px-1.5 py-0.5 text-[10px] font-bold text-red-400">
                   ADMIN
                 </span>
               </div>
@@ -134,10 +140,10 @@ export default function AdminSidebar({
                         <Link
                           key={item.href}
                           href={item.href}
-                          className={`${itemClass} text-zinc-400 hover:bg-white/[0.04] hover:text-white`}
+                          className={`${itemClass} text-zinc-400 hover:bg-white/[0.04] hover:text-white active:bg-red-500/15 active:text-red-300`}
                         >
                           <span className="flex items-center gap-3">
-                            <Icon className="size-4 text-zinc-400 group-hover:text-zinc-200" />
+                            <Icon className="size-4 text-zinc-400 group-hover:text-zinc-200 group-active:text-red-400" />
                             <span>{item.label}</span>
                           </span>
                           <ExternalLink className="size-3 text-zinc-600" />
@@ -159,16 +165,16 @@ export default function AdminSidebar({
                         aria-current={isActive ? "page" : undefined}
                         className={`${itemClass} ${
                           isActive
-                            ? "border border-white/10 bg-white/[0.08] text-white shadow-xs"
-                            : "text-zinc-400 hover:bg-white/[0.04] hover:text-white"
+                            ? "border border-red-500/20 bg-red-500/15 text-red-400 shadow-xs"
+                            : "text-zinc-400 hover:bg-white/[0.04] hover:text-white active:bg-red-500/15 active:text-red-300"
                         }`}
                       >
                         <span className="flex items-center gap-3">
                           <Icon
                             className={`size-4 transition-colors ${
                               isActive
-                                ? "text-[#3ECF8E]"
-                                : "text-zinc-400 group-hover:text-zinc-200"
+                                ? "text-red-500"
+                                : "text-zinc-400 group-hover:text-zinc-200 group-active:text-red-400"
                             }`}
                           />
                           <span>{item.label}</span>
