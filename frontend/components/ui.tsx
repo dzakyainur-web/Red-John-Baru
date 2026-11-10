@@ -120,15 +120,15 @@ const STATUS_TONE: Record<string, string> = {
 };
 
 const STATUS_LABEL: Record<string, string> = {
-  pending: "PENDING",
-  verified: "VERIFIED",
-  rejected: "REJECTED",
+  pending: "MENUNGGU",
+  verified: "TERVERIFIKASI",
+  rejected: "DITOLAK",
 };
 
 export function StatusBadge({ status }: { status: string }) {
   return (
     <span
-      className={`inline-flex items-center rounded-[3px] border px-2 py-0.5 font-[family-name:var(--font-geist-mono)] text-[11px] font-semibold tracking-wider ${
+      className={`inline-flex items-center rounded-md border px-2 py-1 font-[family-name:var(--font-geist-mono)] text-[11px] font-semibold tracking-wider ${
         STATUS_TONE[status] ?? "border-rule-strong text-muted"
       }`}
     >
