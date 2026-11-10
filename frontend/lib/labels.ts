@@ -12,7 +12,35 @@ export const CATEGORY_LABEL: Record<string, string> = {
   crypto_scam: "Investasi Kripto Bodong",
 };
 
-export const CATEGORY_STYLES: Record<string, { bg: string; text: string; border: string }> = {
+// Label yang tampil di kartu berita (/berita + landing).
+export const NEWS_CATEGORY_NAMES: Record<string, string> = {
+  all: "All",
+  engineering: "Engineering",
+  security: "Security",
+  malware_apk: "Malware APK",
+  quishing: "Quishing QRIS",
+  social_engineering: "Rekayasa Sosial",
+  phishing_link: "Phishing Web",
+  fake_job: "Kerja Freelance",
+  pinjol_ilegal: "Pinjol Ilegal",
+  crypto_scam: "Kripto Bodong",
+  giveaway_palsu: "Hadiah Palsu",
+  general: "General",
+  press: "Press",
+};
+
+export function formatCardDate(value: string | null): string {
+  if (!value) return "Terbaru";
+  const date = new Date(value);
+  if (Number.isNaN(date.getTime())) return "Terbaru";
+  const months = [
+    "Januari", "Februari", "Maret", "April", "Mei", "Juni",
+    "Juli", "Agustus", "September", "Oktober", "November", "Desember",
+  ];
+  return `${date.getDate()} ${months[date.getMonth()]}`;
+}
+
+export const CATEGORY_STYLES:Record<string, { bg: string; text: string; border: string }> = {
   malware_apk: {
     bg: "bg-red-500/10",
     text: "text-red-400",
