@@ -4,7 +4,7 @@
 
 import { useMemo, useState, useEffect, useRef, useCallback } from "react";
 import Link from "next/link";
-import { RED_JOHN_ROUNDS, type GameRound } from "@/lib/game-scenarios";
+import { listQuizQuestions, submitQuizAnswer, type GameRound } from "@/lib/quiz";
 import { useSound } from "./SoundManager";
 import QuestionCard from "./QuestionCard";
 import ResidentSlider from "./ResidentSlider";
@@ -22,7 +22,6 @@ type Answer = {
   pointsEarned?: number;
 };
 
-const TOTAL = RED_JOHN_ROUNDS.length;
 
 export interface DifficultyInfo {
   level: number;
@@ -110,16 +109,16 @@ export function getDifficultyInfo(level: number): DifficultyInfo {
   };
 }
 
-function verdict(correct: number, difficultyLevel: number) {
+function verdict(correct: number, difficultyLevel: number, total: number) {
   const isHighDiff = difficultyLevel >= 76;
-  if (correct === TOTAL) {
+  if (correct === total) {
     return {
       label: isHighDiff
         ? "Legenda Forensik — Penakluk Red John Tingkat Dewa"
         : "Sempurna — Agen Forensik Senior",
       note: isHighDiff
-        ? `Luar biasa! Di tingkat kesulitan ekstrem (${difficultyLevel}/100), seluruh 10 skenario manipulasi psikologis berhasil kamu patahkan tanpa cela.`
-        : "Luar biasa! Seluruh 10 skenario manipulasi psikologis dan rekayasa sosial berhasil kamu tangkal tanpa celah.",
+        ? `Luar biasa! Di tingkat kesulitan ekstrem (${difficultyLevel}/100), seluruh ${total} skenario manipulasi psikologis berhasil kamu patahkan tanpa cela.`
+        : `Luar biasa! Seluruh ${total} skenario manipulasi psikologis dan rekayasa sosial berhasil kamu tangkal tanpa celah.`,
       color: "text-white",
       badge: "border-white/20 bg-white/[0.06] text-white",
     };
@@ -151,6 +150,23 @@ function verdict(correct: number, difficultyLevel: number) {
 }
 
 export default function QuizClient() {
+  const [rounds, setRounds] = useState<GameRound[]>([]);
+  const [loadError, setLoadError] = useState<string | null>(null);
+  const [submitting, setSubmitting] = useState(false);
+  const [loading, setLoading] = useState(true);
+  const [reloadKey, setReloadKey] = useState(0);
+  const TOTAL = rounds.length;
+  useEffect(() => {
+    let cancelled = false;
+    setLoading(true);
+    setLoadError(null);
+    listQuizQuestions().then((data) => {
+      if (!cancelled) { setRounds(data); setLoadError(null); }
+    }).catch((error: Error) => {
+      if (!cancelled) { setLoadError(error.message); setRounds([]); }
+    }).finally(() => { if (!cancelled) setLoading(false); });
+    return () => { cancelled = true; };
+  }, [reloadKey]);
   const [phase, setPhase] = useState<Phase>("intro");
   const [index, setIndex] = useState(0);
   const [difficulty, setDifficulty] = useState<number>(72);
@@ -170,7 +186,7 @@ export default function QuizClient() {
   const { playClick, playSuccess, playAlert } = useSound();
 
   const diffInfo = useMemo(() => getDifficultyInfo(difficulty), [difficulty]);
-  const round: GameRound = RED_JOHN_ROUNDS[index];
+  const round: GameRound = rounds[index];
 
   const correctCount = useMemo(
     () => answers.filter((a) => a.correct).length,
@@ -188,6 +204,7 @@ export default function QuizClient() {
   );
 
   const handleTimeout = useCallback(() => {
+    if (!round) return;
     playAlert();
     const timeoutText = "[Waktu Habis — Terlalu Lama Ragu]";
     setPickedText(timeoutText);
@@ -201,11 +218,11 @@ export default function QuizClient() {
     });
 
     setAnswers((prev) => [
-      ...prev,
+      ...prev.filter((a) => a.roundId !== round.id),
       {
         roundId: round.id,
         title: round.title,
-        tactic: round.debrief.redJohnTactic,
+        tactic: round.debrief.red_john_tactic,
         correct: false,
         picked: timeoutText,
         consequence: "Waktu berpikir habis sebelum keputusan diambil.",
@@ -268,75 +285,32 @@ export default function QuizClient() {
     return Math.max(0, basePoints - (hasPenalty ? 15 : 0));
   }
 
-  function handleContinueFromAsk() {
+  async function handleContinueFromAsk() {
     if (timerRef.current) clearInterval(timerRef.current);
-
-    if (round.kind === "text_input") {
-      const text = input.trim();
-      if (!text || !round.evaluateInput) return;
-      const evaluation = round.evaluateInput(text);
-      if (evaluation.isSafe) playSuccess();
-      else playAlert();
-
-      const points = calculateRoundPoints(evaluation.isSafe, round.id);
-
-      setPickedText(text);
-      setPickedSafe(evaluation.isSafe);
-      setLastDebrief({
-        consequence: evaluation.consequence,
-        intervention: evaluation.janeIntervention,
+    if (submitting || !round) return;
+    setLoadError(null);
+    const text = input.trim();
+    if (round.kind === "text_input" ? !text : !selectedChoiceId) return;
+    setSubmitting(true);
+    try {
+      const evaluation = await submitQuizAnswer(round.id,
+        round.kind === "text_input" ? { text } : { choice_id: selectedChoiceId! });
+      if (evaluation.is_safe) playSuccess(); else playAlert();
+      const points = calculateRoundPoints(evaluation.is_safe, round.id);
+      setPickedText(evaluation.user_said);
+      setPickedSafe(evaluation.is_safe);
+      setLastDebrief({ consequence: evaluation.consequence,
+        intervention: evaluation.jane_intervention, pointsEarned: points });
+      setAnswers((prev) => [...prev.filter((a) => a.roundId !== round.id), {
+        roundId: round.id, title: round.title, tactic: round.debrief.red_john_tactic,
+        correct: evaluation.is_safe, picked: evaluation.user_said,
+        consequence: evaluation.consequence, intervention: evaluation.jane_intervention,
         pointsEarned: points,
-      });
-
-      setAnswers((prev) => [
-        ...prev,
-        {
-          roundId: round.id,
-          title: round.title,
-          tactic: round.debrief.redJohnTactic,
-          correct: evaluation.isSafe,
-          picked: text,
-          consequence: evaluation.consequence,
-          intervention: evaluation.janeIntervention,
-          pointsEarned: points,
-        },
-      ]);
+      }]);
       setPhase("feedback");
-      return;
-    }
-
-    // Multiple choice or binary
-    if (!selectedChoiceId || !round.choices) return;
-    const choice = round.choices.find((c) => c.id === selectedChoiceId);
-    if (!choice) return;
-
-    if (choice.isSafe) playSuccess();
-    else playAlert();
-
-    const points = calculateRoundPoints(choice.isSafe, round.id);
-
-    setPickedText(choice.text);
-    setPickedSafe(choice.isSafe);
-    setLastDebrief({
-      consequence: choice.consequence,
-      intervention: choice.janeIntervention,
-      pointsEarned: points,
-    });
-
-    setAnswers((prev) => [
-      ...prev,
-      {
-        roundId: round.id,
-        title: round.title,
-        tactic: round.debrief.redJohnTactic,
-        correct: choice.isSafe,
-        picked: choice.text,
-        consequence: choice.consequence,
-        intervention: choice.janeIntervention,
-        pointsEarned: points,
-      },
-    ]);
-    setPhase("feedback");
+    } catch (error) {
+      setLoadError(error instanceof Error ? error.message : "Jawaban gagal dinilai.");
+    } finally { setSubmitting(false); }
   }
 
   function handleSkip() {
@@ -353,11 +327,11 @@ export default function QuizClient() {
     });
 
     setAnswers((prev) => [
-      ...prev,
+      ...prev.filter((a) => a.roundId !== round.id),
       {
         roundId: round.id,
         title: round.title,
-        tactic: round.debrief.redJohnTactic,
+        tactic: round.debrief.red_john_tactic,
         correct: false,
         picked: skippedText,
         pointsEarned: 0,
@@ -430,14 +404,17 @@ export default function QuizClient() {
           headerTitle="Simulasi Investigasi"
           step={0}
           totalSteps={TOTAL}
-          title="Kuis Kriminal Otomatis"
-          description="Uji naluri detektifmu menghadapi 10 simulasi serangan rekayasa sosial, malware APK, quishing, dan pemerasan digital asli Indonesia."
+          title={`Kuis Kriminal Otomatis · ${TOTAL} soal`}
+          description="Uji naluri detektifmu menghadapi simulasi serangan rekayasa sosial, malware APK, quishing, dan pemerasan digital asli Indonesia."
           canPrevious={false}
-          onContinue={start}
-          continueLabel={`Mulai Kuis (Lvl ${difficulty})`}
+          onContinue={TOTAL > 0 ? start : undefined}
+          canContinue={TOTAL > 0 && !submitting && !loading}
+          continueLabel={loading ? "Memuat soal…" : `Mulai Kuis (Lvl ${difficulty})`}
           shortcuts={["↵"]}
         >
           <div className="space-y-4">
+            {loadError && <p role="alert" className="rounded-xl border border-red-500/30 bg-red-500/10 p-3 text-sm text-red-300">{loadError} <button onClick={() => setReloadKey((v) => v + 1)} className="underline">Coba lagi</button></p>}
+            {!loadError && TOTAL === 0 && <p className="text-sm text-white/60">{loading ? "Memuat soal…" : "Belum ada soal aktif. Tambahkan melalui halaman admin."}</p>}
             {/* ─── Difficulty Slider Resident Card ─── */}
             <div className="rounded-2xl border border-white/[0.08] bg-[#0d0e0d] p-4 sm:p-5 shadow-inner">
               {/* Slider Header */}
@@ -553,24 +530,24 @@ export default function QuizClient() {
             {/* Target Rounds Overview */}
             <div className="space-y-2 pt-1">
               <p className="text-[12px] font-semibold uppercase tracking-wider text-[#666]">
-                Target 10 Kasus Investigasi
+                Daftar Kasus Investigasi
               </p>
               <div className="grid grid-cols-1 gap-1.5 sm:grid-cols-2">
-                {RED_JOHN_ROUNDS.slice(0, 6).map((r) => (
+                {rounds.slice(0, 6).map((r) => (
                   <div
                     key={r.id}
                     className="flex items-center gap-2 truncate rounded-lg border border-white/[0.03] bg-white/[0.015] px-2.5 py-1.5 text-[13px] text-[#A0A0A0]"
                   >
                     <span className="font-[family-name:var(--font-supa-mono)] text-[11px] text-[#666]">
-                      {String(r.roundNumber).padStart(2, "0")}
+                      {String(r.round_number).padStart(2, "0")}
                     </span>
                     <span className="truncate">{r.title}</span>
                   </div>
                 ))}
               </div>
-              <p className="pt-0.5 text-center text-[12px] text-[#555]">
-                + 4 skenario pembongkaran modus rekayasa sosial lanjutan
-              </p>
+              {TOTAL > 6 && <p className="pt-0.5 text-center text-[12px] text-[#555]">
+                + {TOTAL - 6} skenario pembongkaran modus rekayasa sosial lanjutan
+              </p>}
             </div>
           </div>
         </QuestionCard>
@@ -590,7 +567,7 @@ export default function QuizClient() {
           step={index + 1}
           totalSteps={TOTAL}
           title={round.title}
-          description={round.storyContext}
+          description={round.story_context}
           contextBox={
             <div className="space-y-2.5">
               {/* Dynamic Difficulty & Timer Banner */}
@@ -633,23 +610,23 @@ export default function QuizClient() {
                 <div className="mb-2 flex items-center justify-between text-[11px] font-[family-name:var(--font-supa-mono)] uppercase tracking-wider">
                   <span className="flex items-center gap-2 text-white">
                     <span className="size-1.5 rounded-full bg-white animate-pulse" />
-                    Pesan Masuk · {round.threatType}
+                    Pesan Masuk · {round.threat_type}
                   </span>
-                  <span className="text-[#555]">{round.chapterTitle}</span>
+                  <span className="text-[#555]">{round.chapter_title}</span>
                 </div>
                 <p className="whitespace-pre-line font-[family-name:var(--font-supa-mono)] text-[13.5px] leading-relaxed text-[#EDEDED]">
-                  {round.redJohnMessage}
+                  {round.red_john_message}
                 </p>
 
                 {/* Red John Psychological Taunt (High Difficulty) */}
-                {difficulty >= 50 && round.redJohnTaunt && (
+                {difficulty >= 50 && round.red_john_taunt && (
                   <div className="mt-3 rounded-lg border border-red-500/30 bg-red-950/20 px-3 py-2 text-[12.5px] text-red-200">
                     <div className="flex items-center gap-1.5 text-[10px] font-bold uppercase tracking-wider text-red-400">
                       <span className="size-1.5 rounded-full bg-red-500 animate-ping" />
                       Intimidasi Red John:
                     </div>
                     <p className="mt-0.5 italic text-red-200/90 font-serif">
-                      &ldquo;{round.redJohnTaunt}&rdquo;
+                      &ldquo;{round.red_john_taunt}&rdquo;
                     </p>
                   </div>
                 )}
@@ -662,7 +639,7 @@ export default function QuizClient() {
                     <span>💡 Petunjuk Patrick Jane (Aktif)</span>
                   </div>
                   <p className="mt-1 leading-relaxed text-emerald-100/90">
-                    {round.janeClue}
+                    {round.jane_clue}
                   </p>
                 </div>
               )}
@@ -697,7 +674,7 @@ export default function QuizClient() {
                         )}
                       </div>
                       <p className="mt-1 leading-relaxed text-amber-100/90">
-                        {round.janeClue}
+                        {round.jane_clue}
                       </p>
                     </div>
                   )}
@@ -723,17 +700,18 @@ export default function QuizClient() {
           onSkip={handleSkip}
           skipLabel="Lewati"
           onContinue={handleContinueFromAsk}
-          canContinue={canContinueAsk}
-          continueLabel="Putuskan Jawaban"
+          canContinue={canContinueAsk && !submitting}
+          continueLabel={submitting ? "Menilai…" : "Putuskan Jawaban"}
           shortcuts={["⌘", "↵"]}
         >
+          {loadError && <p role="alert" className="mb-3 rounded-lg border border-red-500/30 bg-red-500/10 p-3 text-sm text-red-300">{loadError}</p>}
           {round.kind === "text_input" && (
             <div className="space-y-3">
               <label
                 htmlFor="quiz-input"
                 className="block text-[12px] font-semibold uppercase tracking-wider text-[#A0A0A0]"
               >
-                {round.inputPrompt ?? "Ketik balasan keputusanmu:"}
+                {round.input_prompt ?? "Ketik balasan keputusanmu:"}
               </label>
               <input
                 id="quiz-input"
@@ -741,7 +719,7 @@ export default function QuizClient() {
                 value={input}
                 onChange={(e) => setInput(e.target.value)}
                 placeholder={
-                  round.inputPlaceholder ?? "Ketik tindakan atau respons..."
+                  round.input_placeholder ?? "Ketik tindakan atau respons..."
                 }
                 className="w-full rounded-xl border border-white/15 bg-black/40 px-4 py-3 text-[15px] text-white placeholder:text-[#555] transition-all focus:border-white/30 focus:outline-none focus:ring-1 focus:ring-white/20"
                 autoFocus
@@ -893,7 +871,7 @@ export default function QuizClient() {
                   Trik Pelaku
                 </div>
                 <p className="mt-1 text-[13px] leading-relaxed text-[#A0A0A0]">
-                  {round.debrief.redJohnTactic}
+                  {round.debrief.red_john_tactic}
                 </p>
               </div>
               <div className="rounded-xl border border-white/[0.06] bg-[#0d0e0d] p-3 text-[13px]">
@@ -901,7 +879,7 @@ export default function QuizClient() {
                   Langkah Aman
                 </div>
                 <p className="mt-1 text-[13px] leading-relaxed text-[#A0A0A0]">
-                  {round.debrief.safeAction}
+                  {round.debrief.safe_action}
                 </p>
               </div>
             </div>
@@ -916,8 +894,8 @@ export default function QuizClient() {
           headerTitle="Rapor Forensik Investigasi"
           step={TOTAL}
           totalSteps={TOTAL}
-          title={verdict(correctCount, difficulty).label}
-          description={verdict(correctCount, difficulty).note}
+          title={verdict(correctCount, difficulty, TOTAL).label}
+          description={verdict(correctCount, difficulty, TOTAL).note}
           canPrevious={false}
           footerLeft={
             <div className="flex flex-wrap items-center gap-2">

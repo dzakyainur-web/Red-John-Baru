@@ -13,7 +13,7 @@ from app.config import settings
 from app.ml.model import get_model
 from app.news_harvester import store as news_store
 from app.news_harvester.scheduler import start_scheduler, stop_scheduler
-from app.routers import check, discord, examples, news, reports, scan, threats
+from app.routers import check, discord, examples, news, quiz, reports, scan, threats
 from app.schemas import HealthResponse
 
 logging.basicConfig(level=logging.INFO)
@@ -57,7 +57,7 @@ app.add_middleware(
     CORSMiddleware,
     allow_origins=list(settings.cors_origins) or ["*"],
     allow_methods=["GET", "POST", "PATCH", "DELETE"],
-    allow_headers=["Content-Type", "X-API-Key"],
+    allow_headers=["Content-Type", "X-API-Key", "Authorization"],
 )
 
 app.include_router(check.router, prefix="/api")
@@ -67,6 +67,7 @@ app.include_router(scan.router, prefix="/api")
 app.include_router(reports.router, prefix="/api")
 app.include_router(discord.router, prefix="/api")
 app.include_router(threats.router, prefix="/api")
+app.include_router(quiz.router, prefix="/api")
 
 
 @app.get("/health", response_model=HealthResponse)

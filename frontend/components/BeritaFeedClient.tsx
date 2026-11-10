@@ -328,7 +328,7 @@ export default function BeritaFeedClient({ initialItems, total, updatedAt }: Ber
 
           <div className="flex items-center gap-3">
             <Link
-              href="/#game"
+              href="/quiz"
               onClick={playClick}
               className="text-xs font-medium text-zinc-300 hover:text-white bg-white/[0.06] hover:bg-white/[0.1] border border-white/10 rounded-full px-4 py-2 transition-all"
             >

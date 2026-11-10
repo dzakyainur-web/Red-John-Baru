@@ -3,8 +3,6 @@ import SupabaseNavbar from "@/components/SupabaseNavbar";
 import SupabaseHero from "@/components/SupabaseHero";
 import BentoFeatures from "@/components/BentoFeatures";
 import NewsCarousel from "@/components/NewsCarousel";
-import RedJohnGame from "@/components/RedJohnGame";
-import SelectedWorks from "@/components/SelectedWorks";
 import StudioFooter from "@/components/StudioFooter";
 import { fetchNews } from "@/lib/news";
 
@@ -41,37 +39,6 @@ export default async function HomePage() {
           updatedAt={updated_at}
         />
       </div>
-
-      {/* =========================================================================
-          LABORATORIUM SIMULASI KOGNITIF: RED JOHN vs JANE
-          ========================================================================= */}
-      <section id="game" className="relative z-10 py-20 px-4 sm:px-8 border-t border-white/[0.06] bg-[#0c0d0d]">
-        <div className="max-w-[1200px] mx-auto space-y-8">
-          <div className="flex flex-wrap items-end justify-between gap-4">
-            <div>
-              <span className="text-xs font-mono tracking-wider text-[#A855F7] uppercase font-semibold">
-                [ ARENA LATIHAN // 10 BABAK ]
-              </span>
-              <h2 className="mt-2 text-2xl sm:text-4xl font-bold uppercase tracking-tight text-white font-sans">
-                Uji Nalarmu Melawan Red John
-              </h2>
-            </div>
-            <p className="max-w-md text-xs sm:text-sm font-sans text-zinc-400 leading-relaxed">
-              Uji ketajaman intuisimu menghadapi 10 babak rekayasa sosial Red John. Bot Jane akan mengintervensi langsung bila kamu salah mengambil keputusan dan menjelaskan trik manipulasi di baliknya.
-            </p>
-          </div>
-
-          {/* Embedded Full Interactive Game in sleek container */}
-          <div className="rounded-3xl bg-[#161817] border border-white/[0.08] p-5 sm:p-9 shadow-2xl">
-            <RedJohnGame />
-          </div>
-        </div>
-      </section>
-
-      {/* =========================================================================
-          DIRECTORY OF ALL CAPABILITIES / WORKS
-          ========================================================================= */}
-      <SelectedWorks />
 
       {/* =========================================================================
           CLOSING CTA
