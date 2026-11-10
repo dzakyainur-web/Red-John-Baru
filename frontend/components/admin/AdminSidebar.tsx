@@ -3,6 +3,7 @@
 import React from "react";
 import Image from "next/image";
 import Link from "next/link";
+import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar";
 import {
   LayoutDashboard,
   ShieldAlert,
@@ -201,9 +202,12 @@ export default function AdminSidebar({
             className="flex items-center justify-between rounded-xl p-2 transition-colors hover:bg-white/[0.04]"
           >
             <span className="flex items-center gap-2.5 min-w-0">
-              <span className="flex size-9 shrink-0 items-center justify-center rounded-full bg-gradient-to-tr from-[#3ECF8E] to-emerald-600 font-bold text-black text-xs shadow-sm">
-                RJ
-              </span>
+              <Avatar size="default" className="size-9 border border-white/10 shadow-sm">
+                <AvatarImage src="/avatars/3.png" alt="Avatar Admin" className="object-cover" />
+                <AvatarFallback className="bg-red-500/20 font-bold text-red-400 text-xs">
+                  RJ
+                </AvatarFallback>
+              </Avatar>
               <span className="min-w-0 text-left">
                 <span className="block truncate text-xs font-semibold text-white">Admin</span>
                 <span className="block truncate text-[11px] text-zinc-400">
