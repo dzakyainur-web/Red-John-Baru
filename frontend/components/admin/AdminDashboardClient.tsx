@@ -363,7 +363,7 @@ export default function AdminDashboardClient() {
                     type="button"
                     onClick={() => setFilters((f) => ({ ...f, status }))}
                     aria-pressed={filters.status === status}
-                    className={`rounded-lg border px-3 py-1.5 text-xs font-semibold transition-colors ${
+                    className={`min-w-[7.5rem] rounded-md border px-4 py-1.5 text-xs font-semibold transition-colors ${
                       filters.status === status
                         ? "border-[#3ECF8E]/40 bg-[#3ECF8E]/10 text-[#3ECF8E]"
                         : "border-white/10 text-zinc-400 hover:bg-white/5 hover:text-white"

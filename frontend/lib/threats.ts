@@ -75,9 +75,9 @@ export const SOURCE_LABEL: Record<ThreatSource, string> = {
 };
 
 export const STATUS_LABEL: Record<ThreatStatus, string> = {
-  pending: "Pending",
-  verified: "Verified",
-  rejected: "Rejected",
+  pending: "Menunggu",
+  verified: "Terverifikasi",
+  rejected: "Ditolak",
 };
 
 async function request<T>(path: string, init?: RequestInit): Promise<T> {

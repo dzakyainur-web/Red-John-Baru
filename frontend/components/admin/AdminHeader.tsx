@@ -2,7 +2,7 @@
 
 import React from "react";
 import Link from "next/link";
-import { Search, Bell, ExternalLink, Menu } from "lucide-react";
+import { Search, Bell, ArrowLeft, Menu } from "lucide-react";
 
 type AdminHeaderProps = {
   currentTabLabel?: string;
@@ -82,12 +82,10 @@ export default function AdminHeader({
 
         <Link
           href="/"
-          target="_blank"
-          rel="noopener noreferrer"
           className="inline-flex items-center gap-2 rounded-xl border border-white/10 bg-white/[0.05] px-3 py-2 text-xs font-semibold text-zinc-200 hover:bg-white/10 hover:text-white transition-colors"
         >
-          <span className="hidden sm:inline">Buka Situs</span>
-          <ExternalLink className="size-3.5 text-zinc-400" />
+          <span className="hidden sm:inline">Kembali ke Beranda</span>
+          <ArrowLeft className="size-3.5 text-zinc-400" />
         </Link>
       </div>
     </header>
