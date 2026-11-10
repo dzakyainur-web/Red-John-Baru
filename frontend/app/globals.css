@@ -1,4 +1,4 @@
-﻿@import "tailwindcss";
+@import "tailwindcss";
 
 /* ============================================================
    SUPABASE DESIGN TOKENS -- Exact Landing Page Clone
@@ -64,6 +64,13 @@
   --font-inter: var(--font-supa-body);
   --font-manrope: var(--font-supa-heading);
   --font-code: var(--font-supa-mono);
+  /* shadcn/ui tokens (dipakai components/ui/avatar) di atas palet gelap */
+  --color-background: var(--supa-bg);
+  --color-foreground: var(--supa-text);
+  --color-primary: var(--accent-primary);
+  --color-primary-foreground: var(--paper);
+  --color-muted: rgba(255, 255, 255, 0.08);
+  --color-muted-foreground: var(--supa-muted);
 }
 
 /* ============================================================

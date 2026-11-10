@@ -4,12 +4,51 @@ import Link from "next/link";
 import { useState, useRef, useEffect, useMemo } from "react";
 import type { User } from "@supabase/supabase-js";
 import { supabase } from "@/lib/supabase";
+import { cn } from "@/lib/utils";
+import {
+  Avatar as ShadcnAvatar,
+  AvatarFallback,
+  AvatarImage,
+} from "@/components/ui/avatar";
 
 export interface UserDropdownProps {
   className?: string;
   defaultOpen?: boolean;
   showNotifications?: boolean;
   showCart?: boolean;
+}
+
+// Avatar lokal untuk pengguna tanpa avatar_url. Dipilih deterministik dari
+// seed (id/email) supaya satu pengguna selalu dapat gambar yang sama,
+// dengan rotasi "ganti-ganti" ringan agar tidak semua orang identik.
+const AVATAR_POOL = [
+  "/avatars/1.png",
+  "/avatars/2.png",
+  "/avatars/3.png",
+  "/avatars/4.png",
+  "/avatars/5.png",
+  "/avatars/6.png",
+  "/avatars/7.png",
+  "/avatars/8.png",
+] as const;
+
+function hashSeed(seed: string) {
+  let hash = 0;
+  for (let i = 0; i < seed.length; i += 1) {
+    hash = (hash * 31 + seed.charCodeAt(i)) >>> 0;
+  }
+  return hash;
+}
+
+// Urutan gambar pengguna tidak sama dengan urutan seed, jadi seed mirip
+// (mis. "user1", "user2") tetap mendapat variasi.
+function poolIndex(seed: string) {
+  const h = hashSeed(seed);
+  return (h + Math.floor(h / AVATAR_POOL.length) * 7) % AVATAR_POOL.length;
+}
+
+function localAvatarFor(seed: string) {
+  return AVATAR_POOL[poolIndex(seed)];
 }
 
 const NAME_KEYS = ["full_name", "name", "display_name", "username"] as const;
@@ -45,24 +84,26 @@ function initialsOf(name: string) {
     .join("");
 }
 
-function Avatar({ user, name, size }: { user: User; name: string; size: number }) {
-  const src = user.user_metadata?.avatar_url as string | undefined;
-
-  if (src) {
-    return (
-      // eslint-disable-next-line @next/next/no-img-element -- URL avatar dari Supabase bisa dari domain mana pun
-      <img src={src} alt={`Avatar ${name}`} width={size} height={size} className="size-full object-cover" />
-    );
-  }
+function Avatar({
+  user,
+  name,
+  className,
+}: {
+  user: User;
+  name: string;
+  className?: string;
+}) {
+  const src =
+    (user.user_metadata?.avatar_url as string | undefined) ??
+    localAvatarFor(user.id || user.email || name || "user");
 
   return (
-    <div
-      aria-hidden="true"
-      className="size-full flex items-center justify-center bg-zinc-700 text-[10px] font-semibold text-zinc-200"
-      style={{ fontSize: size > 32 ? 14 : 10 }}
-    >
-      {initialsOf(name) || "?"}
-    </div>
+    <ShadcnAvatar className={cn("size-full rounded-full", className)}>
+      <AvatarImage src={src} alt={`Avatar ${name}`} className="object-cover" />
+      <AvatarFallback className="rounded-full bg-zinc-800 text-[10px] font-semibold text-zinc-200">
+        {initialsOf(name) || "?"}
+      </AvatarFallback>
+    </ShadcnAvatar>
   );
 }
 
@@ -208,7 +249,7 @@ export default function UserDropdown({
           {/* Circular Avatar */}
           <div className="relative size-7 rounded-full overflow-hidden shrink-0 border border-white/15 bg-zinc-800">
             {user && profile ? (
-              <Avatar user={user} name={profile.name} size={28} />
+              <Avatar user={user} name={profile.name} />
             ) : (
               <div className="size-full bg-zinc-800" />
             )}
@@ -253,7 +294,7 @@ export default function UserDropdown({
                 <div className="rounded-xl bg-white/[0.04] border border-white/[0.08] p-3 flex items-center gap-3">
                   {/* Larger Avatar */}
                   <div className="relative size-11 rounded-full overflow-hidden shrink-0 border border-white/15 shadow-sm bg-zinc-800">
-                    <Avatar user={user} name={profile.name} size={44} />
+                    <Avatar user={user} name={profile.name} />
                   </div>
 
                   {/* User Details */}
