@@ -53,17 +53,18 @@ function localAvatarFor(seed: string) {
 
 const NAME_KEYS = ["full_name", "name", "display_name", "username"] as const;
 
-// Supabase menandai admin lewat app_metadata.role = "admin" (service role),
-// atau lewat daftar email NEXT_PUBLIC_ADMIN_EMAILS (dipisah koma) sebagai fallback.
-const ADMIN_EMAILS = (process.env.NEXT_PUBLIC_ADMIN_EMAILS ?? "")
-  .split(",")
-  .map((email) => email.trim().toLowerCase())
-  .filter(Boolean);
-
-function isAdmin(user: User) {
-  const role = user.app_metadata?.role;
-  if (role === "admin") return true;
-  return Boolean(user.email && ADMIN_EMAILS.includes(user.email.toLowerCase()));
+// Role dibaca dari public.profiles (bukan app_metadata) — sumber yang sama dengan
+// yang diperiksa backend, jadi badge tidak bisa "lebih admin" dari hak akses asli.
+// RLS hanya mengizinkan user membaca barisnya sendiri.
+async function fetchRole(userId: string): Promise<"admin" | "user"> {
+  if (!supabase) return "user";
+  const { data, error } = await supabase
+    .from("profiles")
+    .select("role")
+    .eq("id", userId)
+    .maybeSingle();
+  if (error || !data) return "user";
+  return data.role === "admin" ? "admin" : "user";
 }
 
 function resolveName(user: User) {
@@ -115,6 +116,7 @@ export default function UserDropdown({
 }: UserDropdownProps) {
   const [isOpen, setIsOpen] = useState(defaultOpen);
   const [user, setUser] = useState<User | null>(null);
+  const [role, setRole] = useState<"admin" | "user">("user");
   // Sudah "loaded" sejak awal bila Supabase tidak dikonfigurasi.
   const [loaded, setLoaded] = useState(() => !supabase);
   const dropdownRef = useRef<HTMLDivElement>(null);
@@ -138,6 +140,22 @@ export default function UserDropdown({
       data.subscription.unsubscribe();
     };
   }, []);
+
+  // Ambil role sekali per sesi, dan lagi saat user berganti.
+  const userId = user?.id;
+  useEffect(() => {
+    let active = true;
+    if (!userId) {
+      setRole("user");
+      return;
+    }
+    void fetchRole(userId)
+      .then((r) => active && setRole(r))
+      .catch(() => active && setRole("user"));
+    return () => {
+      active = false;
+    };
+  }, [userId]);
 
   // Close dropdown when clicking outside or pressing Escape
   useEffect(() => {
@@ -170,14 +188,14 @@ export default function UserDropdown({
   const profile = useMemo(() => {
     if (!user) return null;
     const name = resolveName(user);
-    const admin = isAdmin(user);
+    const admin = role === "admin";
     return {
       name,
       email: user.email ?? "",
       admin,
       statusLabel: admin ? "Admin" : "Pelanggan Aktif",
     };
-  }, [user]);
+  }, [user, role]);
 
   return (
     <div

@@ -5,7 +5,6 @@ from fastapi import APIRouter, Depends, Header, HTTPException
 from postgrest.exceptions import APIError
 
 from app import quiz_store
-from app.config import settings
 from app.news_harvester import store
 from app.quiz import (QuizAnswerIn, QuizAnswerOut, QuizQuestionAdmin,
                       QuizQuestionCreate, QuizQuestionPublic, QuizQuestionUpdate)
@@ -22,16 +21,19 @@ async def require_quiz_admin(authorization: Annotated[str | None, Header()] = No
     require_client()
     if not authorization or authorization[:7].lower() != "bearer ":
         raise HTTPException(401, "Login admin diperlukan.")
-    if not settings.quiz_admin_emails:
-        raise HTTPException(503, "QUIZ_ADMIN_EMAILS belum dikonfigurasi.")
     try:
         response = await store.get_store().auth.get_user(authorization[7:].strip())
-        email = (response.user.email or "").lower()
     except Exception as exc:
         raise HTTPException(401, "Sesi login tidak valid atau kedaluwarsa.") from exc
-    if email not in settings.quiz_admin_emails:
+    try:
+        role = await quiz_store.get_user_role(response.user.id)
+    except APIError as exc:
+        if exc.code in {"42P01", "42703", "PGRST205"}:
+            raise HTTPException(503, "Tabel profiles belum ada. Jalankan migrasi 007_profiles.sql.") from exc
+        raise translate_db_error(exc) from exc
+    if role != "admin":
         raise HTTPException(403, "Akun ini tidak memiliki akses admin kuis.")
-    return email
+    return response.user.email or response.user.id
 
 
 def translate_db_error(exc: APIError) -> HTTPException:

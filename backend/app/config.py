@@ -67,12 +67,6 @@ class Settings:
     supabase_service_key: str = field(
         default_factory=lambda: os.environ.get("SUPABASE_SERVICE_ROLE_KEY", "")
     )
-    quiz_admin_emails: frozenset[str] = field(
-        default_factory=lambda: frozenset(
-            email.strip().lower() for email in os.environ.get("QUIZ_ADMIN_EMAILS", "").split(",")
-            if email.strip()
-        )
-    )
     # Scheduler hanya hidup di proses scraper (`uv run scraper.py`). Set true bila
     # ingin API ikut menjalankannya (deploy satu container).
     news_scheduler: bool = field(
