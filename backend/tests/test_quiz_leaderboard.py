@@ -36,6 +36,70 @@ def db(monkeypatch: pytest.MonkeyPatch) -> None:
     monkeypatch.setattr(quiz_store, "get_question", get_question)
 
 
+def test_admin_broadcast_mengantrikan_top_5_periode_berjalan(
+    db: None, monkeypatch: pytest.MonkeyPatch
+) -> None:
+    jobs: list[dict[str, Any]] = []
+
+    async def top(day, limit=20):
+        assert limit == 5
+        assert day == quiz_daily.quiz_day()
+        return [
+            {"rank": n, "user_id": f"u{n}", "name": f"Agen {n}",
+             "points": 600 - n, "solved": n}
+            for n in range(1, 6)
+        ]
+
+    async def enqueue(guild_id, kind="news_broadcast", payload=None, dedupe_key=None):
+        jobs.append({"guild_id": guild_id, "kind": kind, "payload": payload})
+        return {"status": "pending"}
+
+    monkeypatch.setitem(main.app.dependency_overrides, quiz_router.require_quiz_admin, lambda: "admin")
+    monkeypatch.setattr(quiz_daily, "top_scores", top)
+    monkeypatch.setattr(quiz_router.bot_outbox, "enqueue", enqueue)
+    res = client.post(
+        "/api/quiz/admin/leaderboard/broadcast",
+        json={"guild_id": "42"}, headers={"Authorization": "Bearer admin-token"},
+    )
+    assert res.status_code == 202
+    assert res.json()["status"] == "queued"
+    assert len(jobs) == 1 and jobs[0]["guild_id"] == "42"
+    assert jobs[0]["kind"] == "leaderboard"
+    assert jobs[0]["payload"]["day"] == quiz_daily.quiz_day().isoformat()
+    assert len(jobs[0]["payload"]["entries"]) == 5
+
+
+def test_admin_broadcast_kosong_tetap_dikirim_dan_perlu_admin(
+    db: None, monkeypatch: pytest.MonkeyPatch
+) -> None:
+    jobs: list[dict[str, Any]] = []
+
+    async def top(day, limit=20):
+        return []
+
+    async def enqueue(guild_id, kind="news_broadcast", payload=None, dedupe_key=None):
+        jobs.append({"guild_id": guild_id, "kind": kind, "payload": payload})
+        return {"status": "pending"}
+
+    monkeypatch.setattr(quiz_daily, "top_scores", top)
+    monkeypatch.setattr(quiz_router.bot_outbox, "enqueue", enqueue)
+    denied = client.post("/api/quiz/admin/leaderboard/broadcast", json={"guild_id": "42"})
+    assert denied.status_code == 401 and jobs == []
+
+    monkeypatch.setitem(main.app.dependency_overrides, quiz_router.require_quiz_admin, lambda: "admin")
+    res = client.post("/api/quiz/admin/leaderboard/broadcast", json={"guild_id": "42"})
+    assert res.status_code == 202
+    assert jobs[0]["payload"]["entries"] == []
+
+
+def test_admin_broadcast_menolak_guild_id_bukan_angka(
+    db: None, monkeypatch: pytest.MonkeyPatch
+) -> None:
+    monkeypatch.setitem(main.app.dependency_overrides, quiz_router.require_quiz_admin, lambda: "admin")
+    res = client.post("/api/quiz/admin/leaderboard/broadcast", json={"guild_id": "guild"})
+    assert res.status_code == 422
+
+
 def test_leaderboard_publik_bentuk_respons(db: None, monkeypatch: pytest.MonkeyPatch) -> None:
     async def top(day, limit=20):
         return [{"rank": 1, "user_id": "u1", "name": "Budi", "points": 350, "solved": 10}]
