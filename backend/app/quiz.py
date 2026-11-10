@@ -32,6 +32,7 @@ class QuizTextConfig(BaseModel):
     prompt: str = Field(min_length=1, max_length=1000)
     placeholder: str = Field(default="", max_length=300)
     rules: list[QuizFeedback] = Field(min_length=1, max_length=10)
+    default: QuizFeedback
     @model_validator(mode="after")
     def validate_rules(self) -> Self:
         for rule in [*self.rules, self.default]:

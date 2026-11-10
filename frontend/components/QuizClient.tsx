@@ -149,7 +149,19 @@ function verdict(correct: number, difficultyLevel: number, total: number) {
   };
 }
 
+/** Fisher-Yates: n soal acak tanpa pengulangan. */
+function pickRounds(pool: GameRound[], n: number): GameRound[] {
+  const out = [...pool];
+  for (let i = out.length - 1; i > 0; i--) {
+    const j = Math.floor(Math.random() * (i + 1));
+    [out[i], out[j]] = [out[j], out[i]];
+  }
+  return out.slice(0, n);
+}
+
 export default function QuizClient() {
+  const ROUNDS_PER_GAME = 10;
+  const [allRounds, setAllRounds] = useState<GameRound[]>([]);
   const [rounds, setRounds] = useState<GameRound[]>([]);
   const [loadError, setLoadError] = useState<string | null>(null);
   const [submitting, setSubmitting] = useState(false);
@@ -161,9 +173,9 @@ export default function QuizClient() {
     setLoading(true);
     setLoadError(null);
     listQuizQuestions().then((data) => {
-      if (!cancelled) { setRounds(data); setLoadError(null); }
+      if (!cancelled) { setAllRounds(data); setLoadError(null); }
     }).catch((error: Error) => {
-      if (!cancelled) { setLoadError(error.message); setRounds([]); }
+      if (!cancelled) { setLoadError(error.message); setAllRounds([]); }
     }).finally(() => { if (!cancelled) setLoading(false); });
     return () => { cancelled = true; };
   }, [reloadKey]);
@@ -200,7 +212,7 @@ export default function QuizClient() {
 
   const maxPossibleScore = useMemo(
     () => Math.round(TOTAL * 100 * diffInfo.multiplier),
-    [diffInfo.multiplier]
+    [TOTAL, diffInfo.multiplier]
   );
 
   const handleTimeout = useCallback(() => {
@@ -262,8 +274,12 @@ export default function QuizClient() {
     };
   }, [phase, index, diffInfo.timeLimit, diffInfo.janeClueMode, handleTimeout]);
 
+  // Tingkat kesulitan hanya mengatur timer/skor; soal diacak lintas bab (Dasar–Lanjutan).
+  const planned = Math.min(ROUNDS_PER_GAME, allRounds.length);
+
   function start() {
     playClick();
+    setRounds(pickRounds(allRounds, ROUNDS_PER_GAME));
     setPhase("ask");
     setIndex(0);
     setSelectedChoiceId(null);
@@ -403,18 +419,36 @@ export default function QuizClient() {
           className="max-w-[640px]"
           headerTitle="Simulasi Investigasi"
           step={0}
-          totalSteps={TOTAL}
-          title={`Kuis Kriminal Otomatis · ${TOTAL} soal`}
+          totalSteps={planned}
+          title={`Kuis Kriminal Otomatis · ${planned} soal`}
           description="Uji naluri detektifmu menghadapi simulasi serangan rekayasa sosial, malware APK, quishing, dan pemerasan digital asli Indonesia."
           canPrevious={false}
-          onContinue={TOTAL > 0 ? start : undefined}
-          canContinue={TOTAL > 0 && !submitting && !loading}
+          onContinue={allRounds.length > 0 ? start : undefined}
+          canContinue={allRounds.length > 0 && !submitting && !loading}
           continueLabel={loading ? "Memuat soal…" : `Mulai Kuis (Lvl ${difficulty})`}
           shortcuts={["↵"]}
         >
           <div className="space-y-4">
             {loadError && <p role="alert" className="rounded-xl border border-red-500/30 bg-red-500/10 p-3 text-sm text-red-300">{loadError} <button onClick={() => setReloadKey((v) => v + 1)} className="underline">Coba lagi</button></p>}
-            {!loadError && TOTAL === 0 && <p className="text-sm text-white/60">{loading ? "Memuat soal…" : "Belum ada soal aktif. Tambahkan melalui halaman admin."}</p>}
+            {/* TODO(logika): ambil 10 soal harian hasil AI dari berita penipuan terbaru
+                (digenerate lewat tombol di /admin). Saat ini tombolnya belum terhubung. */}
+            <Link
+              href="/quiz/berita-hari-ini"
+              className="group flex w-full items-center justify-between gap-3 rounded-2xl border border-amber-400/20 bg-gradient-to-r from-amber-500/[0.08] to-transparent px-4 py-3 text-left transition-all hover:border-amber-400/40 hover:from-amber-500/[0.14] active:scale-[0.99]"
+            >
+              <span className="min-w-0">
+                <span className="block text-[13px] font-semibold text-amber-200">
+                  Soal Berita Penipuan Hari Ini
+                </span>
+                <span className="mt-0.5 block truncate text-[12px] text-[#8a8a8a]">
+                  10 soal baru dari berita penipuan terbaru, disusun oleh AI
+                </span>
+              </span>
+              <span className="shrink-0 rounded-lg bg-amber-400 px-3 py-1.5 text-[12px] font-bold text-black transition-colors group-hover:bg-amber-300">
+                Kerjakan →
+              </span>
+            </Link>
+            {!loadError && allRounds.length === 0 && <p className="text-sm text-white/60">{loading ? "Memuat soal…" : "Belum ada soal aktif. Tambahkan melalui halaman admin."}</p>}
             {/* ─── Difficulty Slider Resident Card ─── */}
             <div className="rounded-2xl border border-white/[0.08] bg-[#0d0e0d] p-4 sm:p-5 shadow-inner">
               {/* Slider Header */}
@@ -530,10 +564,10 @@ export default function QuizClient() {
             {/* Target Rounds Overview */}
             <div className="space-y-2 pt-1">
               <p className="text-[12px] font-semibold uppercase tracking-wider text-[#666]">
-                Daftar Kasus Investigasi
+                Daftar Kasus Investigasi · {planned} dipilih acak dari {allRounds.length} (semua bab)
               </p>
               <div className="grid grid-cols-1 gap-1.5 sm:grid-cols-2">
-                {rounds.slice(0, 6).map((r) => (
+                {allRounds.slice(0, 6).map((r) => (
                   <div
                     key={r.id}
                     className="flex items-center gap-2 truncate rounded-lg border border-white/[0.03] bg-white/[0.015] px-2.5 py-1.5 text-[13px] text-[#A0A0A0]"
@@ -545,8 +579,8 @@ export default function QuizClient() {
                   </div>
                 ))}
               </div>
-              {TOTAL > 6 && <p className="pt-0.5 text-center text-[12px] text-[#555]">
-                + {TOTAL - 6} skenario pembongkaran modus rekayasa sosial lanjutan
+              {allRounds.length > 6 && <p className="pt-0.5 text-center text-[12px] text-[#555]">
+                + {allRounds.length - 6} skenario pembongkaran modus rekayasa sosial lanjutan
               </p>}
             </div>
           </div>
