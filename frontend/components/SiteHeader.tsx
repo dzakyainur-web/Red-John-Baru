@@ -13,8 +13,8 @@ export default function SiteHeader() {
 
   const isHome = pathname === "/";
 
-  // Home page uses SupabaseNavbar directly in page.tsx
-  if (pathname === "/" || pathname === "/login" || pathname === "/register") {
+  // These pages render SupabaseNavbar themselves
+  if (pathname === "/" || pathname === "/login" || pathname === "/register" || pathname === "/quiz") {
     return null;
   }
 
@@ -90,7 +90,7 @@ export default function SiteHeader() {
             </Link>
 
             <Link
-              href="/#game"
+              href="/quiz"
               onClick={playClick}
               className="hover:text-white transition-colors"
             >
@@ -177,7 +177,7 @@ export default function SiteHeader() {
               { href: "/berita", label: "Radar Berita" },
               { href: "/pemindai", label: "Pemindai Pesan" },
               { href: "/inspect", label: "Inspeksi Tautan" },
-              { href: "/#game", label: "Simulasi Kognitif" },
+              { href: "/quiz", label: "Simulasi Kognitif" },
               { href: "/act", label: "Playbook" },
               { href: "/learn", label: "Intelijen" },
             ].map((item) => (
