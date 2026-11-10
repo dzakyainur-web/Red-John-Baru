@@ -56,7 +56,17 @@ export default function QuizAdminClient({ embedded = false }: { embedded?: boole
   const body = <>
     {!token ? <form onSubmit={login} className="mx-auto mt-12 max-w-md space-y-4 rounded-2xl border border-white/15 bg-white/[0.03] p-6"><h2 className="text-lg font-semibold">Login admin Supabase</h2>{error && <p role="alert" className="text-sm text-red-300">{error}</p>}<input type="email" required placeholder="Email admin" autoComplete="email" value={email} onChange={(e) => setEmail(e.target.value)} className="w-full rounded-lg border border-white/15 bg-black/30 p-3 text-sm" /><input type="password" required placeholder="Password" autoComplete="current-password" value={password} onChange={(e) => setPassword(e.target.value)} className="w-full rounded-lg border border-white/15 bg-black/30 p-3 text-sm" /><button disabled={loading || !supabase} className="w-full rounded-lg bg-white p-3 text-sm font-semibold text-black disabled:opacity-50">{loading ? "Memproses…" : "Masuk"}</button></form> : <>
       {error && <div role="alert" className="mt-5 rounded-lg border border-red-500/30 bg-red-500/10 p-3 text-sm text-red-300">{error}</div>}
-      <div className="mt-6 flex justify-end"><button onClick={() => setEditing(emptyQuestion(Math.max(0, ...questions.map((q) => q.round_number)) + 1))} className="rounded-lg bg-white px-4 py-2 text-sm font-semibold text-black">+ Tambah soal</button></div>
+      <div className="mt-6 flex flex-wrap justify-end gap-2">
+        {/* TODO(logika): hubungkan ke endpoint generate soal AI dari berita penipuan terbaru. */}
+        <button
+          type="button"
+          onClick={() => setError("Generate soal dari berita terbaru belum tersedia.")}
+          className="rounded-lg border border-amber-400/40 bg-amber-400/10 px-4 py-2 text-sm font-semibold text-amber-200 hover:bg-amber-400/20"
+        >
+          ✨ Generate Soal Hari Ini (dari berita)
+        </button>
+        <button onClick={() => setEditing(emptyQuestion(Math.max(0, ...questions.map((q) => q.round_number)) + 1))} className="rounded-lg bg-white px-4 py-2 text-sm font-semibold text-black">+ Tambah soal</button>
+      </div>
       {loading ? <p className="mt-8 text-white/60">Memuat…</p> : <div className="mt-4 overflow-hidden rounded-xl border border-white/10">{questions.map((q) => <article key={q.id} className="flex flex-wrap items-center gap-3 border-b border-white/10 p-4 last:border-0">
         <span className="font-mono text-sm text-white/50">#{q.round_number}</span><div className="min-w-0 flex-1"><h2 className="font-semibold">{q.title}</h2><p className="text-xs text-white/50">{{ multiple_choice: "Pilihan ganda", binary: "Benar/salah", text_input: "Teks" }[q.kind]} · {q.is_active ? "Aktif" : "Arsip"}</p></div>
         <button onClick={() => setEditing(q)} className="rounded-lg border border-white/15 px-3 py-1.5 text-xs">Edit</button><button disabled={!q.is_active} onClick={() => void archive(q)} className="rounded-lg border border-red-400/30 px-3 py-1.5 text-xs text-red-300 disabled:opacity-30">Arsip</button>
