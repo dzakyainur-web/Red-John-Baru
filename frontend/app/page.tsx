@@ -2,7 +2,7 @@
 import SupabaseNavbar from "@/components/SupabaseNavbar";
 import SupabaseHero from "@/components/SupabaseHero";
 import BentoFeatures from "@/components/BentoFeatures";
-import NewsCarousel from "@/components/NewsCarousel";
+import NewsGrid from "@/components/NewsGrid";
 import StudioFooter from "@/components/StudioFooter";
 import { fetchNews } from "@/lib/news";
 
@@ -33,7 +33,7 @@ export default async function HomePage() {
           FEEDS BERITA RADAR INTELIJEN TERKINI
           ========================================================================= */}
       <div className="bg-[#0c0d0d]">
-        <NewsCarousel
+        <NewsGrid
           items={items}
           total={total}
           updatedAt={updated_at}

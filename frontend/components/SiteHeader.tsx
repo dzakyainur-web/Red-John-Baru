@@ -5,6 +5,7 @@ import Image from "next/image";
 import { usePathname } from "next/navigation";
 import { useState } from "react";
 import { useSound } from "./SoundManager";
+import UserDropdown from "./UserDropdown";
 
 export default function SiteHeader() {
   const pathname = usePathname();
@@ -139,14 +140,8 @@ export default function SiteHeader() {
             <span>Audio {soundEnabled ? "ON" : "OFF"}</span>
           </button>
 
-          {/* HeroUI Solid White Pill "Get Started / Dashboard" */}
-          <Link
-            href="/admin"
-            onClick={playClick}
-            className="px-4 py-1.5 rounded-full bg-white hover:bg-zinc-200 text-black font-semibold text-xs font-sans transition-all shadow-[0_0_20px_rgba(255,255,255,0.2)] hover:scale-[1.02] active:scale-[0.98]"
-          >
-            Dashboard
-          </Link>
+          {/* User profile dropdown (Gambar 2): Bell + Cart (badge 2) + Divider + User Pill & Dropdown */}
+          <UserDropdown />
 
           {/* Mobile Menu Button */}
           <button

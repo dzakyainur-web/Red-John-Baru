@@ -67,6 +67,41 @@
 }
 
 /* ============================================================
+   MARQUEE — dua baris kartu berita di landing page
+   Track berisi 2 salinan identik; geser -50% = loop mulus.
+   ============================================================ */
+@keyframes marquee-left {
+  from { transform: translateX(0); }
+  to { transform: translateX(-50%); }
+}
+@keyframes marquee-right {
+  from { transform: translateX(-50%); }
+  to { transform: translateX(0); }
+}
+.marquee-track {
+  animation: marquee-left var(--marquee-duration, 60s) linear infinite;
+}
+.marquee-track-reverse {
+  animation: marquee-right var(--marquee-duration, 60s) linear infinite;
+}
+.marquee-edge {
+  mask-image: linear-gradient(to right, transparent, black 5%, black 95%, transparent);
+  -webkit-mask-image: linear-gradient(to right, transparent, black 5%, black 95%, transparent);
+}
+.marquee-edge:hover .marquee-track,
+.marquee-edge:hover .marquee-track-reverse,
+.marquee-edge:focus-within .marquee-track,
+.marquee-edge:focus-within .marquee-track-reverse {
+  animation-play-state: paused;
+}
+@media (prefers-reduced-motion: reduce) {
+  .marquee-track,
+  .marquee-track-reverse {
+    animation: none;
+  }
+}
+
+/* ============================================================
    BASE BODY -- Supabase typography system
    font-weight 450 = Inter variable font sweet spot
    -webkit-font-smoothing: antialiased = crisp rendering
