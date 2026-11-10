@@ -9,6 +9,7 @@ from app.news_harvester import store
 from app.quiz import QuizAnswerIn, QuizQuestionBase, QuizQuestionPublic
 
 TABLE = "quiz_questions"
+PROFILES = "profiles"
 
 
 def to_public(row: dict[str, Any]) -> QuizQuestionPublic:
@@ -21,6 +22,20 @@ def to_public(row: dict[str, Any]) -> QuizQuestionPublic:
         "input_prompt": config.get("prompt"),
         "input_placeholder": config.get("placeholder"),
     })
+
+
+def normalize_role(role: str | None) -> str:
+    """public.profiles.role -> 'admin' bila persis 'admin', selain itu 'user'."""
+    return "admin" if role == "admin" else "user"
+
+
+async def get_user_role(user_id: str) -> str:
+    """Role dari public.profiles. Panggil hanya setelah token Supabase diverifikasi."""
+    sb = store.get_store()
+    if sb is None:
+        raise RuntimeError("Supabase tidak dikonfigurasi.")
+    result = await sb.table(PROFILES).select("role").eq("id", user_id).limit(1).execute()
+    return normalize_role(result.data[0]["role"] if result.data else None)
 
 
 def _match(rule: dict[str, Any], text: str) -> bool:
