@@ -129,3 +129,45 @@ func TestNewsEmbedFooter(t *testing.T) {
 		t.Errorf("footer harus menyebut 1 dari 9: %+v", emb.Footer)
 	}
 }
+
+func TestLeaderboardEmbed(t *testing.T) {
+	entries := make([]models.LeaderboardEntry, 0, 10)
+	for i := 1; i <= 10; i++ {
+		entries = append(entries, models.LeaderboardEntry{
+			Rank: i, Name: longWords(300), Points: 350, Solved: 10,
+		})
+	}
+	emb := LeaderboardEmbed(models.QuizLeaderboard{
+		Day: "2026-11-10", Label: "10 Nov 21:00 → 11 Nov 21:00 WIB", Entries: entries,
+	})
+	checkEmbed(t, "", emb)
+	if len(emb.Fields) != 10 {
+		t.Errorf("%d field, mau 10", len(emb.Fields))
+	}
+	if strings.Contains(emb.Fields[0].Value, strings.Repeat("penipuan", 40)) {
+		t.Errorf("nama panjang harus dipotong: %q", emb.Fields[0].Value)
+	}
+}
+
+func TestLeaderboardEmbedEscapesMarkdown(t *testing.T) {
+	emb := LeaderboardEmbed(models.QuizLeaderboard{
+		Day: "2026-11-10",
+		Entries: []models.LeaderboardEntry{
+			{Rank: 1, Name: "**admin** `<@123>` @everyone", Points: 100, Solved: 1},
+		},
+	})
+	v := emb.Fields[0].Value
+	for _, bad := range []string{"**admin**", "<@123>", "@everyone"} {
+		if strings.Contains(v, bad) {
+			t.Errorf("markdown/mention harus di-escape, masih ada %q: %q", bad, v)
+		}
+	}
+}
+
+func TestLeaderboardEmbedEmpty(t *testing.T) {
+	emb := LeaderboardEmbed(models.QuizLeaderboard{Day: "2026-11-10"})
+	checkEmbed(t, "", emb)
+	if !strings.Contains(emb.Description, "Belum ada peserta") {
+		t.Errorf("state kosong: %q", emb.Description)
+	}
+}

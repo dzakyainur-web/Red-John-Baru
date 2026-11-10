@@ -119,6 +119,9 @@ class QuizQuestionPublic(BaseModel):
 class QuizAnswerIn(BaseModel):
     choice_id: str | None = Field(default=None, max_length=30)
     text: str | None = Field(default=None, max_length=1000)
+    # Dipakai untuk skor leaderboard. Ponytail: dikirim klien — lihat quiz_daily.points_for.
+    difficulty: int | None = Field(default=None, ge=1, le=100)
+    clue_penalty: bool = False
 
 class QuizAnswerOut(BaseModel):
     is_safe: bool
@@ -128,3 +131,19 @@ class QuizAnswerOut(BaseModel):
     jane_intervention: str
     manipulation_tactic: str
     points_base: int
+    points_awarded: int = 0
+    counted: bool = False
+
+class LeaderboardEntry(BaseModel):
+    rank: int
+    user_id: str
+    name: str
+    points: int
+    solved: int
+
+class QuizLeaderboardOut(BaseModel):
+    day: str
+    label: str
+    resets_at: str
+    server_now: str
+    entries: list[LeaderboardEntry]

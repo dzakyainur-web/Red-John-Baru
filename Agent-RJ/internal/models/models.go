@@ -165,3 +165,20 @@ type ThreatList struct {
 	Offset     int      `json:"offset"`
 	Configured bool     `json:"configured"`
 }
+
+// ---- payload job `leaderboard` (dirakit backend dari quiz_daily_scores) ----------
+
+// LeaderboardEntry satu baris papan peringkat kuis harian.
+type LeaderboardEntry struct {
+	Rank   int    `json:"rank"`
+	Name   string `json:"name"`
+	Points int    `json:"points"`
+	Solved int    `json:"solved"`
+}
+
+// QuizLeaderboard papan peringkat satu periode kuis (jendela 21:00 WIB).
+type QuizLeaderboard struct {
+	Day     string             `json:"day"`
+	Label   string             `json:"label"`
+	Entries []LeaderboardEntry `json:"entries"`
+}

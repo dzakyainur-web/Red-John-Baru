@@ -85,6 +85,17 @@ class Settings:
     news_max_age_days: int = 90
     news_concurrency: int = 3
     news_lock_ttl_minutes: int = 45
+
+    # --- leaderboard kuis harian ---
+    # Job 21:00 WIB yang mengumumkan papan peringkat ke Discord. Default false:
+    # dev lokal tidak menembak channel produksi.
+    leaderboard_scheduler: bool = field(
+        default_factory=lambda: os.environ.get("LEADERBOARD_SCHEDULER", "false").lower()
+        in {"1", "true", "yes", "on"}
+    )
+    leaderboard_hour: int = field(
+        default_factory=lambda: int(os.environ.get("LEADERBOARD_HOUR", "21"))
+    )
     news_user_agent: str = "RedJohn-news/2.0 (+edukasi penipuan digital)"
 
 

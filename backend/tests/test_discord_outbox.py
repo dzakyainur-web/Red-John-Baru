@@ -114,7 +114,17 @@ def test_claim_kosong_204(outbox: FakeOutbox) -> None:
 def test_claim_mengembalikan_job(outbox: FakeOutbox) -> None:
     outbox.jobs.append({"id": 9, "guild_id": "42", "kind": "news_broadcast"})
     body = client.post("/api/discord/outbox/claim", headers=HEADERS).json()
-    assert body == {"id": 9, "guild_id": "42", "kind": "news_broadcast"}
+    assert body == {"id": 9, "guild_id": "42", "kind": "news_broadcast", "payload": None}
+
+
+def test_claim_meneruskan_payload_leaderboard(outbox: FakeOutbox) -> None:
+    payload = {"day": "2026-11-10", "label": "x", "entries": []}
+    outbox.jobs.append(
+        {"id": 10, "guild_id": "42", "kind": "leaderboard", "payload": payload}
+    )
+    body = client.post("/api/discord/outbox/claim", headers=HEADERS).json()
+    assert body["kind"] == "leaderboard"
+    assert body["payload"] == payload
 
 
 def test_finish_sukses_dan_gagal(outbox: FakeOutbox) -> None:

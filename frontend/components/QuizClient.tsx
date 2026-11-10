@@ -5,6 +5,7 @@
 import { useMemo, useState, useEffect, useRef, useCallback } from "react";
 import Link from "next/link";
 import { listQuizQuestions, submitQuizAnswer, type GameRound } from "@/lib/quiz";
+import { supabase } from "@/lib/supabase";
 import { useSound } from "./SoundManager";
 import QuestionCard from "./QuestionCard";
 import ResidentSlider from "./ResidentSlider";
@@ -20,6 +21,8 @@ type Answer = {
   consequence?: string;
   intervention?: string;
   pointsEarned?: number;
+  /** true bila server mencatat poin ini ke leaderboard harian (butuh login). */
+  counted?: boolean;
 };
 
 
@@ -294,13 +297,6 @@ export default function QuizClient() {
     setSelectedChoiceId(choiceId);
   }
 
-  function calculateRoundPoints(isSafe: boolean, roundId: string): number {
-    if (!isSafe) return 0;
-    const basePoints = Math.round(100 * diffInfo.multiplier);
-    const hasPenalty = cluePenaltyRounds.includes(roundId);
-    return Math.max(0, basePoints - (hasPenalty ? 15 : 0));
-  }
-
   async function handleContinueFromAsk() {
     if (timerRef.current) clearInterval(timerRef.current);
     if (submitting || !round) return;
@@ -309,10 +305,20 @@ export default function QuizClient() {
     if (round.kind === "text_input" ? !text : !selectedChoiceId) return;
     setSubmitting(true);
     try {
+      const token = supabase
+        ? (await supabase.auth.getSession()).data.session?.access_token
+        : undefined;
+      // Poin dihitung server (quiz_daily.points_for) supaya angka di rapor dan
+      // leaderboard tidak pernah berbeda.
       const evaluation = await submitQuizAnswer(round.id,
-        round.kind === "text_input" ? { text } : { choice_id: selectedChoiceId! });
+        {
+          ...(round.kind === "text_input" ? { text } : { choice_id: selectedChoiceId! }),
+          difficulty,
+          clue_penalty: cluePenaltyRounds.includes(round.id),
+        },
+        token);
       if (evaluation.is_safe) playSuccess(); else playAlert();
-      const points = calculateRoundPoints(evaluation.is_safe, round.id);
+      const points = evaluation.points_awarded;
       setPickedText(evaluation.user_said);
       setPickedSafe(evaluation.is_safe);
       setLastDebrief({ consequence: evaluation.consequence,
@@ -321,7 +327,7 @@ export default function QuizClient() {
         roundId: round.id, title: round.title, tactic: round.debrief.red_john_tactic,
         correct: evaluation.is_safe, picked: evaluation.user_said,
         consequence: evaluation.consequence, intervention: evaluation.jane_intervention,
-        pointsEarned: points,
+        pointsEarned: points, counted: evaluation.counted,
       }]);
       setPhase("feedback");
     } catch (error) {
@@ -449,6 +455,22 @@ export default function QuizClient() {
               </span>
             </Link>
             {!loadError && allRounds.length === 0 && <p className="text-sm text-white/60">{loading ? "Memuat soal…" : "Belum ada soal aktif. Tambahkan melalui halaman admin."}</p>}
+            <Link
+              href="/quiz/leaderboard"
+              className="group flex w-full items-center justify-between gap-3 rounded-2xl border border-white/10 bg-white/[0.03] px-4 py-3 text-left transition-all hover:border-white/25 hover:bg-white/[0.06] active:scale-[0.99]"
+            >
+              <span className="min-w-0">
+                <span className="block text-[13px] font-semibold text-white">
+                  Klasemen Harian
+                </span>
+                <span className="mt-0.5 block truncate text-[12px] text-[#8a8a8a]">
+                  Total poin hari ini. Reset & pengumuman Discord 21:00 WIB.
+                </span>
+              </span>
+              <span className="shrink-0 rounded-lg bg-white px-3 py-1.5 text-[12px] font-bold text-black transition-colors group-hover:bg-[#EDEDED]">
+                Lihat →
+              </span>
+            </Link>
             {/* ─── Difficulty Slider Resident Card ─── */}
             <div className="rounded-2xl border border-white/[0.08] bg-[#0d0e0d] p-4 sm:p-5 shadow-inner">
               {/* Slider Header */}
@@ -947,6 +969,12 @@ export default function QuizClient() {
               >
                 Ganti Level Kesulitan
               </button>
+              <Link
+                href="/quiz/leaderboard"
+                className="rounded-xl border border-white/10 bg-white/[0.04] px-3.5 py-2.5 text-[13px] font-medium text-[#A0A0A0] transition-all hover:bg-white/[0.08] hover:text-white"
+              >
+                Klasemen Harian →
+              </Link>
             </div>
           }
           footerRight={
@@ -962,6 +990,18 @@ export default function QuizClient() {
           }
         >
           <div className="space-y-4">
+            {answers.length > 0 && answers.every((a) => !a.counted) && (
+              <p
+                role="status"
+                className="rounded-xl border border-amber-400/25 bg-amber-500/[0.08] p-3 text-[13px] text-amber-200"
+              >
+                Skor ini belum masuk klasemen harian.{" "}
+                <Link href="/login" className="font-semibold underline">
+                  Login
+                </Link>{" "}
+                sebelum menjawab agar poin tercatat.
+              </p>
+            )}
             {/* Big Score Header with Difficulty Multiplier */}
             <div className="grid grid-cols-1 gap-3 rounded-xl border border-white/[0.08] bg-[#0d0e0d] p-4 sm:grid-cols-2">
               <div>

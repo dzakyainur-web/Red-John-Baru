@@ -81,3 +81,23 @@ def test_question_requires_exactly_one_safe_choice():
 def test_public_only_fields_cannot_be_written():
     with pytest.raises(ValidationError):
         QuizQuestionUpdate.model_validate({**question_data(), "input_prompt": "berbahaya"})
+
+
+def test_answer_out_carries_server_side_points():
+    from app.quiz import QuizAnswerOut
+
+    out = QuizAnswerOut.model_validate(
+        {"is_safe": True, "user_said": "Tolak", "consequence": "Aman",
+         "jane_intervention": "Tepat", "manipulation_tactic": "Urgensi",
+         "points_base": 100, "points_awarded": 150, "counted": True}
+    )
+    assert out.points_awarded == 150
+    assert out.counted is True
+    # Default aman untuk klien/path yang tidak mencatat skor.
+    default = QuizAnswerOut.model_validate(
+        {"is_safe": False, "user_said": "Kirim", "consequence": "Bahaya",
+         "jane_intervention": "Jangan", "manipulation_tactic": "Urgensi",
+         "points_base": 0}
+    )
+    assert default.points_awarded == 0
+    assert default.counted is False

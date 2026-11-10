@@ -333,3 +333,55 @@ func AlertEmbed(t models.Threat) *discordgo.MessageEmbed {
 		Footer:      &discordgo.MessageEmbedFooter{Text: "Sumber: " + t.SourceMedia},
 	}
 }
+
+// discordEscaper melumpuhkan markdown/mention Discord pada teks dari pengguna.
+var discordEscaper = strings.NewReplacer(
+	"\\", "\\\\",
+	"*", "\\*",
+	"_", "\\_",
+	"`", "\\`",
+	"~", "\\~",
+	"|", "\\|",
+	">", "\\>",
+	"<", "\\<",
+	"@", "＠",
+	"\n", " ",
+)
+
+// leaderboardName membersihkan nama pengguna agar tidak bisa menyuntikkan
+// format Discord (**tebal**, `kode`, @mention, tautan) ke papan peringkat.
+func leaderboardName(name string) string {
+	name = discordEscaper.Replace(strings.TrimSpace(name))
+	if name == "" {
+		return "Agen"
+	}
+	return trunc(name, 60)
+}
+
+// LeaderboardEmbed papan peringkat kuis harian dari payload job backend.
+// Satu field per peringkat (maks 10 dari backend) supaya tetap muat di embed.
+func LeaderboardEmbed(lb models.QuizLeaderboard) *discordgo.MessageEmbed {
+	label := lb.Label
+	if label == "" {
+		label = lb.Day
+	}
+	emb := &discordgo.MessageEmbed{
+		Title: trunc("🏆 Klasemen Kuis Harian — "+label, maxFieldName),
+		Color: ColorInfo,
+	}
+	if len(lb.Entries) == 0 {
+		emb.Description = "Belum ada peserta pada periode ini."
+		emb.Footer = &discordgo.MessageEmbedFooter{Text: "Reset & pengumuman berikutnya 21:00 WIB"}
+		return emb
+	}
+	emb.Description = "Total poin kuis periode 21:00 → 21:00 WIB. Mainkan di halaman kuis Red John."
+	for _, e := range lb.Entries {
+		emb.Fields = append(emb.Fields, &discordgo.MessageEmbedField{
+			Name:   fmt.Sprintf("#%d", e.Rank),
+			Value:  fmt.Sprintf("%s\n%d poin · %d kasus", leaderboardName(e.Name), e.Points, e.Solved),
+			Inline: true,
+		})
+	}
+	emb.Footer = &discordgo.MessageEmbedFooter{Text: "Reset & pengumuman berikutnya 21:00 WIB"}
+	return emb
+}

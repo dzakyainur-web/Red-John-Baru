@@ -61,8 +61,18 @@ func (f *fakeOutbox) handler(t *testing.T) http.HandlerFunc {
 
 func newBroadcaster(t *testing.T, ob *fakeOutbox, post func(context.Context, string, []models.NewsItem) error) *Broadcaster {
 	t.Helper()
+	return newBroadcasterWith(t, ob, post, nil)
+}
+
+func newBroadcasterWith(
+	t *testing.T,
+	ob *fakeOutbox,
+	post func(context.Context, string, []models.NewsItem) error,
+	postLeaderboard func(context.Context, string, *models.QuizLeaderboard) error,
+) *Broadcaster {
+	t.Helper()
 	client, _ := newTestClient(t, ob.handler(t))
-	return NewBroadcaster(client, time.Second, post)
+	return NewBroadcaster(client, time.Second, post, postLeaderboard)
 }
 
 func TestBroadcasterPostsToNewsChannel(t *testing.T) {
@@ -145,5 +155,79 @@ func TestBroadcasterAntrianKosong(t *testing.T) {
 	b.tick(context.Background())
 	if len(ob.finish) != 0 {
 		t.Errorf("tidak ada job -> tidak ada finish: %v", ob.finish)
+	}
+}
+
+func TestBroadcasterLeaderboardDikirimTanpaBerita(t *testing.T) {
+	payload := `{"day":"2026-11-10","label":"10 Nov 21:00 → 11 Nov 21:00 WIB","entries":[{"rank":1,"name":"Budi","points":350,"solved":10}]}`
+	ob := &fakeOutbox{finish: map[int64]string{}, jobs: []PendingBroadcast{{
+		ID: 8, GuildID: "g1", Kind: KindLeaderboard, Payload: []byte(payload),
+	}}}
+	var gotChannel string
+	var got *models.QuizLeaderboard
+	b := newBroadcasterWith(t, ob,
+		func(context.Context, string, []models.NewsItem) error {
+			t.Error("job leaderboard tidak boleh mengambil berita acak")
+			return nil
+		},
+		func(_ context.Context, ch string, lb *models.QuizLeaderboard) error {
+			gotChannel, got = ch, lb
+			return nil
+		})
+	b.tick(context.Background())
+
+	if gotChannel != "N1" {
+		t.Errorf("channel = %q, mau N1", gotChannel)
+	}
+	if got == nil || len(got.Entries) != 1 || got.Entries[0].Name != "Budi" || got.Entries[0].Points != 350 {
+		t.Errorf("payload leaderboard salah: %+v", got)
+	}
+	if msg, ok := ob.finish[8]; !ok || msg != "" {
+		t.Errorf("job harus ditandai sukses, dapat %q (ada=%v)", msg, ok)
+	}
+}
+
+func TestBroadcasterClaimRusakTidakPosting(t *testing.T) {
+	handler := func(w http.ResponseWriter, r *http.Request) {
+		w.Header().Set("Content-Type", "application/json")
+		switch r.URL.Path {
+		case "/api/discord/outbox/claim":
+			// JSON tidak valid di payload: RawMessage menolak, decode klaim gagal.
+			_, _ = w.Write([]byte(`{"id":9,"guild_id":"g1","kind":"leaderboard","payload":{`))
+		case "/api/discord/news-channels":
+			_, _ = w.Write([]byte(`[{"guild_id":"g1","news_channel_id":"N1"}]`))
+		default:
+			t.Errorf("endpoint tak terduga: %s %s", r.Method, r.URL.Path)
+		}
+	}
+	client, _ := newTestClient(t, handler)
+	b := NewBroadcaster(client, time.Second,
+		func(context.Context, string, []models.NewsItem) error {
+			t.Error("payload rusak tidak boleh jatuh ke jalur berita")
+			return nil
+		},
+		func(context.Context, string, *models.QuizLeaderboard) error {
+			t.Error("payload rusak tidak boleh diposting")
+			return nil
+		})
+	b.tick(context.Background())
+}
+
+func TestBroadcasterKindTakDikenalTidakFallbackKeBerita(t *testing.T) {
+	ob := &fakeOutbox{finish: map[int64]string{}, jobs: []PendingBroadcast{{
+		ID: 11, GuildID: "g1", Kind: "sesuatu_baru",
+	}}}
+	b := newBroadcasterWith(t, ob,
+		func(context.Context, string, []models.NewsItem) error {
+			t.Error("kind tak dikenal tidak boleh jatuh ke jalur berita")
+			return nil
+		},
+		func(context.Context, string, *models.QuizLeaderboard) error {
+			t.Error("kind tak dikenal tidak boleh diposting sebagai leaderboard")
+			return nil
+		})
+	b.tick(context.Background())
+	if msg := ob.finish[11]; msg == "" {
+		t.Error("kind tak dikenal harus dilaporkan ke backend")
 	}
 }
