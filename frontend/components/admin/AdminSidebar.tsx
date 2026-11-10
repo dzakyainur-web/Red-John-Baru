@@ -60,7 +60,7 @@ const NAV_SECTIONS: { title: string; items: NavItem[] }[] = [
     title: "HALAMAN PUBLIK",
     items: [
       { label: "Pemindai Pesan", icon: ScanSearch, href: "/pemindai" },
-      { label: "Periksa Tautan", icon: Link2, href: "/inspect" },
+      { label: "Lapor cepat", icon: Link2, href: "/lapor-cepat" },
       { label: "Feed Berita", icon: Newspaper, href: "/berita" },
       { label: "Kuis Publik", icon: GraduationCap, href: "/quiz" },
       { label: "Konsol API", icon: Terminal, href: "/dev" },

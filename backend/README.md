@@ -33,6 +33,7 @@ Variables dashboard; file `.env` tidak perlu ikut ke image produksi.
 | `NEWS_SCHEDULER` | `false` | — | `true` = proses API ikut menjalankan scraper terjadwal |
 | `NEWS_RUN_ON_START` | `false` | — | Jalankan sekali saat boot, tidak menunggu interval |
 | `NEWS_INTERVAL_HOURS` | `6` | — | Jarak antar harvest |
+| `NEWS_BROADCAST_SCHEDULER` | `false` | — | `true` = broadcast 5 berita acak pukul 05:00/13:00/20:00 WITA; aktifkan di satu proses |
 | `LEADERBOARD_SCHEDULER` | `false` | — | `true` = cron pengumuman klasemen kuis ke Discord tiap `LEADERBOARD_HOUR` WIB |
 | `LEADERBOARD_HOUR` | `21` | — | Jam WIB pengumuman **sekaligus** reset periode klasemen |
 | `OPENROUTER_API_KEY` | kosong | — | Untuk generate soal AI (belum terpakai di kode). Rahasia |
@@ -61,7 +62,7 @@ Semua di bawah prefix `/api` kecuali health.
 | GET/PATCH | `/discord/config/{guild_id}` | `X-API-Key` | Konfigurasi bot per guild |
 | GET | `/discord/alert-channels` | `X-API-Key` | Guild yang punya channel alert (polling bot) |
 | GET | `/discord/news-channels` | `X-API-Key` | Guild dengan channel berita (target klasemen) |
-| POST | `/discord/broadcast` | `X-API-Key` | Enqueue job "post 5 berita acak". `409` bila masih pending, `429` bila kena rate limit |
+| POST | `/discord/broadcast` | `X-API-Key` + Bearer admin | Enqueue job "post 5 berita acak". `409` bila masih pending, `429` bila kena rate limit |
 | POST | `/discord/outbox/claim` | `X-API-Key` | Bot ambil job berikutnya (`204` bila kosong) |
 | POST | `/discord/outbox/{id}/finish` | `X-API-Key` | Bot lapor hasil (`204`) |
 | GET | `/quiz/questions` | — | Soal aktif versi publik (tanpa kunci jawaban) |
@@ -82,6 +83,15 @@ log), `APP_ENV=production` → `503`. Endpoint frontend/admin tidak terpengaruh.
 ### Auth admin kuis
 
 Endpoint `/quiz/admin/*` membaca token Bearer Supabase lalu memeriksa `public.profiles.role`.
+Pemeriksaan yang sama juga berlaku untuk `/discord/broadcast`.
+
+## Broadcast berita Discord
+
+`NEWS_BROADCAST_SCHEDULER=true` mengantrikan 5 berita acak untuk setiap guild yang memiliki
+channel berita/alert pada 05:00, 13:00, dan 20:00 WITA (`Asia/Makassar`). `dedupe_key`
+mencegah satu slot dikirim ulang saat scheduler restart/catch-up. Bot harus berjalan untuk
+mengambil outbox dan memposting embed. Aktifkan scheduler hanya di satu proses backend.
+Berita dapat berulang antar-slot karena pemilihan tetap acak.
 
 ## Migrasi SQL
 
@@ -174,6 +184,7 @@ app/
   news_harvester/   # browser, extract, store, runner, scheduler, parsers/
   quiz.py           # model kuis
   quiz_daily.py     # klasemen harian + cron Discord
+  news_broadcast.py # cron broadcast berita Discord
   bot_outbox.py     # antrean job bot Discord
   discord_store.py  # konfigurasi guild
   engine.py         # gabung skor rule + ML

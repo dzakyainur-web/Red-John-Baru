@@ -8,12 +8,15 @@ from __future__ import annotations
 
 from datetime import timedelta
 
+from typing import Annotated
+
 from fastapi import APIRouter, Depends, HTTPException, Response
 from postgrest.exceptions import APIError
 
 from app import bot_outbox, discord_store
 from app.auth import require_bot_key
 from app.news_harvester import store
+from app.routers.quiz import require_quiz_admin
 from app.schemas import (
     BotEventFinishIn,
     BotEventOut,
@@ -118,7 +121,10 @@ async def list_news_channels() -> list[GuildConfigOut]:
 
 
 @router.post("/broadcast", response_model=BroadcastQueuedOut, status_code=202)
-async def queue_broadcast(payload: BroadcastRequest) -> BroadcastQueuedOut:
+async def queue_broadcast(
+    payload: BroadcastRequest,
+    _admin: Annotated[str, Depends(require_quiz_admin)],
+) -> BroadcastQueuedOut:
     """Enqueue job "post 5 berita acak" untuk guild. Bot mengambilnya saat polling."""
     _require_client()
     guild_id = payload.guild_id

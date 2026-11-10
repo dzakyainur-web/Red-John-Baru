@@ -65,6 +65,9 @@ export default function RandomNewsPanel() {
           <p className="mt-1 text-xs text-zinc-400">
             Pilih 5 berita scam terverifikasi acak untuk disiarkan ke channel pengumuman server Discord.
           </p>
+          <p className="mt-1 text-xs text-zinc-400">
+            Jadwal otomatis: 05:00 · 13:00 · 20:00 WITA. Tombol manual mengantrikan broadcast tambahan.
+          </p>
         </div>
         <button
           type="button"

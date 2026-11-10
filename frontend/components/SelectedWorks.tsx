@@ -39,14 +39,14 @@ const WORKS: WorkItem[] = [
     status: "SIAP PAKAI",
   },
   {
-    id: "inspect",
+    id: "lapor-cepat",
     number: "03",
-    title: "PARSER TAUTAN FORENSIK",
-    category: "ENGINE FORENSIK",
+    title: "LAPOR TAUTAN CEPAT",
+    category: "CEK SEBELUM KLIK",
     description:
       "Bedah mendalam URL untuk mendeteksi homoglyph, penipuan punycode, TLD mencurigakan, dan rantai pengalihan bahaya.",
-    tag: "CEK HOMOGLYPH",
-    href: "/inspect",
+    tag: "LAPOR CEPAT",
+    href: "/lapor-cepat",
     status: "WAKTU NYATA",
   },
   {

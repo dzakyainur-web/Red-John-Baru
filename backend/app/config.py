@@ -83,6 +83,11 @@ class Settings:
     news_max_per_source: int = 15
     news_max_total: int = 60
     news_max_age_days: int = 90
+    # Broadcast 5 berita acak ke semua guild: 05:00, 13:00, 20:00 WITA.
+    news_broadcast_scheduler: bool = field(
+        default_factory=lambda: os.environ.get("NEWS_BROADCAST_SCHEDULER", "false").lower()
+        in {"1", "true", "yes", "on"}
+    )
     news_concurrency: int = 3
     news_lock_ttl_minutes: int = 45
 

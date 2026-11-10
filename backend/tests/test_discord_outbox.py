@@ -10,6 +10,7 @@ from fastapi.testclient import TestClient
 import app.auth as auth
 import main
 from app import bot_outbox, discord_store
+from app.routers import discord
 from app.config import Settings
 from app.news_harvester import store
 
@@ -25,6 +26,9 @@ def _setup(monkeypatch: pytest.MonkeyPatch):
     object.__setattr__(fake, "app_env", "test")
     monkeypatch.setattr(auth, "settings", fake)
     monkeypatch.setattr(store, "_client", object())
+    main.app.dependency_overrides[discord.require_quiz_admin] = lambda: "admin"
+    yield
+    main.app.dependency_overrides.clear()
 
 
 class FakeOutbox:
@@ -76,6 +80,13 @@ def test_broadcast_enqueue(outbox: FakeOutbox) -> None:
     assert res.status_code == 202
     assert res.json()["status"] == "queued"
     assert outbox.jobs[0]["guild_id"] == "42"
+
+
+def test_broadcast_butuh_admin(outbox: FakeOutbox) -> None:
+    del main.app.dependency_overrides[discord.require_quiz_admin]
+    res = client.post("/api/discord/broadcast", json={"guild_id": "42"}, headers=HEADERS)
+    assert res.status_code == 401
+    assert outbox.jobs == []
 
 
 def test_broadcast_butuh_api_key(outbox: FakeOutbox) -> None:

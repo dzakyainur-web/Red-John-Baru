@@ -1,6 +1,7 @@
 "use client";
 
 import { useState, useSyncExternalStore } from "react";
+import Link from "next/link";
 import { PageHead, SourceNote } from "@/components/ui";
 
 const CHECKLIST_KEY = "guardianai-checklist";
@@ -173,6 +174,15 @@ export default function ActPage() {
         <h2 id="report-heading" className="section-title">
           Kalau sudah terlanjur
         </h2>
+        <div className="rounded-lg border-l-[3px] border-l-red-500 bg-white/[0.06] px-4 py-3">
+          <p className="font-semibold">Sudah terlanjur transfer?</p>
+          <p className="mt-1 text-sm text-zinc-300">
+            Buat paket laporan siap kirim ke bank dan kepolisian dalam 5 menit. Semua data tetap di perangkatmu.
+          </p>
+          <Link href="/darurat" className="btn btn-primary mt-3">
+            Buka paket darurat
+          </Link>
+        </div>
         <div className="grid gap-3 sm:grid-cols-2">
           {REPORT_GUIDES.map((g) => (
             <div key={g.case} className="panel flex flex-col p-4">

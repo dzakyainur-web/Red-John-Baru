@@ -56,7 +56,8 @@ Role admin dibaca dari `public.profiles.role` di backend — tidak ada env admin
 |---|---|
 | `/` | Periksa pesan mencurigakan |
 | `/berita` | Radar berita penipuan (SSR di build, data dari `/api/news`) |
-| `/pemindai`, `/inspect` | Pemindai pesan, inspeksi tautan |
+| `/pemindai`, `/lapor-cepat` | Pemindai pesan, lapor tautan mencurigakan |
+| `/darurat` | Paket pemulihan golden-hour (wizard laporan, lokal) |
 | `/quiz` | Kuis kriminal otomatis (soal dari backend, skor dihitung server) |
 | `/quiz/leaderboard` | Klasemen harian, reset 21:00 WIB, refetch tiap 60 dtk |
 | `/quiz/berita-hari-ini` | Placeholder soal harian dari berita (belum aktif) |

@@ -488,8 +488,8 @@ export default function AdminDashboardClient() {
                       <a href="/quiz" className="text-[#3ECF8E] hover:underline">
                         Kuis publik
                       </a>
-                      <a href="/inspect" className="text-[#3ECF8E] hover:underline">
-                        Pemeriksa URL
+                      <a href="/lapor-cepat" className="text-[#3ECF8E] hover:underline">
+                        Lapor tautan
                       </a>
                       <a href="/pemindai" className="text-[#3ECF8E] hover:underline">
                         Pemindai pesan
