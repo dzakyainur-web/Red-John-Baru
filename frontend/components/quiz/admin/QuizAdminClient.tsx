@@ -6,7 +6,9 @@ import QuestionForm, { emptyQuestion } from "@/components/quiz/admin/QuestionFor
 import { archiveQuizQuestion, createQuizQuestion, listAdminQuestions, updateQuizQuestion, type GameRound } from "@/lib/quiz";
 import { supabase } from "@/lib/supabase";
 
-export default function QuizAdminClient() {
+// `embedded` dipakai panel /admin: tanpa shell halaman sendiri (judul, back link,
+// tombol keluar) karena shell admin sudah menyediakannya.
+export default function QuizAdminClient({ embedded = false }: { embedded?: boolean } = {}) {
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
   const [token, setToken] = useState("");
@@ -51,9 +53,7 @@ export default function QuizAdminClient() {
     try { await archiveQuizQuestion(question.id, token); await load(token); }
     catch (err) { setError(err instanceof Error ? err.message : "Gagal mengarsipkan."); }
   }
-  return <main className="min-h-screen bg-[#0c0d0d] px-4 py-10 text-white"><div className="mx-auto max-w-5xl">
-    <Link href="/quiz" className="text-sm text-white/60 hover:text-white">← Kembali ke kuis</Link>
-    <div className="mt-5 flex flex-wrap items-center justify-between gap-4"><div><h1 className="text-3xl font-bold">Kelola Bank Soal</h1><p className="mt-1 text-sm text-white/60">Pilihan ganda, benar/salah, dan jawaban teks.</p></div>{token && <button onClick={() => void supabase?.auth.signOut()} className="rounded-lg border border-white/15 px-3 py-2 text-sm">Keluar</button>}</div>
+  const body = <>
     {!token ? <form onSubmit={login} className="mx-auto mt-12 max-w-md space-y-4 rounded-2xl border border-white/15 bg-white/[0.03] p-6"><h2 className="text-lg font-semibold">Login admin Supabase</h2>{error && <p role="alert" className="text-sm text-red-300">{error}</p>}<input type="email" required placeholder="Email admin" autoComplete="email" value={email} onChange={(e) => setEmail(e.target.value)} className="w-full rounded-lg border border-white/15 bg-black/30 p-3 text-sm" /><input type="password" required placeholder="Password" autoComplete="current-password" value={password} onChange={(e) => setPassword(e.target.value)} className="w-full rounded-lg border border-white/15 bg-black/30 p-3 text-sm" /><button disabled={loading || !supabase} className="w-full rounded-lg bg-white p-3 text-sm font-semibold text-black disabled:opacity-50">{loading ? "Memproses…" : "Masuk"}</button></form> : <>
       {error && <div role="alert" className="mt-5 rounded-lg border border-red-500/30 bg-red-500/10 p-3 text-sm text-red-300">{error}</div>}
       <div className="mt-6 flex justify-end"><button onClick={() => setEditing(emptyQuestion(Math.max(0, ...questions.map((q) => q.round_number)) + 1))} className="rounded-lg bg-white px-4 py-2 text-sm font-semibold text-black">+ Tambah soal</button></div>
@@ -63,5 +63,13 @@ export default function QuizAdminClient() {
       </article>)}{questions.length === 0 && <p className="p-6 text-sm text-white/50">Belum ada soal.</p>}</div>}
     </>}
     {editing && <QuestionForm initial={editing} onCancel={() => setEditing(null)} onSave={save} />}
+  </>;
+
+  if (embedded) return body;
+
+  return <main className="min-h-screen bg-[#0c0d0d] px-4 py-10 text-white"><div className="mx-auto max-w-5xl">
+    <Link href="/quiz" className="text-sm text-white/60 hover:text-white">← Kembali ke kuis</Link>
+    <div className="mt-5 flex flex-wrap items-center justify-between gap-4"><div><h1 className="text-3xl font-bold">Kelola Bank Soal</h1><p className="mt-1 text-sm text-white/60">Pilihan ganda, benar/salah, dan jawaban teks.</p></div>{token && <button onClick={() => void supabase?.auth.signOut()} className="rounded-lg border border-white/15 px-3 py-2 text-sm">Keluar</button>}</div>
+    {body}
   </div></main>;
 }

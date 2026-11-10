@@ -4,14 +4,8 @@ import { useState } from "react";
 import { CATEGORY_LABEL, formatNewsDate } from "@/lib/labels";
 import { broadcastNews, fetchRandomNews } from "@/lib/random-news";
 import type { NewsItem } from "@/lib/news";
+import { Dice5, CheckCircle2, AlertCircle, Loader2 } from "lucide-react";
 
-const mono = "font-[family-name:var(--font-geist-mono)]";
-
-/**
- * Panel /admin: tombol memilih 5 berita acak terverifikasi dari database, lalu
- * meminta bot Discord memposting set 5 berita itu ke channel berita server
- * (tipe `/config news-channel`). Panel menampilkan yang sama dengan Discord.
- */
 export default function RandomNewsPanel() {
   const [items, setItems] = useState<NewsItem[]>([]);
   const [total, setTotal] = useState(0);
@@ -37,8 +31,6 @@ export default function RandomNewsPanel() {
       if (data.items.length === 0 || !/^\d{1,32}$/.test(guildId.trim())) {
         return;
       }
-      // Sampel di panel dan di Discord dipilih terpisah (bot mengambilnya sendiri),
-      // jadi keduanya bisa berbeda — keduanya dari 5 berita terverifikasi acak.
       setBroadcast("sending");
       try {
         setNotice(await broadcastNews(guildId.trim()));
@@ -61,65 +53,75 @@ export default function RandomNewsPanel() {
   }
 
   return (
-    <section className="border-t border-rule pt-6" aria-labelledby="random-news-heading">
-      <div className="flex flex-wrap items-end justify-between gap-3">
+    <section className="space-y-4" aria-labelledby="random-news-heading">
+      <div className="flex flex-wrap items-end justify-between gap-4">
         <div>
-          <h2
+          <h3
             id="random-news-heading"
-            className={`${mono} text-[11px] font-semibold uppercase tracking-wider text-muted`}
+            className="text-xs font-bold uppercase tracking-wider text-zinc-400"
           >
-            Sampel acak berita
-          </h2>
-          <p className="mt-1 text-sm text-muted">
-            5 berita terverifikasi dipilih acak, lalu bot mempostingnya ke channel berita Discord.
+            Penyebaran Berita Otomatis ke Discord
+          </h3>
+          <p className="mt-1 text-xs text-zinc-400">
+            Pilih 5 berita scam terverifikasi acak untuk disiarkan ke channel pengumuman server Discord.
           </p>
         </div>
         <button
           type="button"
           onClick={() => void pick()}
           disabled={loading}
-          className="btn btn-primary"
-          aria-busy={loading}
+          className="inline-flex items-center gap-2 rounded-xl bg-[#3ECF8E] px-4 py-2.5 text-xs font-semibold text-black shadow-sm hover:bg-[#4adeaa] disabled:opacity-50 transition-all"
         >
-          {loading || broadcast === "sending"
-            ? "Memilih…"
-            : "🎲 Tampilkan 5 berita acak"}
+          {loading || broadcast === "sending" ? (
+            <>
+              <Loader2 className="size-3.5 animate-spin text-black" />
+              <span>Memproses…</span>
+            </>
+          ) : (
+            <>
+              <Dice5 className="size-3.5" />
+              <span>Tampilkan & Broadcast 5 Berita</span>
+            </>
+          )}
         </button>
       </div>
 
-      <label className="mt-3 flex max-w-xs flex-col gap-1">
-        <span className={`${mono} text-[11px] uppercase tracking-wider text-muted`}>
-          ID server Discord tujuan
-        </span>
-        <input
-          value={guildId}
-          onChange={(e) => setGuildId(e.target.value)}
-          inputMode="numeric"
-          placeholder="mis. 123456789012345678"
-          className={`${mono} border border-rule bg-transparent px-2 py-1 text-sm`}
-        />
-        <span className="text-xs text-muted">
+      <div className="max-w-md space-y-1.5 pt-2">
+        <label className="text-xs font-semibold text-zinc-300">
+          ID Server (Guild ID) Discord
+        </label>
+        <div className="flex items-center gap-2">
+          <input
+            value={guildId}
+            onChange={(e) => setGuildId(e.target.value)}
+            inputMode="numeric"
+            placeholder="Contoh: 123456789012345678"
+            className="w-full rounded-xl border border-white/15 bg-black/40 px-3.5 py-2 text-xs text-white placeholder:text-zinc-500 focus:border-[#3ECF8E] focus:bg-[#111211] focus:outline-none focus:ring-1 focus:ring-[#3ECF8E]/40 font-mono"
+          />
+        </div>
+        <p className="text-[11px] text-zinc-500">
           {guildId.trim()
-            ? "Bot memposting ke channel `/config news-channel` server ini (fallback: channel alert)."
-            : "Isi ID server Discord agar bot ikut memposting ke Discord."}
-        </span>
-      </label>
+            ? "Bot akan memposting ke channel #berita-scam di server ini."
+            : "Masukkan ID server Discord untuk mengaktifkan webhook siaran otomatis."}
+        </p>
+      </div>
 
       {error && (
-        <p role="alert" className="mt-4 border-l-2 border-l-alert pl-3 text-sm text-alert-ink">
-          {error}
-        </p>
+        <div className="flex items-center gap-2 rounded-xl border border-red-500/30 bg-red-500/10 p-3 text-xs text-red-300">
+          <AlertCircle className="size-4 shrink-0 text-red-400" />
+          <span>{error}</span>
+        </div>
       )}
 
       {notice && !error && (
-        <p role="status" className="mt-4 border-l-2 border-l-safe pl-3 text-sm text-ink">
-          {broadcast === "sent" ? "✅ " : "⏳ "}
-          {notice}
-        </p>
+        <div className="flex items-center gap-2 rounded-xl border border-[#3ECF8E]/30 bg-[#3ECF8E]/10 p-3 text-xs text-[#3ECF8E]">
+          <CheckCircle2 className="size-4 shrink-0 text-[#3ECF8E]" />
+          <span>{notice}</span>
+        </div>
       )}
 
       {pressedAt && !error && items.length === 0 && !loading && (
-        <p className={`mt-4 text-sm text-muted ${mono}`}>
+        <p className="text-xs text-zinc-500 italic">
           {total === 0
             ? "Belum ada berita terverifikasi di database."
             : "Tidak ada berita yang bisa diambil."}
@@ -127,44 +129,49 @@ export default function RandomNewsPanel() {
       )}
 
       {items.length > 0 && (
-        <>
-          <p className={`mt-4 ${mono} text-xs text-muted`}>
-            Menampilkan {items.length} dari {total} berita terverifikasi ·{" "}
+        <div className="space-y-3 pt-2">
+          <p className="text-xs font-semibold text-zinc-400">
+            Menampilkan {items.length} dari {total} berita terverifikasi · Terakhir diperbarui:{" "}
             {pressedAt?.toLocaleTimeString("id-ID", { hour: "2-digit", minute: "2-digit" })}
           </p>
-          <ol className="mt-3 divide-y divide-rule border-y border-rule">
+
+          <div className="divide-y divide-white/[0.06] rounded-xl border border-white/[0.08] bg-[#161817]">
             {items.map((item, i) => (
-              <li key={item.id} className="flex gap-3 py-3">
-                <span className={`${mono} w-5 shrink-0 pt-0.5 text-xs text-muted`}>{i + 1}.</span>
-                <div className="min-w-0">
-                  <div className="flex flex-wrap items-baseline gap-x-2">
-                    {item.url ? (
-                      <a
-                        href={item.url}
-                        target="_blank"
-                        rel="noopener noreferrer"
-                        className="font-semibold text-ink underline-offset-4 hover:underline"
-                      >
-                        {item.title}
-                      </a>
-                    ) : (
-                      <span className="font-semibold text-ink">{item.title}</span>
-                    )}
-                  </div>
-                  <p className={`${mono} mt-1 text-[11px] uppercase tracking-wider text-muted`}>
-                    {item.categories.map((c) => CATEGORY_LABEL[c] ?? c).join(" · ")}
-                    {item.source ? ` · ${item.source}` : ""}
+              <div key={item.id} className="flex items-start gap-3 p-3.5 hover:bg-white/[0.03] transition-colors">
+                <span className="flex size-6 shrink-0 items-center justify-center rounded-md bg-white/10 text-xs font-bold text-zinc-300">
+                  {i + 1}
+                </span>
+                <div className="min-w-0 flex-1">
+                  {item.url ? (
+                    <a
+                      href={item.url}
+                      target="_blank"
+                      rel="noopener noreferrer"
+                      className="text-xs font-bold text-white hover:text-[#3ECF8E] hover:underline leading-snug"
+                    >
+                      {item.title}
+                    </a>
+                  ) : (
+                    <p className="text-xs font-bold text-white leading-snug">{item.title}</p>
+                  )}
+                  <p className="mt-1 text-[11px] text-zinc-500">
+                    <span className="font-semibold text-zinc-300">
+                      {item.categories.map((c) => CATEGORY_LABEL[c] ?? c).join(" · ")}
+                    </span>
+                    {item.source ? ` • Sumber: ${item.source}` : ""}
                     {formatNewsDate(item.published_at) &&
-                      ` · ${formatNewsDate(item.published_at)}`}
+                      ` • ${formatNewsDate(item.published_at)}`}
                   </p>
                   {item.snippet && (
-                    <p className="mt-1 line-clamp-2 text-sm text-muted">{item.snippet}</p>
+                    <p className="mt-1 line-clamp-2 text-xs text-zinc-400 leading-relaxed">
+                      {item.snippet}
+                    </p>
                   )}
                 </div>
-              </li>
+              </div>
             ))}
-          </ol>
-        </>
+          </div>
+        </div>
       )}
     </section>
   );
